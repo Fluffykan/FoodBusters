@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import ShopCondensedInfo from '../components/ShopCondensedInfo';
 
 export default function ProfilePage() {
     // TODO: 
@@ -19,6 +20,9 @@ export default function ProfilePage() {
         console.log('redirect to edit profile');
     }
 
+    // TODO: 
+    // CREATE UI FOR REVIEWS AND IMAGES PAGE
+
     return (
         <View>
             <View style={styles.userPictureAndInfo}>
@@ -37,6 +41,9 @@ export default function ProfilePage() {
             <View>
                 {ProfileNavBar(setShowReviews, setShowImages, setShowFavorites)}
             </View>
+            <ScrollView>
+            { showFavorites && <ShopCondensedInfo /> }
+            </ScrollView>
         </View>
     );
 }
@@ -123,6 +130,7 @@ const navBarStyles = StyleSheet.create({
         flexDirection: 'row', 
         justifyContent: 'space-between',
         borderWidth: 1,
+        backgroundColor: 'rgb(222, 222, 222)',
     },
     navBarButton: {
         height: 25,

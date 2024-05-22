@@ -23,6 +23,11 @@ export default function LoginCredentialsUI() {
         console.log('redirecting to reset password');
     }
 
+    const handleCreateAccount = () => {
+        // TODO: LINK TO BACKEND
+        console.log('redirecting to create account page');
+    }
+
     return (
         <View>
                 <View style={styles.loginCredentialsView}>
@@ -34,8 +39,11 @@ export default function LoginCredentialsUI() {
                 <TouchableOpacity style={styles.loginCredentialsView} onPress={handleLogin}>
                     <Text style={styles.loginButton}>Login</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={handleForgettPassword}>
-                    <Text style={styles.forgotPasswordButton}>Forgot Password</Text>
+                <TouchableOpacity style={styles.redirectButton} onPress={handleForgettPassword}>
+                    <Text style={styles.redirectButtonText}>Forgot Password</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.redirectButton} onPress={handleCreateAccount}>
+                    <Text style={styles.redirectButtonText}>Create Account</Text>
                 </TouchableOpacity>
         </View>
     )
@@ -59,13 +67,16 @@ const styles = StyleSheet.create({
     loginButton: {
         backgroundColor: 'blue',
         borderWidth: 1,
-        borderRadius: 10,
+        borderRadius: 5,
         color: 'white', 
         textAlign: 'center'
     },
-    forgotPasswordButton: {
+    redirectButtonText: {
         textDecorationLine: 'underline',
         color: 'blue',
         textAlign: 'center'
+    },
+    redirectButton: {
+        padding: 10,
     },
 })
