@@ -1,5 +1,4 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { useState } from 'react';
 
 export default function ShopCondensedInfo() {
     // TODO: 

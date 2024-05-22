@@ -30,13 +30,13 @@ export default function LoginCredentialsUI() {
 
     return (
         <View>
-                <View style={styles.loginCredentialsView}>
-                    <TextInput style={styles.loginCredentialsField} placeholder="Username" onChangeText={handleUsernameInput} />
+                <View style={styles.textInputContainer}>
+                    <TextInput style={styles.textInput} placeholder="Username" onChangeText={handleUsernameInput} />
                 </View>
-                <View style={styles.loginCredentialsView}>
-                   <TextInput style={styles.loginCredentialsField} placeholder="Password" onChangeText={handlePasswordInput} />
+                <View style={styles.textInputContainer}>
+                   <TextInput style={styles.textInput} placeholder="Password" onChangeText={handlePasswordInput} />
                 </View>
-                <TouchableOpacity style={styles.loginCredentialsView} onPress={handleLogin}>
+                <TouchableOpacity style={styles.textInputContainer} onPress={handleLogin}>
                     <Text style={styles.loginButton}>Login</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.redirectButton} onPress={handleForgettPassword}>
@@ -51,14 +51,14 @@ export default function LoginCredentialsUI() {
 
 const styles = StyleSheet.create({
     
-    loginCredentialsField: {
+    textInput: {
         borderColor: 'black',
         borderWidth: 1,
         borderRadius: 10,
         backgroundColor: 'rgb(227,227,227)',
         paddingLeft: 20,
     }, 
-    loginCredentialsView: {
+    textInputContainer: {
         paddingLeft: 20,
         paddingRight: 20,
         paddingTop: 5,
