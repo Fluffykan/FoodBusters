@@ -1,4 +1,5 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { Link } from 'expo-router';
 
 export default function ShopCondensedInfo() {
     // TODO: 
@@ -17,7 +18,7 @@ export default function ShopCondensedInfo() {
     }
 
     return (
-        <TouchableOpacity style={styles.shopButton} onPress={handleStoreClick}>
+        <Link href='/pages/workInProgress'>
             <View style={styles.storeImageContainer}>
             <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
             </View>
@@ -35,7 +36,8 @@ export default function ShopCondensedInfo() {
                 <Text style={styles.informationText}>{storeClassification}</Text>
 
             </View>
-        </TouchableOpacity>
+        </Link>
+
     )
 }
 

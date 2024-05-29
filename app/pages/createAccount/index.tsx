@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { IconWithTitle } from '../components';
+import IconWithTitle from '@/components/IconWithTitle';
 import { useState } from 'react';
+import InputBoxWithTitle from './components/inputBoxWithTitle';
+import Button from '@/components/Button';
 
 export default function CreateAccountPage() {
     const [username, updateUsername] = useState('');
@@ -8,41 +10,33 @@ export default function CreateAccountPage() {
     const [password, updatePassword] = useState('');
     const [confirmPassword, updateConfirmPassword] = useState('');
 
+    const updateField = (fn: Function) => (s: string) => {
+        fn(s);
+        console.log(s);
+    }
+
     // TODO: 
     // CREATE LOGIC TO HANDLE ACCOUNT CREATION
     const handleCreateAccount = () => {
-        if (!passwordMismatch && allFieldsFilled) {
+        console.log('creating acct')
+        if (!passwordMismatch && !hasEmptyField) {
             console.log('New Account : username: ' + username + ' email: ' + email + ' password: ' + password);
         }
     }
     const passwordMismatch = !(password === confirmPassword);
-    const allFieldsFilled = !(username !== '' && password != '' && email !== '' && confirmPassword !== '');
+    const hasEmptyField = (username == '' || password == '' || email == '' || confirmPassword == '');
 
     return (
-        <View>
+        <View style={styles.container}>
             <IconWithTitle />
             <Text style={styles.pageHeading}>Create Account</Text>
-            <View style={styles.textInputContainer}>
-                <Text>Username</Text>
-                <TextInput style={styles.textInput} onChangeText={updateUsername} />
-            </View>
-            <View style={styles.textInputContainer}>
-                <Text>Email</Text>
-                <TextInput style={styles.textInput} onChangeText={updateEmail} />
-            </View>
-            <View style={styles.textInputContainer}>
-                <Text>Password</Text>
-                <TextInput style={styles.textInput} onChangeText={updatePassword} />
-            </View>
-            <View style={styles.textInputContainer}>
-                <Text>Confirm Password</Text>
-                <TextInput style={styles.textInput} onChangeText={updateConfirmPassword} />
-                {passwordMismatch && <Text style={styles.errorMessage}>Passwords do not match</Text>}
-            </View>
-            <TouchableOpacity style={styles.registerButton} onPress={handleCreateAccount}>
-                <Text style={styles.registerButtonText}>Register</Text>
-                {allFieldsFilled && <Text style={styles.errorMessage}>Some fields are empty</Text>}
-            </TouchableOpacity>
+            <InputBoxWithTitle title='Username' placeholder='' updaterFn={updateField(updateUsername)} />
+            <InputBoxWithTitle title='Email' placeholder='' updaterFn={updateField(updateEmail)} />
+            <InputBoxWithTitle title='Password' placeholder='' updaterFn={updateField(updatePassword)} />
+            <InputBoxWithTitle title = 'Confirm Password' placeholder='' updaterFn={updateField(updateConfirmPassword)} />
+            {passwordMismatch && <Text style={styles.errorMessage}>Passwords do not match</Text>}
+            <Button text='Register' border='rounded' fn={handleCreateAccount} />
+            {hasEmptyField && <Text style={styles.errorMessage}>Some fields are empty</Text>}
         </View>
     )
 }
@@ -53,6 +47,10 @@ const styles = StyleSheet.create({
         padding: 20,
         fontSize: 30,
         textDecorationLine: 'underline',
+    },
+    container: {
+        paddingLeft: 20, 
+        paddingRight: 20, 
     },
     registerButtonText: {
         backgroundColor: 'blue',
