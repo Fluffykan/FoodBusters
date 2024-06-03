@@ -1,63 +1,57 @@
-import { StyleSheet, View, Text, Image, Button, TouchableOpacity, Pressable } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { useState } from "react";
-import { Link } from 'expo-router';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function ReviewsComponent() {
 
-    const tempNameAndRating = "By: DomTor    Rating: 4.5" 
+    const name = "DomTor";
+    const rating = "4.5";
     const tempReview = "Review: Amazing food with great service here..."
 
-    const overallStyle = StyleSheet.create({
-        container: {
-            borderRadius: 10,
-            borderWidth: 2,
-            flexDirection: "row"
-        }
-    })    
-
-    const nameAndStars = StyleSheet.create({
-        container: {
-            flexDirection: "row",
-        }
-    })
-
-    const arrowDown = StyleSheet.create({
-        container: {
-            alignSelf: 'center',
-        }
-    })
-
-    const profileIcon = StyleSheet.create({
-        container: {
-            paddingHorizontal: 10,
-        }
-    })
+    /*
+    // ReadMore functionality is removed, can add back if time and skill permits in the future
 
     const [readMoreButtonIsPressed, setReadMoreButton] = useState(false)
     const toggleReadMoreButton = () => {
         setReadMoreButton(!readMoreButtonIsPressed)
         console.log("Extending Review...")
     }
+    */
 
     return (
-        <View style={overallStyle.container}>
-            <View style={profileIcon.container}>
-                <Icon name="user" size={50} color="black" />
-            </View>
+        <View style={styles.container}>
+            <Icon name="user" size={50} color="black" />
             <View>
-                <View style={nameAndStars.container}>
-                    <Text>{tempNameAndRating}</Text>
-                    <Icon name="staro" size={15} color="black" />
+                <View style={styles.usernameAndRating}>
+                    <Text>By: {name}</Text>
+                    <View style={styles.rating}>
+                        <Text>Rating: {rating}</Text>
+                        <Icon name="staro" size={15} color="black" />
+                        <Text> / 5</Text>
+                        <Icon name="staro" size={15} color="black" />
+                    </View>
                 </View>
                 
                 <Text>{tempReview}</Text>
-                <View style={arrowDown.container}>
-                    <TouchableOpacity onPress={toggleReadMoreButton}>
-                        <Icon name="down" size={15} color="black" />
-                    </TouchableOpacity>
-                </View>
+
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        borderRadius: 10,
+        borderWidth: 2,
+        flexDirection: "row",
+        paddingHorizontal: 5,
+    },
+    usernameAndRating: {
+        justifyContent: "space-between",
+        flexDirection: "row",
+    },
+    rating: {
+        flexDirection: "row",
+        justifyContent: "center",
+    }
+})

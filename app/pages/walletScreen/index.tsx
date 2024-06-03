@@ -1,6 +1,5 @@
 import { StyleSheet, View, Text, ScrollView } from "react-native";
 import { useState } from "react";
-
 import PageBreakLine from "@/components/PageBreakLine";
 import LoyaltyPointsBar from "./components/loyaltyPointsBar";
 import WalletNavbar from "./components/walletNavBar";

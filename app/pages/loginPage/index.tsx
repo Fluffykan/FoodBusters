@@ -1,48 +1,67 @@
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
-import { Link } from 'expo-router';
+import { View, Text, StyleSheet } from 'react-native';
+import { Link, Redirect } from 'expo-router';
 import { useState } from 'react';
-import IconWithTitle from '@/components/IconWithTitle';
-import InputBoxWithOptionalTitle from '../createAccount/components/inputBoxWithTitle';
+import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
-import HyperlinkButton from '@/components/HyperlinkButton';
+import axios from 'axios';
+import Header from '@/components/Header';
 
 export default function LoginPage() {
-    const [username, updateUsername] = useState('');
-    const [password, updatePassword] = useState('');
+    const [email, updateEmail] = useState('');
+    const [password, updatePassword] = useState<String>('');
+    const [passwordError, updatePasswordError] = useState(true);
+    const [attemptedLogin, updateAttemptedLogin] = useState(false);
 
-    const handleUsernameInput = (newUsername:string) => {
-        updateUsername(newUsername);
+    interface APIresponse {
+        password_hash:string;
     }
-
-    const handlePasswordInput = (newPassword:string) => {
-        updatePassword(newPassword);
+    function extractHash(data: APIresponse[]):string {
+        return data.filter(item=> item.password_hash !== undefined)
+                    .map(item=> item.password_hash as string)[0];
     }
 
     const handleLogin = () => {
-        // TODO: LINK TO BACKEND
-        console.log('login attempt');
         if (!hasEmptyField) {
-            console.log('Username:' + username + ' Password:' + password);
+            updateAttemptedLogin(true);
+            console.log('login attempt');
+            axios.get(`http://192.168.1.15:4200/loginAttempt/${email}`)
+                .then(response => {
+                    console.log(response.data);
+                    console.log(extractHash(response.data));
+                    console.log(`input password: ${password}, actual password: ${extractHash(response.data)} \npassword error = ${password != extractHash(response.data)}`);
+                    updatePasswordError(password != extractHash(response.data));
+                })
+                .catch(error => {
+                    console.error(error);
+                })
+        } else {
+            console.log('some fields empty');
         }
     }
 
-    const hasEmptyField = username == '' || password == '';
+    const hasEmptyField = email == '' || password == '';
 
-    return (
-        <View style={styles.container}>
-            <IconWithTitle />
-            <InputBoxWithOptionalTitle placeholder='Username' updaterFn={handleUsernameInput} />
-            <InputBoxWithOptionalTitle placeholder='Password' updaterFn={handlePasswordInput} />
-            {hasEmptyField && <Text style={{color: 'red'}}>Some fields are empty</Text>}
-            <Button text='Login' bgColor='blue' textColor='white' border='rounded' fn={handleLogin} />
-            <Link href='/pages/workInProgress' style={styles.redirectButton}>
-                <Text style={styles.redirectButtonText}>Forgot Password</Text>
-            </Link>
-            <Link href='/pages/createAccount' style={styles.redirectButton}>
-                <Text style={styles.redirectButtonText}>Create Account</Text>
-            </Link>
-        </View>
-    )
+    if (!passwordError) {
+        return <Redirect href='/pages/homeScreen' />
+    } else {
+        return (
+            <View style={styles.container}>
+                <Header header='FoodBuster' transparentBg={true} />
+                <InputBoxWithOptionalTitle placeholder='Email' updaterFn={updateEmail} />
+                <InputBoxWithOptionalTitle placeholder='Password' updaterFn={updatePassword} />
+                {hasEmptyField && <Text style={styles.errorMsg}>Some fields are empty</Text>}
+                {passwordError && attemptedLogin && <Text style={styles.errorMsg}>Incorrect Email or Password</Text>}
+                <Button text='Login' bgColor='blue' textColor='white' border='rounded' fn={handleLogin} />
+                <Link replace href='/pages/resetPassword' style={styles.redirectButton}>
+                    <Text style={styles.redirectButtonText}>Forgot Password</Text>
+                </Link>
+                <Link replace href='/pages/createAccount' style={styles.redirectButton}>
+                    <Text style={styles.redirectButtonText}>Create Account</Text>
+                </Link>
+            </View>
+        )
+    }
+
 }
 
 const styles = StyleSheet.create({
@@ -52,26 +71,6 @@ const styles = StyleSheet.create({
         height: '100%', 
         justifyContent:'center'
 
-    },
-    textInput: {
-        borderColor: 'black',
-        borderWidth: 1,
-        borderRadius: 10,
-        backgroundColor: 'rgb(227,227,227)',
-        paddingLeft: 20,
-    }, 
-    textInputContainer: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: 5,
-        paddingBottom: 5
-    },
-    loginButton: {
-        backgroundColor: 'blue',
-        borderWidth: 1,
-        borderRadius: 5,
-        color: 'white', 
-        textAlign: 'center'
     },
     redirectButtonText: {
         textDecorationLine: 'underline',
@@ -83,6 +82,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         paddingTop: 10,
         paddingBottom: 10,
+    },
+    errorMsg: {
+        color: 'red', 
+        textDecorationLine:'underline',
     }
 
 })

@@ -1,6 +1,5 @@
-import { StyleSheet, View, Text, Image, Button, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, } from "react-native";
 import { useState } from "react";
-import Icon from 'react-native-vector-icons/AntDesign';
 
 type storeInfo = {
     operating: boolean;
@@ -53,12 +52,6 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'flex-start'
     }, 
-    statusText: {
-        color: "black",
-        fontSize: 30,
-        textDecorationLine: 'underline',
-        textAlign: 'center',
-    },
     statusOpen: {
         color: "white",
         fontSize: 30,

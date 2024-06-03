@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: 'rgb(227,227,227)',
         paddingLeft: 5,
-        flex: 1,
     }, 
     textInputContainer: {
         paddingTop: 5,

@@ -1,11 +1,11 @@
 import { View, Text } from 'react-native';
 import LoginPage from './pages/loginPage';
-import HomePage from './pages/homePage';
+import HomeScreen from './app/pages/homeScreen';
 
 export default function index() {
   return (
     <View>
-      <HomePage />
+      <HomeScreen />
     </View>
   );
 }
