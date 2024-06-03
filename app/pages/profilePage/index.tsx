@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import ShopCondensedInfo from '../../components/ShopCondensedInfo';
 import UserInfo from './components/userInfo';
 import ProfileNavBar from './components/profileNavBar';
+import Navbar from '@/components/Navbar';
 
 export default function ProfilePage() {
     // TODO: 
@@ -32,7 +33,10 @@ export default function ProfilePage() {
             <ProfileNavBar setShowFavorites={setShowFavorites} setShowImages={setShowImages} setShowReviews={setShowReviews} />
             <ScrollView>
             { showFavorites && <ShopCondensedInfo /> }
+            { showImages && <Text>Images</Text> }
+            { showReviews && <Text>reviews</Text> }
             </ScrollView>
+            <Navbar/>
         </View>
     );
 }

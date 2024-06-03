@@ -1,6 +1,7 @@
 import { View, Image, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import Button from '@/components/Button';
+import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
 
 type userInfoProps = {
     username:string;
@@ -18,10 +19,7 @@ export default function UserInfo({username, email}:userInfoProps) {
             <View>
                 <Text style={styles.usernameText}>{username}</Text>
                 <Text style={styles.userEmailText}>{email}</Text>
-                <Link href='/pages/workInProgress' style={styles.editProfileContainer}>
-                    <Text style={styles.editProfileText}>Edit Profile</Text>
-                    <Image source={require('@/app/assets/editProfileIcon.png')} style={{height: 20, width: 20}} />
-                </Link>
+                <NavIconButtonWithOptionalText iconName='setting' destination='/pages/workInProgress' replaceScreen={false} text='Edit Profile' flexDir='row' border={true} />
             </View>
         </View>
     )
@@ -51,24 +49,4 @@ const styles = StyleSheet.create({
         fontSize: 15,
         paddingBottom: 15,
     },
-    editUserProfileButton: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderRadius: 10,
-    },
-    editProfileText: {
-        fontSize: 15,
-        paddingRight: 10,
-        paddingLeft: 5,
-        textDecorationLine: 'underline',
-    },
-    editProfileContainer: {
-        borderRadius: 10, 
-        borderWidth: 1, 
-        justifyContent: 'center',
-        alignItems: 'center',
-        textAlign: 'center',
-    }
 });

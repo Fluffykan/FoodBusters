@@ -22,7 +22,7 @@ export default function ShopCondensedInfo() {
         <Link href='/pages/workInProgress'>
             <View style={styles.flexDirecRow}>
                 <View style={styles.storeImageContainer}>
-                    <Image source={require('../../../../assets/images/plateAndCutlery.png')} style={styles.storeImage} />
+                    <Text>image placeholder</Text>
                 </View>
                 <View>
                     <View style={styles.flexRowContainer}>
@@ -32,7 +32,7 @@ export default function ShopCondensedInfo() {
                     <Text style={styles.informationText}>{storeAddress}</Text>
                     <View style={styles.flexRowContainer}>
                     <Text style={styles.informationText}>{storeRating}</Text>
-                    <Image source={require('../../../../assets/images/star.png')} style={{height: 13, width: 13}} />
+                    <Text>image placeholder</Text>
                     </View>
                     <Text style={styles.informationText}>{storeStatus}</Text>
                     <Text style={styles.informationText}>{storeClassification}</Text>

@@ -1,0 +1,23 @@
+import { View, StyleSheet, ScrollView } from 'react-native';
+import Navbar from '@/components/Navbar';
+import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
+import StallNamePlusButtons from './stallscreen/components/stallNamePlusButtons';
+
+export default function index() {
+    return (
+        <View style={styles.container}>
+            <TopButtonPlusHeader header='Foodbusters' />
+            <ScrollView>
+                <StallNamePlusButtons stallName='La Jiang Shan' />
+            </ScrollView>
+            <Navbar />
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        justifyContent: 'space-between'
+    }
+})
