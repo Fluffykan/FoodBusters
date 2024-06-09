@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 export default function ShopCondensedInfo() {
     // TODO: 
@@ -11,28 +12,22 @@ export default function ShopCondensedInfo() {
     const storeStatus = 'Open till 10pm';
     const storeClassification = 'Cafe, Coffee, Toast';
 
-    // TODO: 
-    // CREATE LOGIC TO REDIRECT TO STORE PAGE
-    const handleStoreClick = () => {
-        console.log('redirect to store page');
-    }
-
     return (
 
-        <Link href='/pages/workInProgress'>
-            <View style={styles.flexDirecRow}>
+        <Link href='/pages/stallscreen' style={{borderWidth: 1}}>
+            <View style={styles.container}>
                 <View style={styles.storeImageContainer}>
                     <Text>image placeholder</Text>
                 </View>
                 <View>
                     <View style={styles.flexRowContainer}>
-                    <Text style={styles.informationText}>{storeName}</Text>
-                    <Text style={styles.storeDistance}>{storeDist}</Text>
+                        <Text style={styles.informationText}>{storeName}</Text>
+                        <Text style={styles.storeDistance}>{storeDist}</Text>
                     </View>
                     <Text style={styles.informationText}>{storeAddress}</Text>
                     <View style={styles.flexRowContainer}>
-                    <Text style={styles.informationText}>{storeRating}</Text>
-                    <Text>image placeholder</Text>
+                        <Text style={styles.informationText}>{storeRating}</Text>
+                        <Icon name="staro" size={15} color="black" />
                     </View>
                     <Text style={styles.informationText}>{storeStatus}</Text>
                     <Text style={styles.informationText}>{storeClassification}</Text>
@@ -44,12 +39,11 @@ export default function ShopCondensedInfo() {
 }
 
 const styles = StyleSheet.create({
-    flexDirecRow: {
+    container: {
         flexDirection: "row",
         borderWidth: 1.5,
         borderRadius: 6,
-        width: "100%",
-        
+        width: "100%",        
     },
     shopButton: {
         flexDirection: 'row',
@@ -75,9 +69,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         color: 'white',
         alignContent: 'center',
-
-        paddingRight: 5,
-        paddingLeft: 5,
+        paddingHorizontal: 5,
     },
     flexRowContainer: {
         flexDirection: 'row',

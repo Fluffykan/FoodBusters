@@ -21,8 +21,7 @@ export default function CreateAccountPage() {
         console.log('creating acct')
         if (!passwordMismatch && !hasEmptyField) {
             updateEmailTaken(false);
-
-            axios.post('http://192.168.1.15:4200/', {username:username, email:email, password_hash:password})
+            axios.post('http://10.0.2.2:4200/createAccount', {username:username, email:email, password_hash:password})
                 .then(response => {
                     console.log(`Success! New Account: username=${username},email=${email},password=${password}`)
                     updateSuccessfulCreation(true);
@@ -32,8 +31,6 @@ export default function CreateAccountPage() {
                     updateEmailTaken(true);
                     console.log('Error: cannot create account', error);
                 });
-                
-            
         }
     }
     const passwordMismatch = !(password === confirmPassword);

@@ -15,7 +15,7 @@ import StallScreen from './pages/stallscreen';
 
 export default function index() {
     return (
-        <StallScreen />
+        <LoginPage />
 
 
     );

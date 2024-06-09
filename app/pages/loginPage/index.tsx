@@ -12,27 +12,20 @@ export default function LoginPage() {
     const [passwordError, updatePasswordError] = useState(true);
     const [attemptedLogin, updateAttemptedLogin] = useState(false);
 
-    interface APIresponse {
-        password_hash:string;
-    }
-    function extractHash(data: APIresponse[]):string {
-        return data.filter(item=> item.password_hash !== undefined)
-                    .map(item=> item.password_hash as string)[0];
-    }
-
     const handleLogin = () => {
         if (!hasEmptyField) {
             updateAttemptedLogin(true);
-            console.log('login attempt');
-            axios.get(`http://192.168.1.15:4200/loginAttempt/${email}`)
-                .then(response => {
-                    console.log(response.data);
-                    console.log(extractHash(response.data));
-                    console.log(`input password: ${password}, actual password: ${extractHash(response.data)} \npassword error = ${password != extractHash(response.data)}`);
-                    updatePasswordError(password != extractHash(response.data));
+            console.log(`login attempt: ${email} ${password}`);
+            axios.post(`http://10.0.2.2:4200/login`, {email:email, password_hash:password})
+                .then(response => { 
+                    const status = response.status;
+                    console.log("response status=" + status);
+                    updatePasswordError(status != 200);
+                    updateAttemptedLogin(true);
                 })
                 .catch(error => {
                     console.error(error);
+                    console.log(error.request);
                 })
         } else {
             console.log('some fields empty');

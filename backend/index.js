@@ -1,12 +1,59 @@
-const con = require('./connection.js');
-const express = require('express');
+import express from 'express';
+import cors from 'cors';
+import { createAccount, getUsers, resetPassword, verifyUser } from './connection.js';
 const app = express();
-const cors = require('cors');
 const PORT = 4200;
 
 // Middleware
-app.use(cors());
 app.use(express.json());
+app.use(cors());
+
+
+// Get endpoint
+app.post('/login', async (req, res) => {
+    try {
+        console.log(req.params)
+        const {email, password_hash} = req.body;
+        const [result] = await verifyUser(email, password_hash);
+        console.log(result);
+        if (result == undefined) {
+            res.status(401).send("unknown user");
+        } else {
+            res.status(200).send("successful login: " + result.username);
+        }
+    } catch (error) {
+        res.status(500).send("something broke", error)
+    }
+});
+
+app.post('/createAccount', async (req, res) => {
+    try {
+        const {username, email, password_hash} = req.body;
+        const result = await createAccount(username, email, password_hash);
+        console.log(result);
+        if (result == 1) {
+            res.status(201).send("account created");
+        } else {
+            res.status(500).send("error" + result);
+        }
+    } catch (error) {
+        res.status(500).send("unknown error");
+    }
+})
+
+app.post('/resetPassword', async (req, res) => {
+    try {
+        const {email, password_hash} = req.body;
+        const result = await resetPassword(email, password_hash);
+        if (result == 1) {
+            res.status(200).send("password reset");
+        } else {
+            res.status(500).send("error" + result);
+        }
+    } catch (error) {
+        res.status(500).send("unknown error");
+    }
+})
 
 // Error handler middleware
 app.use((err, req, res, next) => {
@@ -14,100 +61,6 @@ app.use((err, req, res, next) => {
     res.status(500).json({
         status: err.code
     })
-});
-
-// Get endpoint
-app.get('/:table_name', (req, res) => {
-    const table_name = req.params.table_name;
-    con.query("SELECT * FROM ??", [table_name], (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Database error');
-        } else {
-            res.send(result);
-        }
-    });
-});
-
-// Get endpoint
-app.get('/', (req, res) => {
-    con.query("SELECT * FROM users", (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Database error');
-        } else {
-            res.send(result);
-        }
-    });
-});
-
-// GET endpoint: LOGIN ATTEMPT 
-app.get('/loginAttempt/:email', (req, res) => {
-    const data = req.params.email;
-    con.query("select password_hash from users where email = ?", [data], (err, result) => {
-        if (err) {
-            res.send('login attempt error');
-        } else {
-            res.send(result);
-        }
-    })
-})
-
-
-// POST endpoint createAccount for new user
-app.post('/', (req, res) => {
-    const data = req.body;
-    // Assuming data validation is done before inserting into the database
-    con.query("INSERT INTO users SET ?", data, (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Database error');
-        } else {
-            res.send(result);
-        }
-    });
-});
-
-// PUT endpoint
-app.put('/updateCustomers/:id', (req, res) => {
-    const { name, address } = req.body;
-    const { id } = req.params;
-    // Assuming data validation is done before updating the database
-    con.query("UPDATE customers SET name = ?, address = ? WHERE id = ?", [name, address, id], (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Database error');
-        } else {
-            res.send(result);
-        }
-    });
-});
-
-// PUT endpoint: RESET PASSWORD
-app.put('/resetPassword/', (req, res) => {
-    const {password_hash, email} = req.body;
-    // Assuming data validation is done before updating the database
-    con.query("UPDATE users SET password_hash = ? WHERE email = ?", [password_hash, email], (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Database error');
-        } else {
-            res.send(result);
-        }
-    });
-});
-
-// DELETE endpoint
-app.delete('/:id', (req, res) => {
-    const studentId = req.params.id;
-    con.query("DELETE FROM customers WHERE id = ?", [studentId], (err, result) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Database error');
-        } else {
-            res.send(result);
-        }
-    });
 });
 
 app.listen(PORT, () => console.log('Server running on port ' + PORT));

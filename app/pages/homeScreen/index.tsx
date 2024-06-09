@@ -1,7 +1,7 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 import { useState } from "react";
 import Header from "@/components/Header";
-import ShopCondensedInfo from "@/app/components/ShopCondensedInfo";
+import ShopCondensedInfo from "@/app/pages/stallscreen/components/shopCondensedInfo";
 import PageBreakLine from "@/components/PageBreakLine";
 import InputBoxWithOptionalTitle from "@/components/InputBoxWithTitle";
 import Navbar from "@/components/Navbar";
@@ -33,7 +33,7 @@ export default function HomeScreen() {
                 <LinkIconButtonWithOptionalText iconName="search1" fn={handleSearch} />
                 <LinkIconButtonWithOptionalText iconName="filter" fn={handleFilter} />
             </View>
-            <ScrollView>                
+            <ScrollView style={styles.scrollView}>                
                 <ShopCondensedInfo />
                 <ShopCondensedInfo />
                 <ShopCondensedInfo />
@@ -64,5 +64,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 5,
+    }, 
+    scrollView: {
+        paddingHorizontal: 10, 
+        width: '100%',
+        alignContent: 'center',
+        borderWidth: 1,
     }
 })

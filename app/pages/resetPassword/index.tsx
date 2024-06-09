@@ -16,14 +16,15 @@ export default function ResetPassword() {
     const passwordMismatch = newPassword != confirmNewPassword;
     const hasEmptyFields = email == "" || newPassword == "" || confirmNewPassword == "";
 
+    // does using post / put matter in this case? i think they serve the same purpose
     const handleResetPassword = () => {
         console.log('resetting password');
         if (!(passwordMismatch || hasEmptyFields)) {
-            axios.put("http://192.168.1.15:4200/resetPassword/", {password_hash:newPassword, email:email})
+            axios.post("http://10.0.2.2:4200/resetPassword", {email:email, password_hash:newPassword})
                 .then(response => {
                     console.log('reset password success');
-                    console.log(response.data["affectedRows"])
-                    updateResetPasswordSuccess(response.data["affectedRows"] == 1);
+                    const status = response.status;
+                    updateResetPasswordSuccess(status == 200);
                     updateAttempt(true);
                 })
                 .catch(error => {
@@ -31,7 +32,7 @@ export default function ResetPassword() {
                     updateAttempt(true);
                 })
         } else {
-            console.log('password mismatch');
+            console.error('password mismatch');
         }
     }
 
