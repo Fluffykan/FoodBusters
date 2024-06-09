@@ -22,10 +22,11 @@ export default function NavIconButtonWithOptionalText({iconName, destination, re
     const defaultIconSize = iconSize ? iconSize : 30;
     const flexDirection = flexDir ? flexDir : "column";
     const borderWidth = border ? 1 : 0;
+    const textPaddingRight = flexDirection == "row" ? 10 : 0;
 
     const styles = StyleSheet.create({
         container: {
-            paddingHorizontal: 5,
+            paddingHorizontal: 10,
             alignItems: 'center',
             justifyContent: 'center',
             flexDirection: flexDirection,
@@ -35,7 +36,7 @@ export default function NavIconButtonWithOptionalText({iconName, destination, re
         text: {
             fontSize: defaultTextSize,
             textAlign: 'center',
-            paddingRight: 10
+            paddingRight: textPaddingRight,
         }
     })
     

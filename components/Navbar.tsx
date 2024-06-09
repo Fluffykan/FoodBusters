@@ -20,8 +20,7 @@ const styles = StyleSheet.create({
     },
     NavbarContainer: {
         flexDirection: "row",
-        paddingHorizontal: 20, 
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         width: "100%",
         backgroundColor: 'white',
     }
