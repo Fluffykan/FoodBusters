@@ -1,15 +1,31 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Link } from 'expo-router';
 
-export default function ShopCondensedInfo() {
+type ShopCondensedInfoProps = {
+    storeName: string;
+    storeAddress: string;
+    storeStatus: string;
+    storeClassification: string;
+    storeRating: string;
+    storeDist: string;
+};
+
+export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
+
+    const { storeName, storeDist, storeAddress, storeRating, storeStatus, storeClassification } = props;
     // TODO: 
     // CREATE LOGIC TO PULL INFORMATION FROM BACKEND
-    const storeName = 'Ah Huat Coffee';
-    const storeDist = '300m';
-    const storeAddress = '1 Novena Express';
-    const storeRating = '3.5';
-    const storeStatus = 'Open till 10pm';
-    const storeClassification = 'Cafe, Coffee, Toast';
+    //const storeName = 'Ah Huat Coffee';
+    //const storeDist = '300m';
+    //const storeAddress = '1 Novena Express';
+    //const storeRating = '3.5';
+    //const storeStatus = 'Open till 10pm';
+    //const storeClassification = 'Cafe, Coffee, Toast';
+
+    // Convert storeRating and storeDist to numbers
+    const rating = parseFloat(storeRating);
+    const distance = parseFloat(storeDist);
+
 
     // TODO: 
     // CREATE LOGIC TO REDIRECT TO STORE PAGE
@@ -17,6 +33,19 @@ export default function ShopCondensedInfo() {
         console.log('redirect to store page');
     }
 
+    //============================================
+    type ShopCondensedInfoProps = {
+        storeName: string;
+        storeDistance: string;
+        storeAddress: string;
+        storeRating: string;
+        storeStatus: string;
+        storeClassification: string;
+      };
+
+      
+
+    //===============================================
     return (
         <Link href='/pages/workInProgress'>
             <View style={styles.storeImageContainer}>

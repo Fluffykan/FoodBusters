@@ -29,3 +29,10 @@ export async function resetPassword(email, password) {
     const [result] = await pool.query("update users set password_hash = ? where email = ?", [password, email]);
     return result.affectedRows;
 }
+
+// cut-off
+
+export async function selectAll() {
+    const [result] = await pool.query("select * from restaurantstest1");
+    return result;
+}

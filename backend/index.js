@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, getUsers, resetPassword, verifyUser } from './connection.js';
+import { createAccount, getUsers, resetPassword, verifyUser, selectAll } from './connection.js';
+
 const app = express();
 const PORT = 4200;
 
@@ -55,6 +56,16 @@ app.post('/resetPassword', async (req, res) => {
     }
 })
 
+app.get('/restaurants', async (req, res) => {
+    try {
+        const result = await selectAll();
+        console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send("unknown error" + error);
+    }
+  })
+
 // Error handler middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
@@ -67,3 +78,4 @@ app.listen(PORT, () => console.log('Server running on port ' + PORT));
 
 // ROOT URL = 'http://192.168.1.15:4200/'
 // CHANGE IF SERVER # IS CHANGED
+

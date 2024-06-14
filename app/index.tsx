@@ -12,11 +12,12 @@ import LoginPage from './pages/loginPage';
 import ReviewsComponent from './pages/stallscreen/components/reviewsComponent';
 import StallNamePlusButtons from './pages/stallscreen/components/stallNamePlusButtons';
 import StallScreen from './pages/stallscreen';
+import TempHomeScreen from './pages/tempHomeScreen/temphomeScreen';
 
 export default function index() {
     return (
-        <LoginPage />
-
+        //<LoginPage />
+        <TempHomeScreen />
 
     );
 }
