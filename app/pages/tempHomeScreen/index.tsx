@@ -17,6 +17,7 @@ type Restaurant = {
   storeClassification: string;
   storeRating: string;
   storeDist: string;
+  averageRating: number | null; // Added this field. For some restaurants where there are no reviews added, there would be no average rating, hence the null value
 };
 
 
@@ -40,8 +41,9 @@ export default function TempHomeScreen() {
     const [loading, setLoading] = useState(true);
 
     const url = "http://192.168.1.72:4200/restaurants";
+    const fetchAverageRatingUrl = (id: number) => `http://192.168.1.72:4200/averageRating?restaurantID=${id}`;
 
-    const fetch = () => {
+    /*const fetch = () => {
       axios.get(url)
       .then(response => {
           update(response.data);
@@ -53,7 +55,36 @@ export default function TempHomeScreen() {
           console.error("oops", error);
           setLoading(false); // Set loading to false in case of error
       })
-    }
+    }*/
+
+      // What's the difference between these 2 codes for fetching data ?
+    const fetch = () => {
+    axios.get(url)
+      .then(response => {
+        const fetchedRestaurants = response.data;
+        const fetchRatingsPromises = fetchedRestaurants.map((restaurant: Restaurant) =>
+          axios.get(fetchAverageRatingUrl(restaurant.id)).then(res => ({
+            ...restaurant,
+            averageRating: res.data.averageRating
+          }))
+        );
+        Promise.all(fetchRatingsPromises)
+          .then(restaurantsWithRatings => {
+            update(restaurantsWithRatings);
+            setFilteredRestaurants(restaurantsWithRatings); // Initialize with all restaurants
+            setLoading(false); // Set loading to false after data is fetched
+            console.log(restaurantsWithRatings);
+          })
+          .catch(error => {
+            console.error("Error fetching average ratings", error);
+            setLoading(false); // Set loading to false in case of error
+          });
+      })
+      .catch(error => {
+        console.error("oops", error);
+        setLoading(false); // Set loading to false in case of error
+      });
+  };
   
     // Added this
     useEffect(() => {
@@ -114,17 +145,16 @@ export default function TempHomeScreen() {
                   filteredRestaurants.map(restaurant => (
                         <ShopCondensedInfo
                             key={restaurant.id} // Ensure unique key prop
+                            id={restaurant.id} // Pass the id to ShopCondensedInfo
                             storeName={restaurant.storeName}
                             storeDist={restaurant.storeDist.toString()}
                             storeAddress={restaurant.storeAddress}
-                            storeRating={restaurant.storeRating.toString()}
+                            storeRating={restaurant.averageRating !== null ? restaurant.averageRating.toFixed(1) : 'No Rating'} // Handle null value
                             storeStatus={restaurant.storeStatus}
                             storeClassification={restaurant.storeClassification}
                         />
                     ))
                 )}
-                
-                
                 
             </ScrollView>
             <Navbar />
@@ -150,8 +180,6 @@ export default function TempHomeScreen() {
                     />
                 ))}       
 */                
-
-
 
 // Previous code
 /*

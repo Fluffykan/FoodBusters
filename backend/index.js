@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, getUsers, resetPassword, verifyUser, selectAll } from './connection.js';
+import { createAccount, getUsers, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -65,6 +65,64 @@ app.get('/restaurants', async (req, res) => {
         res.status(500).send("unknown error" + error);
     }
   })
+
+// New endpoint for fetching all reviews
+app.get('/allreviews', async (req, res) => {
+    try {
+        const result = await selectAllReviews();
+        console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send("unknown error" + error);
+    }
+})
+
+// New endpoint for fetching reviews by restaurantID
+app.get('/reviews', async (req, res) => {
+    try {
+        const { restaurantID } = req.query;
+        console.log("Received restaurantID:", restaurantID);  // Log the received restaurantID
+
+        const result = await selectReviewsByRestaurantID(restaurantID);
+        console.log("Reviews found:", result);  // Log the result of the query
+        //console.log(result);
+        res.send(result);
+    } catch (error) {
+        console.error("Error occurred:", error);  // Log any errors
+        res.status(500).send("unknown error" + error);
+    }
+});
+
+// New endpoint for calculating the average rating made for the specific restaurant
+app.get('/averageRating', async (req, res) => {
+    const restaurantID = req.query.restaurantID;
+
+    try {
+        const averageRating = await calculateAverageRating(restaurantID);
+        res.json({ averageRating });
+    } catch (err) {
+        console.error("Error calculating average rating:", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// New endpoint for fetching the store image by restaurantID
+app.get('/storeImage', async (req, res) => {
+    try {
+        const { restaurantID } = req.query;
+        console.log("Received request for store image with restaurantID:", restaurantID); // Log the received restaurantID
+        const storeImage = await selectStoreImage(restaurantID);
+        if (storeImage) {
+            res.json({ storeImage });
+        } else {
+            res.status(404).send("Store image not found");
+        }
+    } catch (error) {
+        console.error("Error occurred:", error);
+        res.status(500).send("unknown error" + error);
+    }
+});
+
 
 // Error handler middleware
 app.use((err, req, res, next) => {

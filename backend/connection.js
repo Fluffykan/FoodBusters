@@ -1,5 +1,7 @@
 import mysql from 'mysql2';
 import dotenv from 'dotenv';
+import { Buffer } from 'buffer';
+
 dotenv.config();
 
 const pool = mysql.createPool({
@@ -35,4 +37,53 @@ export async function resetPassword(email, password) {
 export async function selectAll() {
     const [result] = await pool.query("select * from restaurantstest1");
     return result;
+}
+
+export async function selectAllReviews() {
+    const [result] = await pool.query("select * from reviewscomponent");
+    return result;
+}
+
+
+export async function selectReviewsByRestaurantID(restaurantID) {
+    const [result] = await pool.query("SELECT * FROM reviewscomponent WHERE restaurantID = ?", [restaurantID]);
+    return result;
+}
+
+
+export async function calculateAverageRating(restaurantID) {
+    const [result] = await pool.query("SELECT AVG(userRating) as averageRating FROM reviewscomponent WHERE restaurantID = ?", [restaurantID]);
+    return result[0].averageRating;
+}
+
+
+/*export async function selectStoreImage(restaurantID) {
+    const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
+    return result.length > 0 ? result[0].storeImage : null;
+}*/
+
+/*export async function selectStoreImage(restaurantID) {
+    try {
+        const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
+        return result.length > 0 ? result[0].storeImage : null;
+    } catch (error) {
+        console.error("Error selecting store image:", error);
+        throw error; // Rethrow the error to be caught by the calling function
+    }
+}*/
+
+export async function selectStoreImage(restaurantID) {
+    try {
+        console.log("Querying for store image with restaurantID:", restaurantID); // Log the restaurantID
+        const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
+        console.log("Query result:", result); // Log the query result
+        if (result.length > 0 && result[0].storeImage) {
+            const base64Image = Buffer.from(result[0].storeImage).toString('base64');
+            return `data:image/jpeg;base64,${base64Image}`;
+        }
+        return null;
+    } catch (error) {
+        console.error("Error selecting store image:", error);
+        throw error; // Rethrow the error to be caught by the calling function
+    }
 }

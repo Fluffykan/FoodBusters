@@ -1,5 +1,6 @@
 import { StyleSheet, View, Text, } from "react-native";
 import { useState } from "react";
+import Icon from 'react-native-vector-icons/AntDesign';
 
 type storeInfo = {
     operating: boolean;
@@ -19,7 +20,7 @@ export default function AddressPlusButtons({operating, rating, foodType, address
     // TO BE FETCHED USING API
     const storeOpen = operating;
     const storeAddress = address;
-    const storeRating = rating;
+    const storeRating = rating.toFixed(1); // Format the rating to one decimal place
     const storeFoodType = foodType;
 
 
@@ -27,7 +28,10 @@ export default function AddressPlusButtons({operating, rating, foodType, address
         <View style={styles.container}>
             <View style={styles.shopInfoContainer}>
                 <Text style={styles.shopInfo}>{storeAddress}</Text>
-                <Text style={styles.shopInfo}>{storeRating} / 5 Stars</Text>
+                <View style={styles.ratingAndStar}>
+                    <Text style={styles.shopInfo}>{storeRating} / 5.0 </Text>
+                    <Icon name="staro" size={20} color="black" />
+                </View>
                 <Text style={styles.shopInfo}>{storeFoodType}</Text>
             </View>
             <View>
@@ -44,6 +48,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         width: "100%"
+    },
+    ratingAndStar: {
+        flexDirection: "row",
     },
     shopInfo: {
         fontSize: 15,

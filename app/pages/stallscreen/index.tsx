@@ -1,5 +1,7 @@
 import { StyleSheet, View, Text, Image, Button, TouchableOpacity, Pressable, ScrollView, TextInput } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLocalSearchParams } from "expo-router";
+import axios from "axios";
 import TopButtonPlusHeader from "@/components/TopButtonPlusHeader";
 import StallNamePlusButtons from './components/stallNamePlusButtons';
 import AddressPlusButtons from './components/addressPlusButtons';
@@ -8,16 +10,115 @@ import PageBreakLine from "@/components/PageBreakLine";
 import Navbar from "@/components/Navbar";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
 
+type StallScreenProps = {
+    id: number;
+    storeName: string;
+    storeAddress: string;
+    storeStatus: string;
+    storeClassification: string;
+    storeRating: string;
+    storeDist: string;
+};
+
+type Review = {
+    reviewID: number;
+    restaurantID: number;
+    userID: string;
+    userReview: string;
+    userRating: string;
+};
+
+
 export default function StallScreen() {
+
+  // Added this line
+  const { id, storeName, storeAddress, storeStatus, storeClassification, storeRating, storeDist } = useLocalSearchParams();
 
   const [keywords, changeKeywords] = useState('');
 
+  // Added this
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [averageRating, setAverageRating] = useState<number>(0);
+  const [storeImage, setStoreImage] = useState<string>('');
+
+  // This database is based on Wei Bin's IP Address, could edit yours accordingly
+  // This URL filters reviews based on their restaurantID which serves as a foreign key in reviewscomponent
+  const url = `http://192.168.1.72:4200/reviews?restaurantID=${id}`;
+  const averageRatingUrl = `http://192.168.1.72:4200/averageRating?restaurantID=${id}`;
+
+  // This URL should display all reviews for every single restaurant
+  //const url = "http://192.168.1.72:4200/allreviews";
+
+  const fetchReviews = () => {
+    axios.get(url)
+      .then(response => {
+        const filtered = response.data.filter((review: Review) => review.restaurantID === parseInt(id as string, 10));
+        setReviews(filtered);
+        setFilteredReviews(filtered);
+        setLoading(false);
+        console.log(filtered);
+      })
+      .catch(error => {
+        console.error("Error fetching reviews", error);
+        setLoading(false);
+      });
+  };
+
+  const fetchAverageRating = () => {
+    axios.get(averageRatingUrl)
+      .then(response => {
+        setAverageRating(response.data.averageRating);
+      })
+      .catch(error => {
+        console.error("Error fetching average rating", error);
+      });
+  };
+
+  const fetchStoreImage = () => {
+    const storeImageUrl = `http://192.168.1.72:4200/storeImage?restaurantID=${id}`;
+    axios.get(storeImageUrl)
+        .then(response => {
+            setStoreImage(response.data.storeImage);
+        })
+        .catch(error => {
+            console.error("Error fetching store image", error);
+        });
+  };
+
+  useEffect(() => {
+    fetchReviews();
+    fetchAverageRating();
+    fetchStoreImage();
+  }, []);
+
+  const filterReviews = (keyword: string) => {
+    if (!keyword) {
+        setFilteredReviews(reviews); // If no keyword, show all reviews
+    } else {
+        const filtered = reviews.filter(review =>
+            review.userID.toLowerCase().startsWith(keyword.toLowerCase())
+        );
+        setFilteredReviews(filtered);
+    }
+};
+
+    // Handle text input changes
+    const handleKeywordChange = (text: string) => {
+        changeKeywords(text);
+        filterReviews(text);
+    };
+
+
+  //const { storeName, storeDistance, storeAddress, storeRating, storeStatus, storeClassification } = props;
+
   // TO BE FETCHED USING API
-  const stallName = "La Jiang Shan";
+  /*const stallName = "La Jiang Shan";
   const operating = true;
   const address = '123 tangy street';
   const rating = 5;
-  const foodType = 'hotpot'
+  const foodType = 'hotpot'*/
 
   const handleFilterReviews = (keywords:string) => {
     console.log(`filtering reviews with: ${keywords}`);
@@ -28,23 +129,31 @@ export default function StallScreen() {
             <TopButtonPlusHeader header='FoodBuster' destination="/pages/homeScreen" replaceScreen={false} />
 
             <ScrollView style={styles.container}>
-                        <Image style={{height:200, width:"100%"}}
-                            source={{ uri: 'https://singaporebeauty.com/wp-content/uploads/2021/10/la-jiang-shan-selegie-dhoby-ghaut-orchard-buffet.jpg' }} />
-                        <StallNamePlusButtons stallName={stallName} />
+            {storeImage ? (
+                    <Image style={{ height: 200, width: "100%" }} source={{ uri: storeImage }} />
+                ) : (
+                    <Image style={{ height: 200, width: "100%" }} source={{ uri: 'https://via.placeholder.com/200' }} />
+                )}
+                        <StallNamePlusButtons stallName={storeName as string || "Default Store Name"} />
                         <PageBreakLine style='solid' />
-                        <AddressPlusButtons operating={operating} address={address} rating={rating} foodType={foodType} />
+                        <AddressPlusButtons operating={(storeStatus as string) === "open" || false} address={storeAddress as string || "Default Address"} rating={averageRating} foodType={storeClassification as string || "Default Food Type"} />
                         <PageBreakLine style='solid' />
                         <View style={styles.searchBarContainer}>
-                            <TextInput placeholder="Search Reviews" onChangeText={changeKeywords} style={styles.textInput}></TextInput>
-                            <LinkIconButtonWithOptionalText iconName="search1" fn={() => handleFilterReviews(keywords)} />
+                            <TextInput placeholder="Search Reviews" onChangeText={handleKeywordChange} style={styles.textInput}></TextInput>
+                            <LinkIconButtonWithOptionalText iconName="search1" fn={() => filterReviews(keywords)} />
                         </View>
-                        <ReviewsComponent />
-                        <ReviewsComponent />
-                        <ReviewsComponent />
-                        <ReviewsComponent />
-                        <ReviewsComponent />
-                        <ReviewsComponent />
-                        <ReviewsComponent />
+                        {loading ? ( // Conditional rendering based on loading state
+                    <Text>Loading...</Text>
+                ) : (
+                    filteredReviews.map(review => (
+                        <ReviewsComponent
+                            key={review.reviewID} // Ensure unique key prop
+                            userID={review.userID}
+                            userReview={review.userReview}
+                            userRating={review.userRating}
+                        />
+                    ))
+                )}
 
                 
             </ScrollView>
@@ -54,6 +163,14 @@ export default function StallScreen() {
     );
 }
 
+/*
+<Image style={{height:200, width:"100%"}}
+                            source={{ uri: 'https://singaporebeauty.com/wp-content/uploads/2021/10/la-jiang-shan-selegie-dhoby-ghaut-orchard-buffet.jpg' }} />
+
+*/
+// Previous rating code
+// rating={parseInt(storeRating as string, 10) || 0} 
+// <LinkIconButtonWithOptionalText iconName="search1" fn={() => handleFilterReviews(keywords)} />
 const styles = StyleSheet.create({
     container: {
         flex: 1,

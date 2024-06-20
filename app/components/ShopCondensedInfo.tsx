@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import { Link } from 'expo-router';
 
 type ShopCondensedInfoProps = {
+    id: number;
     storeName: string;
     storeAddress: string;
     storeStatus: string;
@@ -12,7 +13,7 @@ type ShopCondensedInfoProps = {
 
 export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
 
-    const { storeName, storeDist, storeAddress, storeRating, storeStatus, storeClassification } = props;
+    const { id, storeName, storeDist, storeAddress, storeRating, storeStatus, storeClassification } = props;
     // TODO: 
     // CREATE LOGIC TO PULL INFORMATION FROM BACKEND
     //const storeName = 'Ah Huat Coffee';
@@ -25,6 +26,10 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
     // Convert storeRating and storeDist to numbers
     const rating = parseFloat(storeRating);
     const distance = parseFloat(storeDist);
+
+    // Create query string with parameters
+    const queryParams = `id=${id}&storeName=${storeName}&storeAddress=${storeAddress}&storeStatus=${storeStatus}&storeClassification=${storeClassification}&storeRating=${storeRating}&storeDist=${storeDist}`;
+
 
 
     // TODO: 
@@ -46,8 +51,10 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
       
 
     //===============================================
+    // Initially /pages/workInProgress
+
     return (
-        <Link href='/pages/workInProgress'>
+        <Link href={`/pages/stallscreen?${queryParams}`}>
             <View style={styles.storeImageContainer}>
             <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
             </View>
@@ -69,6 +76,49 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
 
     )
 }
+
+
+// Initial code
+
+
+/*
+<Link href={{
+            pathname: '/pages/stallscreen',
+            params: {
+                storeName,
+                storeDist,
+                storeAddress,
+                storeRating,
+                storeStatus,
+                storeClassification
+            }
+        }}>
+
+
+*/
+/*
+return (
+        <Link href='/pages/stallscreen'>
+            <View style={styles.storeImageContainer}>
+            <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
+            </View>
+            <View>
+                <View style={styles.flexRowContainer}>
+                <Text style={styles.informationText}>{storeName}</Text>
+                <Text style={styles.storeDistance}>{storeDist}</Text>
+                </View>
+                <Text style={styles.informationText}>{storeAddress}</Text>
+                <View style={styles.flexRowContainer}>
+                <Text style={styles.informationText}>{storeRating}</Text>
+                <Image source={require('../assets/star.png')} style={{height: 13, width: 13}} />
+                </View>
+                <Text style={styles.informationText}>{storeStatus}</Text>
+                <Text style={styles.informationText}>{storeClassification}</Text>
+
+            </View>
+        </Link>
+
+    )*/
 
 const styles = StyleSheet.create({
     shopButton: {
