@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, getUsers, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating } from './connection.js';
+import { createAccount, getUsers, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -107,7 +107,7 @@ app.get('/averageRating', async (req, res) => {
 });
 
 // New endpoint for fetching the store image by restaurantID
-app.get('/storeImage', async (req, res) => {
+/*app.get('/storeImage', async (req, res) => {
     try {
         const { restaurantID } = req.query;
         console.log("Received request for store image with restaurantID:", restaurantID); // Log the received restaurantID
@@ -121,7 +121,27 @@ app.get('/storeImage', async (req, res) => {
         console.error("Error occurred:", error);
         res.status(500).send("unknown error" + error);
     }
+});*/
+
+app.get('/storeImage', async (req, res) => {
+    try {
+        const { restaurantID } = req.query;
+        if (!restaurantID) {
+            return res.status(400).send("Bad Request: Missing restaurantID"); // Return 400 for bad request
+        }
+        console.log("Received request for store image with restaurantID:", restaurantID); // Log the received restaurantID
+        const storeImage = await selectStoreImage(restaurantID);
+        if (storeImage) {
+            res.json({ storeImage });
+        } else {
+            res.status(404).send("Store image not found");
+        }
+    } catch (error) {
+        console.error("Error occurred:", error);
+        res.status(500).send("Internal Server Error: " + error.message);
+    }
 });
+
 
 
 // Error handler middleware

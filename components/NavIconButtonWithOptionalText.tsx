@@ -40,12 +40,20 @@ export default function NavIconButtonWithOptionalText({iconName, destination, re
         }
     })
     
+    /*return (
+        <Link replace={replaceScreen} href={destination}>
+            <View style={styles.container}>
+                {text && <Text style={styles.text}>{text}</Text>}
+                <Icon name={iconName} size={defaultIconSize} color={defaultIconColor} />
+            </View>
+        </Link>
+    )*/
 
     // if else statements to ensure that for flex-direction = column, icon is always above text
     if (replaceScreen) {
         if (flexDirection == "row") {
             return (
-                <Link replace href={destination}>
+                <Link replace={replaceScreen} href={destination}>
                     <View style={styles.container}>
                         {text && <Text style={styles.text}>{text}</Text>}
                         <Icon name={iconName} size={defaultIconSize} color={defaultIconColor} />
@@ -54,7 +62,7 @@ export default function NavIconButtonWithOptionalText({iconName, destination, re
             )
         } else {
         return (
-            <Link replace href={destination}>
+            <Link replace={replaceScreen} href={destination}>
                 <View style={styles.container}>
                     <Icon name={iconName} size={defaultIconSize} color={defaultIconColor} />
                     {text && <Text style={styles.text}>{text}</Text>}

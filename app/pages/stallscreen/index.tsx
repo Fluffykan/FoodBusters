@@ -50,6 +50,7 @@ export default function StallScreen() {
 
   // This URL should display all reviews for every single restaurant
   //const url = "http://192.168.1.72:4200/allreviews";
+  const restaurantID = parseInt(id as string, 10);
 
   const fetchReviews = () => {
     axios.get(url)
@@ -76,16 +77,22 @@ export default function StallScreen() {
       });
   };
 
+
   const fetchStoreImage = () => {
     const storeImageUrl = `http://192.168.1.72:4200/storeImage?restaurantID=${id}`;
     axios.get(storeImageUrl)
         .then(response => {
-            setStoreImage(response.data.storeImage);
+            const imageData = response.data.storeImage;
+            if (imageData) {
+                setStoreImage(imageData);
+            } else {
+                console.error("No store image data found in response:", response.data);
+            }
         })
         .catch(error => {
-            console.error("Error fetching store image", error);
+            console.error("Error fetching store image:", error);
         });
-  };
+};
 
   useEffect(() => {
     fetchReviews();
@@ -134,7 +141,7 @@ export default function StallScreen() {
                 ) : (
                     <Image style={{ height: 200, width: "100%" }} source={{ uri: 'https://via.placeholder.com/200' }} />
                 )}
-                        <StallNamePlusButtons stallName={storeName as string || "Default Store Name"} />
+                        <StallNamePlusButtons stallName={storeName as string || "Default Store Name"} stallAddress={storeAddress as string} restaurantID={restaurantID} />
                         <PageBreakLine style='solid' />
                         <AddressPlusButtons operating={(storeStatus as string) === "open" || false} address={storeAddress as string || "Default Address"} rating={averageRating} foodType={storeClassification as string || "Default Food Type"} />
                         <PageBreakLine style='solid' />
@@ -154,8 +161,6 @@ export default function StallScreen() {
                         />
                     ))
                 )}
-
-                
             </ScrollView>
             <Navbar />
 
@@ -171,6 +176,11 @@ export default function StallScreen() {
 // Previous rating code
 // rating={parseInt(storeRating as string, 10) || 0} 
 // <LinkIconButtonWithOptionalText iconName="search1" fn={() => handleFilterReviews(keywords)} />
+
+// Else condition for image display
+// <Image style={{ height: 200, width: "100%" }} source={{ uri: 'https://via.placeholder.com/200' }} />
+// <Text>Sorry, there is no image uploaded. Perhaps you could be the first to upload one !</Text>
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,

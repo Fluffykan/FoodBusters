@@ -5,10 +5,12 @@ import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptio
 import NavIconButtonWithOptionalText from "@/components/NavIconButtonWithOptionalText";
 
 type StallNamePlusButtonsProps = {
+    restaurantID: number,
     stallName: string;
+    stallAddress: string;
 }
 
-export default function StallNamePlusButtons({stallName}: StallNamePlusButtonsProps) {
+export default function StallNamePlusButtons({stallName, stallAddress, restaurantID}: StallNamePlusButtonsProps) {
 
     const [visitWebsiteButtonIsPressed, setvisitWebsiteButtonIsPressed] = useState(false)
     const togglevisitWebsiteButton = () => {
@@ -16,14 +18,19 @@ export default function StallNamePlusButtons({stallName}: StallNamePlusButtonsPr
         console.log("Entering Stall Website")
     }
 
+    const reviewDestination = `/pages/writeReviewPage?stallName=${encodeURIComponent(stallName)}&stallAddress=${encodeURIComponent(stallAddress)}&restaurantID=${restaurantID}`;
+
     return (
         <View style={styles.container}>
             <Text style={styles.stallName}>{stallName}</Text>
             <LinkIconButtonWithOptionalText iconName="earth" text="Website" fn={togglevisitWebsiteButton}/>
-            <NavIconButtonWithOptionalText iconName="message1" text="Review" replaceScreen={false} destination='/pages/workInProgress' />
+            <NavIconButtonWithOptionalText iconName="message1" text="Review" replaceScreen={false} destination={reviewDestination} />
         </View>
     )
 }
+
+// Initial destination
+// destination='/pages/writeReviewPage'
 
 const styles = StyleSheet.create({
     container: {

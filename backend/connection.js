@@ -80,8 +80,10 @@ export async function selectStoreImage(restaurantID) {
         if (result.length > 0 && result[0].storeImage) {
             const base64Image = Buffer.from(result[0].storeImage).toString('base64');
             return `data:image/jpeg;base64,${base64Image}`;
+        } else {
+            console.warn(`No image found for restaurantID: ${restaurantID}`); // Log if no image is found
+            return null;
         }
-        return null;
     } catch (error) {
         console.error("Error selecting store image:", error);
         throw error; // Rethrow the error to be caught by the calling function
