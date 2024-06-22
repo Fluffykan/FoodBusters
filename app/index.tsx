@@ -16,8 +16,7 @@ import TempHomeScreen from './pages/tempHomeScreen';
 
 export default function index() {
     return (
-        //<LoginPage />
-        <TempHomeScreen />
+        <LoginPage />
 
     );
 }

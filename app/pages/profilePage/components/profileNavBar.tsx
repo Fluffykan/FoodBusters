@@ -1,4 +1,8 @@
+import axios from 'axios';
+import { useState } from 'react';
 import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 type profileNavBarProps = {
     setShowImages: (b:boolean) => void;
@@ -29,13 +33,13 @@ export default function ProfileNavBar({setShowImages, setShowReviews, setShowFav
     return (
         <View style={navBarStyles.navBar}>
             <TouchableOpacity style={navBarStyles.navBarButton} onPress={handleReviewClick}>
-                <Image source={require('@/app/assets/reviewsIcon.png')} alt='My Reviews' style={navBarStyles.navBarIcon} />
+                <Icon name='filetext1' size={25} />
             </TouchableOpacity>
             <TouchableOpacity style={navBarStyles.navBarButton} onPress={handleImagesClick}>
-                <Image source={require('@/app/assets/camera.png')} alt='My Images' style={navBarStyles.navBarIcon} />
+                <Icon name='picture' size={25} />
             </TouchableOpacity>
             <TouchableOpacity style={navBarStyles.navBarButton} onPress={handleFavoritesClick}>
-                <Image source={require('@/app/assets/like.png')} alt='Favorites' style={navBarStyles.navBarIcon} />
+                <Icon name='hearto' size={25} />
             </TouchableOpacity>
         </View>  
     );

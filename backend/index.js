@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, getUsers, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -20,12 +20,21 @@ app.post('/login', async (req, res) => {
         if (result == undefined) {
             res.status(401).send("unknown user");
         } else {
+            await saveUserCreds(result.username, result.email, result.password_hash)
             res.status(200).send("successful login: " + result.username);
         }
     } catch (error) {
         res.status(500).send("something broke", error)
     }
 });
+
+app.get('/getUserCreds', async (req, res) => {
+    try {
+        res.status(200).send(getUserCreds().split(','));
+    } catch (error) {
+        console.error(error);
+    }
+})
 
 app.post('/createAccount', async (req, res) => {
     try {
@@ -142,7 +151,36 @@ app.get('/storeImage', async (req, res) => {
     }
 });
 
+app.post('/uploadImg', async (req, res) => {
+    try {
+        const {uri} = req.body;
+        await uploadImage(uri);
+        res.send("done");
+    } catch (error) {
+        res.status(500).send("error uploading image: " + error);
+    }
+})
 
+app.get("/getImg/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        const result = await getImage(id);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.get("/getAllImgs/:username", async (req, res) => {
+    try {
+        const {username} = req.params;
+        const result = await getAllImages(username);
+        console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
 
 // Error handler middleware
 app.use((err, req, res, next) => {

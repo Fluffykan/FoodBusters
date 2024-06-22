@@ -1,6 +1,7 @@
 import mysql from 'mysql2';
 import dotenv from 'dotenv';
 import { Buffer } from 'buffer';
+import fs from 'fs-extra';
 
 dotenv.config();
 
@@ -15,6 +16,17 @@ export async function verifyUser(email, password) {
     console.log(email + " " + password);
     const [data] = await pool.query("select * from users where email = ? and password_hash = ?", [email, password]);
     return data;
+}
+
+export async function saveUserCreds(username, email, password) {
+    fs.writeFileSync("userCreds.txt", `${username},${email},${password}`, {
+        flag: "w"
+    });
+    console.log("written");
+}
+
+export function getUserCreds() {
+    return fs.readFileSync('./userCreds.txt', {encoding:'utf-8', flag:'r'});
 }
 
 export async function getUsers() {
@@ -88,4 +100,35 @@ export async function selectStoreImage(restaurantID) {
         console.error("Error selecting store image:", error);
         throw error; // Rethrow the error to be caught by the calling function
     }
+}
+
+export async function uploadImage(file) {
+    const data = readImageFile(file);
+    console.log(data);
+
+    function readImageFile (file) {
+        const bitmap = fs.readFileSync(file)
+        const buf = new Buffer.from(bitmap);
+        return buf;
+    }
+
+    pool.query(`insert into images (image) values (binary(:data))`, {data}, function(err, res) {
+        if (err) {
+            console.error(err);
+            throw err;
+        }
+    })
+}
+export async function getImage(id) {
+    const [result] = await pool.query(`select image from images where id = ${id}`);
+    const data = result[0].image;
+    console.log(data);
+    const buf = new Buffer.from(data, 'binary');
+    return buf;
+}
+export async function getAllImages(username) {
+    const [result] = await pool.query(`select i.id from images as i, users as u where u.email = ? and i.owner = u.id`, [username]);
+    const index = [];
+    result.forEach(x=>index.push(x.id));
+    return index;
 }

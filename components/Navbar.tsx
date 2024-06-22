@@ -8,7 +8,7 @@ export default function Navbar() {
         <View style={styles.NavbarContainer}>   
             <NavIconButtonWithOptionalText iconName='home' text='Home' replaceScreen={true} destination='/pages/tempHomeScreen'/>
             <NavIconButtonWithOptionalText iconName='wallet' text='Wallet' replaceScreen={true} destination='/pages/walletScreen'/>
-            <NavIconButtonWithOptionalText iconName='staro' text='FOTD' replaceScreen={true} destination='/pages/workInProgress'/>
+            <NavIconButtonWithOptionalText iconName='staro' text='FOTD' replaceScreen={true} destination='/pages/randomRec'/>
             <NavIconButtonWithOptionalText iconName='profile' text='Profile' replaceScreen={true} destination='/pages/profilePage'/>
         </View>
     )

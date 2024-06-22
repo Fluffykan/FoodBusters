@@ -13,7 +13,6 @@ export default function CreateAccountPage() {
     const [confirmPassword, updateConfirmPassword] = useState('');
     const [emailTaken, updateEmailTaken] = useState(false);
     const [successfulCreation, updateSuccessfulCreation] = useState(false);
-    const [goToLogin, updateGoToLogin] = useState(false);
 
     // TODO: 
     // CREATE LOGIC TO HANDLE ACCOUNT CREATION

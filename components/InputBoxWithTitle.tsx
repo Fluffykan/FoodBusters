@@ -4,15 +4,17 @@ type inputBoxWithOptionalTitle = {
     title?: string;
     placeholder: string;
     updaterFn: (a: string) => void;
+    fontSize?:number;
+    multiline?:boolean;
 }
 
-export default function InputBoxWithOptionalTitle({placeholder, updaterFn, title}:inputBoxWithOptionalTitle) {
-    
+export default function InputBoxWithOptionalTitle({placeholder, multiline, updaterFn, title,fontSize}:inputBoxWithOptionalTitle) {
+    const textSize = fontSize ? fontSize : 15;
 
     return (
         <View style={styles.textInputContainer}>
-            {title && <Text>{title}</Text> }
-            <TextInput style={styles.textInput} onChangeText={(s: string) => updaterFn(s)} placeholder={placeholder} />
+            {title && <Text style={{fontSize:textSize}}>{title}</Text> }
+            <TextInput style={styles.textInput} onChangeText={(s: string) => updaterFn(s)} placeholder={placeholder} multiline={multiline} />
         </View>
     )
 }

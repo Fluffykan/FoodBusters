@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, ScrollView, TextInput } from "react-native";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Icon from 'react-native-vector-icons/AntDesign';
 import Slider from '@react-native-community/slider'; //npm install @react-native-community/slider <= Make sure to run this first

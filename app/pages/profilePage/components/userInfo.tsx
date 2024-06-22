@@ -1,6 +1,6 @@
 import { View, Image, Text, StyleSheet } from 'react-native';
 import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
-
+import Icon from 'react-native-vector-icons/AntDesign';
 type userInfoProps = {
     username:string;
     email: string;
@@ -12,7 +12,7 @@ export default function UserInfo({username, email}:userInfoProps) {
     return (
         <View style={styles.userPictureAndInfo}>
             <View style={styles.userProfilePictureContainer}>
-                <Image source={require('@/app/assets/profilePicturePlaceholder.png')} alt='profile picture' style={styles.userProfilePicture} />
+                <Icon name='user' size={20} />
             </View>
             <View>
                 <Text style={styles.usernameText}>{username}</Text>
