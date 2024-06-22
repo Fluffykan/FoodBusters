@@ -6,7 +6,7 @@ export default function Navbar() {
     // All buttons set to replaceScreen = true, i.e. no navigating back
     return (
         <View style={styles.NavbarContainer}>   
-            <NavIconButtonWithOptionalText iconName='home' text='Home' replaceScreen={true} destination='/pages/homeScreen'/>
+            <NavIconButtonWithOptionalText iconName='home' text='Home' replaceScreen={true} destination='/pages/tempHomeScreen'/>
             <NavIconButtonWithOptionalText iconName='wallet' text='Wallet' replaceScreen={true} destination='/pages/walletScreen'/>
             <NavIconButtonWithOptionalText iconName='staro' text='FOTD' replaceScreen={true} destination='/pages/workInProgress'/>
             <NavIconButtonWithOptionalText iconName='profile' text='Profile' replaceScreen={true} destination='/pages/profilePage'/>
@@ -14,6 +14,7 @@ export default function Navbar() {
     )
 }
 
+//destination='/pages/homeScreen'
 const styles = StyleSheet.create({
     NavbarText: {
         fontSize: 18,

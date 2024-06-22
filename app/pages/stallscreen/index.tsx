@@ -40,7 +40,7 @@ export default function StallScreen() {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
-  const [averageRating, setAverageRating] = useState<number>(0);
+  const [averageRating, setAverageRating] = useState<number | null>(null);
   const [storeImage, setStoreImage] = useState<string>('');
 
   // This database is based on Wei Bin's IP Address, could edit yours accordingly
@@ -143,7 +143,7 @@ export default function StallScreen() {
                 )}
                         <StallNamePlusButtons stallName={storeName as string || "Default Store Name"} stallAddress={storeAddress as string} restaurantID={restaurantID} />
                         <PageBreakLine style='solid' />
-                        <AddressPlusButtons operating={(storeStatus as string) === "open" || false} address={storeAddress as string || "Default Address"} rating={averageRating} foodType={storeClassification as string || "Default Food Type"} />
+                        <AddressPlusButtons operating={(storeStatus as string) === "open" || false} address={storeAddress as string || "Default Address"} rating={averageRating !== null ? averageRating : NaN} foodType={storeClassification as string || "Default Food Type"} />
                         <PageBreakLine style='solid' />
                         <View style={styles.searchBarContainer}>
                             <TextInput placeholder="Search Reviews" onChangeText={handleKeywordChange} style={styles.textInput}></TextInput>

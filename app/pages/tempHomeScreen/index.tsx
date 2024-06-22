@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView, FlatList, Text } from "react-native";
+import { StyleSheet, View, ScrollView, FlatList, Text, Modal } from "react-native";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import ShopCondensedInfo from "@/app/components/ShopCondensedInfo";
@@ -7,6 +7,7 @@ import InputBoxWithOptionalTitle from "@/components/InputBoxWithTitle";
 import Navbar from "@/components/Navbar";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
 import Button from "@/components/Button";
+import FilterModal from "@/components/filterModal";
 import axios from "axios";
 
 type Restaurant = {
@@ -33,31 +34,21 @@ export default function TempHomeScreen() {
         console.log(`searching for ${keywords}`);
     }
 
-    const handleFilter = () => {
+    /*const handleFilter = () => {
         console.log('open filter dropdown');
-    }
+    }*/
+
+    const handleFilter = () => {
+      setFilterModalVisible(true);
+    };
 
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [filterModalVisible, setFilterModalVisible] = useState(false);
 
     const url = "http://192.168.1.72:4200/restaurants";
     const fetchAverageRatingUrl = (id: number) => `http://192.168.1.72:4200/averageRating?restaurantID=${id}`;
 
-    /*const fetch = () => {
-      axios.get(url)
-      .then(response => {
-          update(response.data);
-          setFilteredRestaurants(response.data); // Initialize with all restaurants
-          setLoading(false); // Set loading to false after data is fetched
-          console.log(response.data);
-      })
-      .catch(error => {
-          console.error("oops", error);
-          setLoading(false); // Set loading to false in case of error
-      })
-    }*/
-
-      // What's the difference between these 2 codes for fetching data ?
     const fetch = () => {
     axios.get(url)
       .then(response => {
@@ -109,6 +100,30 @@ export default function TempHomeScreen() {
       filterRestaurants(text);
     }
 
+    const handleApplyFilters = (filters: any) => {
+      const { distance, storeName, storeClassification, rating } = filters;
+      let filtered = restaurants;
+  
+      if (distance) {
+        //filtered = filtered.filter(restaurant => restaurant.storeDist.toLowerCase().includes(distance.toLowerCase()));
+        filtered = filtered.filter(restaurant => restaurant.storeDist <= distance);
+      }
+      if (storeName) {
+        //filtered = filtered.filter(restaurant => restaurant.storeName.toLowerCase().includes(storeName.toLowerCase()));
+        filtered = filtered.filter(restaurant => restaurant.storeName.toLowerCase().startsWith(storeName.toLowerCase()));
+      }
+      if (storeClassification) {
+        //filtered = filtered.filter(restaurant => restaurant.storeClassification.toLowerCase().includes(storeClassification.toLowerCase()));
+        filtered = filtered.filter(restaurant => restaurant.storeClassification.toLowerCase().startsWith(storeClassification.toLowerCase()));
+      }
+      if (rating) {
+        //filtered = filtered.filter(restaurant => restaurant.averageRating && restaurant.averageRating >= parseFloat(rating));
+        filtered = filtered.filter(restaurant => restaurant.averageRating && restaurant.averageRating >= rating);
+      }
+  
+      setFilteredRestaurants(filtered);
+    }
+
     return (
 
       // To check if my app is actually connected to the server
@@ -119,11 +134,6 @@ export default function TempHomeScreen() {
           <Text>help</Text>
       </View>*/
 
-            
-      // For some reason after removing the commenting feature for the top part, and commenting it again. The database information
-      // Could be displayed, but with an error recorded in the console => 
-      // Each child in the list should have a unique "key" prop
-      // Resolved => Missing incrementing primary key in database
     <View style={styles.container}>
             
         <Header header='FoodBuster' />
@@ -131,10 +141,11 @@ export default function TempHomeScreen() {
 
             <View style={styles.searchBar}>
                 <View style={{width: '80%'}}>
-                <InputBoxWithOptionalTitle updaterFn={handleKeywordChange} placeholder='Search' />
+                <InputBoxWithOptionalTitle updaterFn={handleKeywordChange} placeholder='Search By Store Name' />
                 </View>
                 <LinkIconButtonWithOptionalText iconName="search1" fn={() => filterRestaurants(keywords)} />
-                <LinkIconButtonWithOptionalText iconName="filter" fn={handleFilter} />
+                
+                <LinkIconButtonWithOptionalText iconName="filter" fn={() => setFilterModalVisible(true)} />
             </View>
             
             
@@ -158,70 +169,39 @@ export default function TempHomeScreen() {
                 
             </ScrollView>
             <Navbar />
+
+            {/* Filter Modal */}
+            <FilterModal
+              visible={filterModalVisible}
+              onClose={() => setFilterModalVisible(false)}
+              onApply={handleApplyFilters}
+            />
+
         </View>
 
     )
 
 }
 
-// Changed restaurants.map() to
-
 /*
-
-{restaurants.map(restaurant => (
-                    <ShopCondensedInfo
-                        key={restaurant.id}
-                        storeName={restaurant.storeName}
-                        storeDist={restaurant.storeDist.toString()}
-                        storeAddress={restaurant.storeAddress}
-                        storeRating={restaurant.storeRating.toString()}
-                        storeStatus={restaurant.storeStatus}
-                        storeClassification={restaurant.storeClassification}
-                    />
-                ))}       
-*/                
-
-// Previous code
-/*
-<View style={styles.container}>
-            
-        <Header header='FoodBuster' />
-            <PageBreakLine style="solid" />
-
-            <View style={styles.searchBar}>
-                <View style={{width: '80%'}}>
-                <InputBoxWithOptionalTitle updaterFn={updateKeywords} placeholder='Search' />
+<Modal
+                transparent={true}
+                visible={filterModalVisible}
+                animationType="slide"
+                onRequestClose={() => setFilterModalVisible(false)}
+              >
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <Text style={styles.modalTitle}>Filter Options</Text>
+                    {}
+                    <Button text="Close" border='rounded' fn={() => setFilterModalVisible(false)} />
+                  </View>
                 </View>
-                <LinkIconButtonWithOptionalText iconName="search1" fn={handleSearch} />
-                <LinkIconButtonWithOptionalText iconName="filter" fn={handleFilter} />
-            </View>
-            
-            
-            <ScrollView>
-                {loading ? ( // Conditional rendering based on loading state
-                    <Text>Loading...</Text>
-                ) : (
-                  filteredRestaurants.map(restaurant => (
-                        <ShopCondensedInfo
-                            key={restaurant.id} // Ensure unique key prop
-                            storeName={restaurant.storeName}
-                            storeDist={restaurant.storeDist.toString()}
-                            storeAddress={restaurant.storeAddress}
-                            storeRating={restaurant.storeRating.toString()}
-                            storeStatus={restaurant.storeStatus}
-                            storeClassification={restaurant.storeClassification}
-                        />
-                    ))
-                )}
-                
-                
-                
-            </ScrollView>
-            <Navbar />
-        </View>
+            </Modal>
 */
 
-
+// Previously
+// <LinkIconButtonWithOptionalText iconName="filter" fn={handleFilter} />
 
 const styles1 = StyleSheet.create({
     container: {
@@ -256,5 +236,22 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 5,
-    }
+    },
+    modalContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalContent: {
+      width: '80%',
+      padding: 20,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      alignItems: 'center',
+    },
+    modalTitle: {
+      fontSize: 20,
+      marginBottom: 20,
+    },
 })
