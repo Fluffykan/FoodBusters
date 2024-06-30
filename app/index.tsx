@@ -13,11 +13,27 @@ import ReviewsComponent from './pages/stallscreen/components/reviewsComponent';
 import StallNamePlusButtons from './pages/stallscreen/components/stallNamePlusButtons';
 import StallScreen from './pages/stallscreen';
 import TempHomeScreen from './pages/tempHomeScreen';
+import Upload from './pages/writeReviewPage/components/imagePicker';
+import WriteReviewPage from './pages/writeReviewPage';
+import RandomRec from './pages/randomRec';
+import ShopCondensedInfo from './components/ShopCondensedInfo';
 
 export default function index() {
+    // return (
+    //     <View>
+    //         <ShopCondensedInfo 
+    //             storeName='laskve'
+    //             storeAddress=';akeovn'
+    //             id={23}
+    //             storeStatus='open'
+    //             storeClassification='aowienv'
+    //             storeRating='oiawenv'
+    //             storeDist='iownvee'
+    //         />
+    //     </View>
+    // );
     return (
-        <LoginPage />
-
-    );
+        <RandomRec/>
+    )
 }
 

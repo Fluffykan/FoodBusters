@@ -12,6 +12,27 @@ const pool = mysql.createPool({
     database: process.env.DB_NAME
 }).promise();
 
+const imgPool = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PW,
+    database: process.env.DB_NAME,
+    
+    queryFormat: function (query, values) {
+        if (!values) return query;
+        return query.replace(/\:(\w+)/g,
+            function (txt, key) {
+            if (values.hasOwnProperty(key)) {
+                return this.escape(values[key]);
+    
+            }
+            return txt;
+            }.bind(this)
+        );
+    },
+}).promise();
+
+
 export async function verifyUser(email, password) {
     console.log(email + " " + password);
     const [data] = await pool.query("select * from users where email = ? and password_hash = ?", [email, password]);
@@ -102,33 +123,51 @@ export async function selectStoreImage(restaurantID) {
     }
 }
 
-export async function uploadImage(file) {
-    const data = readImageFile(file);
-    console.log(data);
+export async function uploadImage(file, owner) {
+    // const data = readImageFile(file);
+    // console.log("hi");
 
-    function readImageFile (file) {
-        const bitmap = fs.readFileSync(file)
-        const buf = new Buffer.from(bitmap);
-        return buf;
-    }
+    // function readImageFile (file) {
+    //     const bitmap = fs.readFileSync(file)
+    //     const buf = new Buffer.from(bitmap);
+    //     return buf;
+    // }
 
-    pool.query(`insert into images (image) values (binary(:data))`, {data}, function(err, res) {
-        if (err) {
-            console.error(err);
-            throw err;
-        }
-    })
+    const [result] = await imgPool.query(`insert into images (image, owner) values (binary(:file), :owner)`, {file, owner});
+    console.log(result);
+    return result;
 }
 export async function getImage(id) {
-    const [result] = await pool.query(`select image from images where id = ${id}`);
+    const [result] = await pool.query(`select image from images where id = ?`, [id]);
     const data = result[0].image;
     console.log(data);
     const buf = new Buffer.from(data, 'binary');
     return buf;
 }
-export async function getAllImages(username) {
-    const [result] = await pool.query(`select i.id from images as i, users as u where u.email = ? and i.owner = u.id`, [username]);
+export async function getAllImages(email) {
+    const [result] = await pool.query(`select i.id from images as i, users as u where u.email = ? and i.owner = u.email`, [email]);
     const index = [];
     result.forEach(x=>index.push(x.id));
     return index;
+}
+
+export async function getUserReviews(email) {
+    const [result] = await pool.query(`select u.id, rev.userReview, res.storeName, rev.userRating
+                                        from reviews as rev, restaurants as res, users as u
+                                        where u.email = ${email} and u.id = rev.userID and rev.restaurantID = res.id`, [email]);
+    return result;
+}
+
+export async function getRandomStore() {
+    const [result] = await pool.query("select count(*) from reviews");
+    console.log("count = " + result[0]["count(*)"]);
+    const rec = Math.floor(Math.random() * (result[0]["count(*)"]) + 1);
+    console.log("rec index = " + rec);
+    const [target] = await pool.query(`select storeName from restaurants where id = ${rec}`);
+    console.log(target);
+    const storeName = target[0].storeName;
+    console.log("storename " + storeName);
+    const [all] = await pool.query(`select * from restaurants where storeName = ?`, [storeName]);
+    console.log(all);
+    return all;
 }

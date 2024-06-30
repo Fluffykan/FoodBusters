@@ -4,6 +4,8 @@ import { useLocalSearchParams } from "expo-router";
 import Icon from 'react-native-vector-icons/AntDesign';
 import Slider from '@react-native-community/slider'; //npm install @react-native-community/slider <= Make sure to run this first
 import Button from "@/components/Button";
+import ImagePickerButton from "./components/imagePicker";
+import axios from "axios";
 
 
 export default function WriteReviewPage() {
@@ -13,20 +15,37 @@ export default function WriteReviewPage() {
     
     const { stallName, stallAddress } = useLocalSearchParams();
     const [rating, setRating] = useState(0);
+    const [image, setImage] = useState('');
 
     const formatRating = (value: number) => {
         return `${value.toFixed(1)} / 5.0`;
     };
 
+    const uploadImg = async () => {
+        try {
+        console.log(image);
+        const ownerInfo = await axios.get("http://10.0.2.2:4200/getUserCreds");
+        const ownerEmail = ownerInfo.data[1];
+        // const data = readImageFile(image);
 
-    const shareYourReview = "Share Your Review";
+        // function readImageFile (file:string) {
+        //     const bitmap = fs.readFileSync(file)
+        //     const buf = new Buffer.from(bitmap);
+        //     return buf;
+        // }
+        const response = await axios.post("http://10.0.2.2:4200/uploadImg", {uri:image, owner:ownerEmail})
+        console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     const shareYourReviewFunc = () => {
         console.log("Sharing Your Photos...");
     }
     
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.storeInfo}>
                 <Text style={styles.storeName}>{stallName}</Text>
                 <Text style={styles.storeAddress}>{stallAddress}</Text>
@@ -66,18 +85,20 @@ export default function WriteReviewPage() {
                     </ScrollView>
                 </View>
             </View>
-            <View style={styles.buttonContainer}>
+            <ImagePickerButton imageUri={image} setImageUri={setImage} />
+
+            <View style={styles.buttonContainer}>                
                 <Button
-                text={shareYourReview}
-                textColor={'Brown'}
-                bgColor={'Grey'}
+                text="Share Your Review"
+                fontSize={20}
+                bgColor={'green'}
                 border={"rounded"}
                 underline={false}
                 fn={shareYourReviewFunc}
                 ></Button>
             </View>
             
-        </View>
+        </ScrollView>
     )
 }
 
@@ -86,7 +107,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        justifyContent: 'space-between', 
     },
     storeInfo: {
         marginLeft: '25%',

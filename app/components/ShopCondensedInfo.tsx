@@ -54,7 +54,7 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
     // Initially /pages/workInProgress
 
     return (
-        <Link href={`/pages/stallscreen?${queryParams}`}>
+        <Link href={`/pages/stallscreen?${queryParams}`} style={styles.overallContainer}>
             <View style={styles.storeImageContainer}>
             <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
             </View>
@@ -70,7 +70,6 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
                 </View>
                 <Text style={styles.informationText}>{storeStatus}</Text>
                 <Text style={styles.informationText}>{storeClassification}</Text>
-
             </View>
         </Link>
 
@@ -134,7 +133,6 @@ const styles = StyleSheet.create({
         height: '100%',
         borderWidth: 1,
         backgroundColor: 'black',
-
     },
     informationText: {
         paddingLeft: 10,
@@ -152,5 +150,12 @@ const styles = StyleSheet.create({
     flexRowContainer: {
         flexDirection: 'row',
         alignItems: 'center'
-    }
+    }, 
+    overallContainer: {
+        borderWidth: 1,
+        borderRadius: 10,
+        padding: 5,
+        flexDirection: 'row',
+        width: '100%'
+    },
 })

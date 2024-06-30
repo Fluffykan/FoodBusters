@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar';
 import axios from 'axios';
 import ProfileNavBar from './components/profileNavBar';
 import Button from '@/components/Button';
+import ReviewsListView from './components/reviewsListView';
 
 export default function ProfilePage() {
     // TODO: 
@@ -58,7 +59,7 @@ export default function ProfilePage() {
             <UserInfo username={username} email={email} />
             <ProfileNavBar setShowFavorites={setShowFavorites} setShowImages={setShowImages} setShowReviews={setShowReviews} />
             <ScrollView>
-                {showReviews && <Text>reviews</Text>}
+                {showReviews && ReviewsListView(email)   }
                 {showFavorites && <ShopCondensedInfo/>}
                 {showImages && <ImageView email={email} />}
             </ScrollView>

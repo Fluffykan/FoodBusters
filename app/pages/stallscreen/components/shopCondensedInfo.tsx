@@ -2,8 +2,7 @@ import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
 import { Link } from 'expo-router';
 import Icon from 'react-native-vector-icons/AntDesign';
 
-export default function ShopCondensedInfo() {
-    // TODO: 
+export default function ShopCondensedInfoOld() {
     // CREATE LOGIC TO PULL INFORMATION FROM BACKEND
     const storeName = 'Ah Huat Coffee';
     const storeDist = '300m';

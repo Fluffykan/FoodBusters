@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -153,8 +153,8 @@ app.get('/storeImage', async (req, res) => {
 
 app.post('/uploadImg', async (req, res) => {
     try {
-        const {uri} = req.body;
-        await uploadImage(uri);
+        const {uri, owner} = req.body;
+        await uploadImage(uri, owner);
         res.send("done");
     } catch (error) {
         res.status(500).send("error uploading image: " + error);
@@ -167,20 +167,40 @@ app.get("/getImg/:id", async (req, res) => {
         const result = await getImage(id);
         res.send(result);
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 })
 
-app.get("/getAllImgs/:username", async (req, res) => {
+app.get("/getAllImgs/:email", async (req, res) => {
     try {
-        const {username} = req.params;
-        const result = await getAllImages(username);
+        const {email} = req.params;
+        const result = await getAllImages(email);
         console.log(result);
         res.send(result);
     } catch (error) {
         res.status(500).send(error);
     }
 })
+
+app.get("/getRandomStore", async (req, res) => {
+    try {
+        const result = await getRandomStore();
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.get("/getUserReviews/:email", async (req, res) => {
+    try {
+        const {email} = req.params;
+        const result = await getUserReviews(email);
+        console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}) 
 
 // Error handler middleware
 app.use((err, req, res, next) => {
