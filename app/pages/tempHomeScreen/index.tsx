@@ -46,8 +46,8 @@ export default function TempHomeScreen() {
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
-    const url = "http://192.168.1.72:4200/restaurants";
-    const fetchAverageRatingUrl = (id: number) => `http://192.168.1.72:4200/averageRating?restaurantID=${id}`;
+    const url = "http://192.168.1.71:4200/restaurants";
+    const fetchAverageRatingUrl = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
 
     const fetch = () => {
     axios.get(url)
@@ -113,8 +113,8 @@ export default function TempHomeScreen() {
         filtered = filtered.filter(restaurant => restaurant.storeName.toLowerCase().startsWith(storeName.toLowerCase()));
       }
       if (storeClassification) {
-        //filtered = filtered.filter(restaurant => restaurant.storeClassification.toLowerCase().includes(storeClassification.toLowerCase()));
-        filtered = filtered.filter(restaurant => restaurant.storeClassification.toLowerCase().startsWith(storeClassification.toLowerCase()));
+        filtered = filtered.filter(restaurant => restaurant.storeClassification.toLowerCase().includes(storeClassification.toLowerCase()));
+        //filtered = filtered.filter(restaurant => restaurant.storeClassification.toLowerCase().startsWith(storeClassification.toLowerCase()));
       }
       if (rating) {
         //filtered = filtered.filter(restaurant => restaurant.averageRating && restaurant.averageRating >= parseFloat(rating));
