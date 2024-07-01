@@ -5,29 +5,18 @@ import Icon from 'react-native-vector-icons/AntDesign';
 
 
 type profileNavBarProps = {
-    setShowImages: (b:boolean) => void;
-    setShowFavorites: (b:boolean) => void;
-    setShowReviews: (b:boolean) => void;
+    toggleScreen: (x: number) => void;
 }
 
-export default function ProfileNavBar({setShowImages, setShowReviews, setShowFavorites}: profileNavBarProps) {
+export default function ProfileNavBar({toggleScreen}: profileNavBarProps) {
     const handleReviewClick = () => {
-        setShowReviews(true);
-        setShowImages(false);
-        setShowFavorites(false);
-        console.log('displaying Reviews')
+        toggleScreen(0);
     }
     const handleImagesClick = () => {
-        setShowReviews(false);
-        setShowImages(true);
-        setShowFavorites(false);
-        console.log('displaying Images')
+        toggleScreen(1);
     }
     const handleFavoritesClick = () => {
-        setShowReviews(false);
-        setShowImages(false);
-        setShowFavorites(true);
-        console.log('displaying Favorites')
+        toggleScreen(2);
     }
     
     return (

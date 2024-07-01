@@ -5,7 +5,8 @@ import { useEffect, useState } from 'react';
 import DropDownSelector from '@/components/DropdownSelector';
 import axios, { AxiosResponse } from 'axios';
 import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
-import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
+import ShopCondensedInfo from '../stallscreen/components/ShopCondensedInfo';
+import Button from '@/components/Button';
 
 export default function RandomRec() {
     const [loading, setLoading] = useState(false);
@@ -22,17 +23,21 @@ export default function RandomRec() {
         averageRating: number | null; // Added this field. For some restaurants where there are no reviews added, there would be no average rating, hence the null value
       };
 
+      const queryStore = () => {
+        axios.get("http://10.0.2.2:4200/getRandomStore")
+        .then(response => {
+            console.log(response.data);
+            setRec(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+      }
 
     useEffect(() => {
-        console.log("reload")
-        axios.get("http://10.0.2.2:4200/getRandomStore")
-                .then(response => {
-                    console.log(response.data);
-                    setRec(response.data);
-                })
-                .catch(error => {
-                    console.error(error);
-                });
+        console.log("reload");
+        queryStore();
+        
     }, []);
 
     if (loading) {
@@ -44,7 +49,7 @@ export default function RandomRec() {
     }
     return (
         <View style={styles.container}>
-            <View style={{flex: 1}}>
+            <View>
                 {/* this shows that there's an error, but actually theres no problem, idk how to ignore the redline */
                 rec.map(restaurant => 
                     <ShopCondensedInfo
@@ -58,6 +63,17 @@ export default function RandomRec() {
                         storeClassification={restaurant.storeClassification}
                     />
                 )}
+            </View>
+            <View>
+            <Button 
+                text='Seen this store before? Get another recommendation' 
+                textColor='black' 
+                border = 'none'
+                underline = {true}
+                bgColor='transparent' 
+                fn={queryStore} 
+            />
+
             </View>
             <Navbar />
         </View>

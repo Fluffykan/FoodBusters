@@ -6,13 +6,14 @@ type Button = {
     textColor?: string;
     bgColor?: string;
     underline?: boolean;
-    border: 'rounded' | 'square';
+    border?: 'rounded' | 'square' | 'none';
     fn: () => void;
 
 }
 
 export default function Button({text, textColor, fontSize, bgColor, border, underline, fn}:Button) {
     const borderRadius = border == 'rounded' ? 10 : 0;
+    const borderWidth = border == 'none' ? 0 : 1;
     const decoration = underline ? 'underline' : 'none';
     const color = textColor ? textColor : 'white';
     const backgroundColor = bgColor ? bgColor : 'blue';
@@ -20,11 +21,11 @@ export default function Button({text, textColor, fontSize, bgColor, border, unde
     const styles = StyleSheet.create({
         text: {
             backgroundColor: backgroundColor,
-            borderWidth: 1, 
+            borderWidth: borderWidth, 
             borderRadius: borderRadius,
             textAlign: 'center',
             color: color,
-            textDecorationColor: decoration,
+            textDecorationLine: decoration,
             paddingHorizontal: 10, 
             fontSize: size,
         }
