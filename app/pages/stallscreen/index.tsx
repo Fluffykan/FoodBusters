@@ -45,8 +45,8 @@ export default function StallScreen() {
 
   // This database is based on Wei Bin's IP Address, could edit yours accordingly
   // This URL filters reviews based on their restaurantID which serves as a foreign key in reviewscomponent
-  const url = `http://192.168.1.72:4200/reviews?restaurantID=${id}`;
-  const averageRatingUrl = `http://192.168.1.72:4200/averageRating?restaurantID=${id}`;
+  const url = `http://10.0.2.2:4200/reviews?restaurantID=${id}`;
+  const averageRatingUrl = `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
 
   // This URL should display all reviews for every single restaurant
   //const url = "http://192.168.1.72:4200/allreviews";

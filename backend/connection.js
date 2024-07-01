@@ -68,7 +68,7 @@ export async function resetPassword(email, password) {
 // cut-off
 
 export async function selectAll() {
-    const [result] = await pool.query("select * from restaurantstest1");
+    const [result] = await pool.query("select * from restaurants");
     return result;
 }
 
@@ -79,13 +79,13 @@ export async function selectAllReviews() {
 
 
 export async function selectReviewsByRestaurantID(restaurantID) {
-    const [result] = await pool.query("SELECT * FROM reviewscomponent WHERE restaurantID = ?", [restaurantID]);
+    const [result] = await pool.query("SELECT * FROM reviews WHERE restaurantID = ?", [restaurantID]);
     return result;
 }
 
 
 export async function calculateAverageRating(restaurantID) {
-    const [result] = await pool.query("SELECT AVG(userRating) as averageRating FROM reviewscomponent WHERE restaurantID = ?", [restaurantID]);
+    const [result] = await pool.query("SELECT AVG(userRating) as averageRating FROM reviews WHERE restaurantID = ?", [restaurantID]);
     return result[0].averageRating;
 }
 
@@ -152,9 +152,7 @@ export async function getAllImages(email) {
 }
 
 export async function getUserReviews(email) {
-    const [result] = await pool.query(`select u.id, rev.userReview, res.storeName, rev.userRating
-                                        from reviews as rev, restaurants as res, users as u
-                                        where u.email = ${email} and u.id = rev.userID and rev.restaurantID = res.id`, [email]);
+    const [result] = await pool.query(`select * from reviews as rev, users as u where u.email = ? and rev.userID = u.username`, [email]);
     return result;
 }
 

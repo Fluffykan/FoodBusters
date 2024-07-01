@@ -2,10 +2,8 @@ import Header from '@/components/Header';
 import Navbar from '@/components/Navbar';
 import { View, Text, StyleSheet } from 'react-native';
 import { useEffect, useState } from 'react';
-import DropDownSelector from '@/components/DropdownSelector';
-import axios, { AxiosResponse } from 'axios';
-import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
-import ShopCondensedInfo from '../stallscreen/components/ShopCondensedInfo';
+import axios from 'axios';
+import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
 import Button from '@/components/Button';
 
 export default function RandomRec() {

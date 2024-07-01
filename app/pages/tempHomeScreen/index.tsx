@@ -46,8 +46,8 @@ export default function TempHomeScreen() {
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
-    const url = "http://192.168.1.71:4200/restaurants";
-    const fetchAverageRatingUrl = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
+    const url = "http://10.0.2.2:4200/restaurants";
+    const fetchAverageRatingUrl = (id: number) => `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
 
     const fetch = () => {
     axios.get(url)

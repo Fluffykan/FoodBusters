@@ -19,21 +19,9 @@ import RandomRec from './pages/randomRec';
 import ShopCondensedInfo from './components/ShopCondensedInfo';
 
 export default function index() {
-    // return (
-    //     <View>
-    //         <ShopCondensedInfo 
-    //             storeName='laskve'
-    //             storeAddress=';akeovn'
-    //             id={23}
-    //             storeStatus='open'
-    //             storeClassification='aowienv'
-    //             storeRating='oiawenv'
-    //             storeDist='iownvee'
-    //         />
-    //     </View>
-    // );
+
     return (
-        <RandomRec/>
+        <LoginPage/>
     )
 }
 
