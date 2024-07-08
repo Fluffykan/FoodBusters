@@ -54,7 +54,7 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
     // Initially /pages/workInProgress
 
     return (
-        <Link href={`/pages/stallscreen?${queryParams}`} style={styles.overallContainer}>
+        <Link href={`/pages/stallscreen?${queryParams}`} style={styles.overallContainer} replace={true}>
             <View style={{flexDirection: 'row'}}>
                 <View style={styles.storeImageContainer}>
                     <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />

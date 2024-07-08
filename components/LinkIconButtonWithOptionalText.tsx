@@ -29,6 +29,7 @@ export default function LinkIconButtonWithOptionalText({iconName, fn, iconSize, 
             borderRadius: 10,
             borderWidth: borderWidth,
             flexDirection: flexDirection,
+            padding: 3,
         },
         text: {
             fontSize: defaultTextSize,

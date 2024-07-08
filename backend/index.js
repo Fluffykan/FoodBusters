@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -201,6 +201,47 @@ app.get("/getUserReviews/:email", async (req, res) => {
         res.status(500).send(error);
     }
 }) 
+
+// endpoint for setting restaurant as favorite
+app.post('/setFavorite', async (req, res) => {
+    try {
+        const {userId, restaurantId} = req.body;
+        await setFavorite(restaurantId, userId)
+        res.status(200).send("successfully set as favorite");
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.post('/removeFavorite', async (req, res) => {
+    try {
+        const {userId, restaurantId} = req.body;
+        await removeFavorite(restaurantId, userId);
+        res.status(200).send("successfully removed from favorite");
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.post('/checkFavorite', async (req, res) => {
+    try {
+        const {userId, restaurantId} = req.body;
+        const [numRows] = await checkFavorite(restaurantId, userId);
+        res.status(200).send(numRows);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.post('/getFavorites', async (req, res) => {
+    try {
+        const {userId} = req.body;
+        const restaurants = await getFavorites(userId);
+        res.status(200).send(restaurants);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
 
 // Error handler middleware
 app.use((err, req, res, next) => {

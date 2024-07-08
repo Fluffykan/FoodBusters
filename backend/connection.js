@@ -169,3 +169,24 @@ export async function getRandomStore() {
     console.log(all);
     return all;
 }
+
+export async function setFavorite(storeId, userId) {
+    const [result] = await pool.query("insert into favorites (userId, restaurantId) values (?, ?)", [userId, storeId])
+    return result;
+}
+
+export async function removeFavorite(storeId, userId) {
+    const [result] = await pool.query("delete from favorites where userId = ? and restaurantId = ?", [userId, storeId])
+    return result;
+}
+
+export async function checkFavorite(storeId, userId) {
+    const [result] = await pool.query("select count(*) as count from favorites where userid = ? and restaurantId = ?", [userId, storeId]);
+    return result;
+}
+
+export async function getFavorites(userId) {
+    const [result] = await pool.query("select res.* from restaurants as res, favorites as fav where fav.userId = 1 and fav.restaurantId = res.id", [userId]);
+    console.log(result);
+    return result;
+}

@@ -13,6 +13,7 @@ export default function PageBreakLine({style, color}:LineProps) {
             width: '100%',
             height: 0,
             backgroundColor: lineColor,
+            borderWidth: 1,
             marginVertical: 10,
         },
         dottedLine: {

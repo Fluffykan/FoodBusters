@@ -5,10 +5,12 @@ import Navbar from '@/components/Navbar';
 import axios from 'axios';
 import ProfileNavBar from './components/profileNavBar';
 import ReviewsComponent from '../stallscreen/components/reviewsComponent';
+import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
 
 export default function ProfilePage() {
     // TODO: 
     // SET LOGIC FOR PULLING USER INFORMATION FROM DATABASE
+    const [userId, setUserId] = useState("");
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(true);
@@ -18,11 +20,13 @@ export default function ProfilePage() {
             const response = await axios.get('http://10.0.2.2:4200/getUserCreds');
             const data = response.data;
             console.log(data);
+            setUserId(data[2]);
             setEmail(data[1]);
             setUsername(data[0]);
-            setLoading(false);
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -60,7 +64,7 @@ export default function ProfilePage() {
             <ProfileNavBar toggleScreen={setScreen} />
             <ScrollView>
                 {screen == 0 && <ReviewsListView email={email} />}
-                {screen == 2 && <Text>favorites</Text>}
+                {screen == 2 && <FavListView email={email} />}
                 {screen == 1 && <ImageView email={email} />}
             </ScrollView>
             <Navbar/>
@@ -77,6 +81,7 @@ const styles = StyleSheet.create({
 
 type ViewProps = {
     email:string;
+    userId:string;
 }
 
 function ImageView({email}:ViewProps) {
@@ -151,9 +156,45 @@ function ReviewsListView({email}:ViewProps) {
 
     return (
         <View>
-            { /* redlines are there but it works, just leave it alone */
+            { /* redlines are there but it works as intended, just leave it alone */
             reviews.map(review => <ReviewsComponent userID={review.username} userReview={review.userReview} userRating={review.userRating} />)}
         </View>
     )
 
+}
+
+function FavListView({userId}:ViewProps) {
+    const [favorites, setFavorites] = useState([]);
+    const getFavorites = () => {
+        try {
+            axios.post("http://10.0.2.2:4200/getFavorites", {userId:userId})
+                .then(response => {
+                    console.log(response.data);
+                    setFavorites(response.data);
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    useEffect(() => {
+        console.log("loading reviews");
+        getFavorites();
+        console.log(favorites);
+    },[]);
+    return (
+        <View>
+            { /* red underline cannot be removed, but works as intended */
+            favorites.map(store => <ShopCondensedInfo
+                                        key={store.id}
+                                        id={store.id}
+                                        storeName={store.storeName}
+                                        storeAddress={store.storeAddress}
+                                        storeRating={store.storeRating}
+                                        storeClassification={store.storeClassification}
+                                        storeDist={store.storeDist}
+                                        storeStatus={store.storeStatus}
+                                    />
+            )}
+        </View>
+    )
 }
