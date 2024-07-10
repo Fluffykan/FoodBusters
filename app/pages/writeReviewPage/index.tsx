@@ -25,7 +25,7 @@ export default function WriteReviewPage() {
         try {
         console.log(image);
         const ownerInfo = await axios.get("http://10.0.2.2:4200/getUserCreds");
-        const ownerEmail = ownerInfo.data[1];
+        const ownerEmail = ownerInfo.data[2];
         // const data = readImageFile(image);
 
         // function readImageFile (file:string) {

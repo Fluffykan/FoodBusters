@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, StyleSheet, Text, ScrollView, TextInput } from 'react-native';
 import Wallet from './pages/walletScreen';
 import ProfileNavBar from './pages/profilePage/components/profileNavBar';
 import ProfilePage from './pages/profilePage';
@@ -18,11 +18,12 @@ import RandomRec from './pages/randomRec';
 import ShopCondensedInfo from './components/ShopCondensedInfo';
 import CreateAccountPage from './pages/createAccount';
 import EditProfilePage from './pages/profilePage/components/editProfilePage';
+import PopupEditProfileSuccess from '../components/popupEditProfileSuccess';
+import { useState } from 'react';
 
 export default function index() {
-
-    return (
-        <EditProfilePage/>
+    return(
+        <EditProfilePage />
     )
 }
 

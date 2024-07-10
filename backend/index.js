@@ -20,7 +20,7 @@ app.post('/login', async (req, res) => {
         if (result == undefined) {
             res.status(401).send("unknown user");
         } else {
-            await saveUserCreds(result.username, result.email, result.password_hash)
+            await saveUserCreds(result.id, result.username, result.email, result.password_hash)
             res.status(200).send("successful login: " + result.username);
         }
     } catch (error) {
@@ -53,9 +53,8 @@ app.post('/createAccount', async (req, res) => {
 
 app.post('/editProfile',async(req, res) => {
     try {
-        const {username, email, password, oldUsername, oldEmail, oldPassword} = req.body;
-        const result = await editProfile(username, email, password, oldUsername, oldEmail, oldPassword);
-        console.log("result" + result);
+        const {username, password} = req.body;
+        const result = await editProfile(username, password);
         res.status(200).send({affectedRows:result});
     } catch (error) {
         res.status(500).send(error);
@@ -64,8 +63,8 @@ app.post('/editProfile',async(req, res) => {
 
 app.post("/updateUserCreds", (req, res) => {
     try {
-        const {username, email, password} = req.body;
-        saveUserCreds(username, email, password);
+        const {id,username, email, password} = req.body;
+        saveUserCreds(id,username, email, password);
         res.sendStatus(200);
     } catch (error) {
         res.sendStatus(500);
