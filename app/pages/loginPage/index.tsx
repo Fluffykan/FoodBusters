@@ -35,7 +35,7 @@ export default function LoginPage() {
     const hasEmptyField = email == '' || password == '';
 
     if (!passwordError) {
-        return <Redirect href='/pages/homeScreen' />
+        return <Redirect href='/pages/tempHomeScreen' />
     } else {
         return (
             <View style={styles.container}>

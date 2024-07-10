@@ -12,12 +12,18 @@ export default function UserInfo({username, email}:userInfoProps) {
     return (
         <View style={styles.userPictureAndInfo}>
             <View style={styles.userProfilePictureContainer}>
-                <Icon name='user' size={20} />
+                <Icon name='user' size={60} />
             </View>
             <View>
                 <Text style={styles.usernameText}>{username}</Text>
                 <Text style={styles.userEmailText}>{email}</Text>
-                <NavIconButtonWithOptionalText iconName='setting' destination='/pages/workInProgress' replaceScreen={false} text='Edit Profile' flexDir='row' border={true} />
+                <NavIconButtonWithOptionalText 
+                    iconName='setting' 
+                    destination='/pages/profilePage/components/editProfilePage' 
+                    replaceScreen={true} 
+                    text='Edit Profile' 
+                    flexDir='row' border={true}
+                />
             </View>
         </View>
     )

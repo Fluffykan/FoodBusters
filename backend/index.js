@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -48,6 +48,27 @@ app.post('/createAccount', async (req, res) => {
         }
     } catch (error) {
         res.status(500).send("unknown error");
+    }
+})
+
+app.post('/editProfile',async(req, res) => {
+    try {
+        const {username, email, password, oldUsername, oldEmail, oldPassword} = req.body;
+        const result = await editProfile(username, email, password, oldUsername, oldEmail, oldPassword);
+        console.log("result" + result);
+        res.status(200).send({affectedRows:result});
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.post("/updateUserCreds", (req, res) => {
+    try {
+        const {username, email, password} = req.body;
+        saveUserCreds(username, email, password);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
     }
 })
 

@@ -60,6 +60,12 @@ export async function createAccount(username, email, password) {
     return result.affectedRows;
 }
 
+export async function editProfile(username, email, password, oldUsername, oldEmail, oldPassword) {
+    const [result] = await pool.query("update users set username = ?, email = ?, password_hash = ? where username = ? and email = ? and password_hash = ?", 
+        [username, email, password, oldUsername, oldEmail,oldPassword]);
+    return result.affectedRows;
+}
+
 export async function resetPassword(email, password) {
     const [result] = await pool.query("update users set password_hash = ? where email = ?", [password, email]);
     return result.affectedRows;

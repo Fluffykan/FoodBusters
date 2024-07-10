@@ -40,9 +40,6 @@ export default function ProfilePage() {
     */
     // TODO: 
     // HANDLE REDIRECTION TO EDIT PROFILE PAGE
-    const handleEditProfileClick = () => {
-        console.log('redirect to edit profile');
-    }
     useEffect(() => {
         console.log("restarted");
         getUserCreds();
@@ -63,9 +60,9 @@ export default function ProfilePage() {
             <UserInfo username={username} email={email} />
             <ProfileNavBar toggleScreen={setScreen} />
             <ScrollView>
-                {screen == 0 && <ReviewsListView email={email} />}
-                {screen == 2 && <FavListView email={email} />}
-                {screen == 1 && <ImageView email={email} />}
+                {screen == 0 && <ReviewsListView email={email} userId={userId} />}
+                {screen == 2 && <FavListView email={email} userId={userId} />}
+                {screen == 1 && <ImageView email={email} userId={userId} />}
             </ScrollView>
             <Navbar/>
         </View>

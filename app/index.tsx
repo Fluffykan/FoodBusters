@@ -16,11 +16,13 @@ import Upload from './pages/writeReviewPage/components/imagePicker';
 import WriteReviewPage from './pages/writeReviewPage';
 import RandomRec from './pages/randomRec';
 import ShopCondensedInfo from './components/ShopCondensedInfo';
+import CreateAccountPage from './pages/createAccount';
+import EditProfilePage from './pages/profilePage/components/editProfilePage';
 
 export default function index() {
 
     return (
-        <TempHomeScreen/>
+        <EditProfilePage/>
     )
 }
 
