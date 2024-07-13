@@ -36,11 +36,12 @@ const imgPool = mysql.createPool({
 export async function verifyUser(email, password) {
     console.log(email + " " + password);
     const [data] = await pool.query("select * from users where email = ? and password_hash = ?", [email, password]);
+    console.log(data);  
     return data;
 }
 
-export async function saveUserCreds(username, email, password) {
-    fs.writeFileSync("userCreds.txt", `${username},${email},${password}`, {
+export async function saveUserCreds(id,username, email, password) {
+    fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password}`, {
         flag: "w"
     });
     console.log("written");
@@ -57,6 +58,12 @@ export async function getUsers() {
 
 export async function createAccount(username, email, password) {
     const [result] = await pool.query("insert into users (username, email, password_hash) values (?, ?, ?)", [username, email, password]);
+    return result.affectedRows;
+}
+
+export async function editProfile(username, password) {
+    const [result] = await pool.query("update users set password_hash = ? where username = ?", 
+        [password, username]);
     return result.affectedRows;
 }
 
@@ -151,8 +158,8 @@ export async function getAllImages(email) {
     return index;
 }
 
-export async function getUserReviews(email) {
-    const [result] = await pool.query(`select * from reviews as rev, users as u where u.email = ? and rev.userID = u.username`, [email]);
+export async function getUserReviews(id) {
+    const [result] = await pool.query(`select * from reviews as rev, users as u where u.id = ? and rev.userID = u.username`, [id]);
     return result;
 }
 

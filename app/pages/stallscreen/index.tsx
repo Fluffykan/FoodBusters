@@ -135,7 +135,7 @@ export default function StallScreen() {
     const getUserCreds = () => {
         try {
             axios.get("http://10.0.2.2:4200/getUserCreds")
-                .then(response => setUserId(response.data[2]));
+                .then(response => setUserId(response.data[0]));
         } catch (error) {
             console.error(error);
         }

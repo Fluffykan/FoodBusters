@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, getUsers } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -29,7 +29,7 @@ app.post('/login', async (req, res) => {
         if (result == undefined) {
             res.status(401).send("unknown user");
         } else {
-            await saveUserCreds(result.username, result.email, result.password_hash)
+            await saveUserCreds(result.id, result.username, result.email, result.password_hash)
             res.status(200).send("successful login: " + result.username);
         }
     } catch (error) {
@@ -57,6 +57,26 @@ app.post('/createAccount', async (req, res) => {
         }
     } catch (error) {
         res.status(500).send("unknown error");
+    }
+})
+
+app.post('/editProfile',async(req, res) => {
+    try {
+        const {username, password} = req.body;
+        const result = await editProfile(username, password);
+        res.status(200).send({affectedRows:result});
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+app.post("/updateUserCreds", (req, res) => {
+    try {
+        const {id,username, email, password} = req.body;
+        saveUserCreds(id,username, email, password);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
     }
 })
 

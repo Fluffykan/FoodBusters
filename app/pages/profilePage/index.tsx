@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
 import UserInfo from './components/userInfo';
 import Navbar from '@/components/Navbar';
 import axios from 'axios';
@@ -20,9 +20,9 @@ export default function ProfilePage() {
             const response = await axios.get('http://10.0.2.2:4200/getUserCreds');
             const data = response.data;
             console.log(data);
-            setUserId(data[2]);
-            setEmail(data[1]);
-            setUsername(data[0]);
+            setUserId(data[0]);
+            setEmail(data[2]);
+            setUsername(data[1]);
         } catch (error) {
             console.error(error);
         } finally {
@@ -40,9 +40,6 @@ export default function ProfilePage() {
     */
     // TODO: 
     // HANDLE REDIRECTION TO EDIT PROFILE PAGE
-    const handleEditProfileClick = () => {
-        console.log('redirect to edit profile');
-    }
     useEffect(() => {
         console.log("restarted");
         getUserCreds();
@@ -63,9 +60,9 @@ export default function ProfilePage() {
             <UserInfo username={username} email={email} />
             <ProfileNavBar toggleScreen={setScreen} />
             <ScrollView>
-                {screen == 0 && <ReviewsListView email={email} />}
-                {screen == 2 && <FavListView email={email} />}
-                {screen == 1 && <ImageView email={email} />}
+                {screen == 0 && <ReviewsListView email={email} userId={userId} />}
+                {screen == 2 && <FavListView email={email} userId={userId} />}
+                {screen == 1 && <ImageView email={email} userId={userId} />}
             </ScrollView>
             <Navbar/>
         </View>
@@ -135,12 +132,12 @@ function ImageView({email}:ViewProps) {
     );
 }
 
-function ReviewsListView({email}:ViewProps) {
+function ReviewsListView({userId}:ViewProps) {
     const [reviews, setReveiws] = useState([]);
 
     const getReviews = async () => {
         try {
-            const response = await axios.get("http://10.0.2.2:4200/getUserReviews/" + email);
+            const response = await axios.get("http://10.0.2.2:4200/getUserReviews/" + userId);
             console.log(reviews);
             setReveiws(response.data);
         } catch (error) {

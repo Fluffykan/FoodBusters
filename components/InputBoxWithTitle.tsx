@@ -2,19 +2,28 @@ import { View, Text, TextInput, StyleSheet } from 'react-native';
 
 type inputBoxWithOptionalTitle = {
     title?: string;
-    placeholder: string;
+    placeholder?: string;
     updaterFn: (a: string) => void;
     fontSize?:number;
     multiline?:boolean;
+    editable?:boolean;
+    defaultValue?:string;
 }
 
-export default function InputBoxWithOptionalTitle({placeholder, multiline, updaterFn, title,fontSize}:inputBoxWithOptionalTitle) {
+export default function InputBoxWithOptionalTitle({defaultValue, editable, placeholder, multiline, updaterFn, title,fontSize}:inputBoxWithOptionalTitle) {
     const textSize = fontSize ? fontSize : 15;
 
     return (
         <View style={styles.textInputContainer}>
             {title && <Text style={{fontSize:textSize}}>{title}</Text> }
-            <TextInput style={styles.textInput} onChangeText={(s: string) => updaterFn(s)} placeholder={placeholder} multiline={multiline} />
+            <TextInput 
+                style={styles.textInput} 
+                onChangeText={(s: string) => updaterFn(s)} 
+                placeholder={placeholder} 
+                multiline={multiline} 
+                editable={editable}
+                defaultValue={defaultValue}
+            />
         </View>
     )
 }
