@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, getUsers } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -11,6 +11,15 @@ app.use(cors());
 
 
 // Get endpoint
+app.get('/users', async (req, res) => {
+    try {
+        const result = await getUsers();
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send("unknown error" + error);
+    }
+});
+
 app.post('/login', async (req, res) => {
     try {
         console.log(req.params)

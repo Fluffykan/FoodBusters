@@ -16,6 +16,7 @@ import Upload from './pages/writeReviewPage/components/imagePicker';
 import WriteReviewPage from './pages/writeReviewPage';
 import RandomRec from './pages/randomRec';
 import ShopCondensedInfo from './components/ShopCondensedInfo';
+import UserCondensedInfo from './components/UserCondensedInfo';
 
 export default function index() {
 

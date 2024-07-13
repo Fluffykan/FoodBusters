@@ -51,12 +51,18 @@ export default function StallScreen() {
     const url = `http://10.0.2.2:4200/reviews?restaurantID=${id}`;
     const averageRatingUrl = `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
 
+    const weibinURL = `http://192.168.1.71:4200/reviews?restaurantID=${id}`;
+    const junHongurl = `http://10.0.2.2:4200/reviews?restaurantID=${id}`;
+
+    const averageRatingUrlWeiBin = `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
+    const averageRatingUrlJunHong = `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
+
     // This URL should display all reviews for every single restaurant
     //const url = "http://192.168.1.72:4200/allreviews";
     const restaurantID = parseInt(id as string, 10);
 
     const fetchReviews = () => {
-        axios.get(url)
+        axios.get(weibinURL)
             .then(response => {
                 const filtered = response.data.filter((review: Review) => review.restaurantID === parseInt(id as string, 10));
                 setReviews(filtered);
@@ -69,7 +75,7 @@ export default function StallScreen() {
     };
 
     const fetchAverageRating = () => {
-        axios.get(averageRatingUrl)
+        axios.get(averageRatingUrlWeiBin)
         .then(response => {
             setAverageRating(response.data.averageRating);
         })

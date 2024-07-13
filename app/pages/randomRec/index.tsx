@@ -1,10 +1,13 @@
 import Header from '@/components/Header';
 import Navbar from '@/components/Navbar';
-import { View, Text, StyleSheet } from 'react-native';
+import UserCondensedInfo from '@/app/components/UserCondensedInfo';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useEffect, useState } from 'react';
+import { Link } from 'expo-router';
 import axios from 'axios';
 import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
 import Button from '@/components/Button';
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
 export default function RandomRec() {
     const [loading, setLoading] = useState(false);
@@ -21,8 +24,12 @@ export default function RandomRec() {
         averageRating: number | null; // Added this field. For some restaurants where there are no reviews added, there would be no average rating, hence the null value
       };
 
+      const weibinURL = 'http://192.168.1.71:4200/getRandomStore';
+      const junHongURL = "http://10.0.2.2:4200/getRandomStore"
+
+
       const queryStore = () => {
-        axios.get("http://10.0.2.2:4200/getRandomStore")
+        axios.get(weibinURL)
         .then(response => {
             console.log(response.data);
             setRec(response.data);
@@ -45,6 +52,9 @@ export default function RandomRec() {
             </View>
         )
     }
+
+    const pointsBenefitSentence = "Did you know you can recommend dishes to other users based on their preferences. Successful recommendations will earn you loyalty points that can be exchanged for cash prizes and discounts at various dining spots!"
+
     return (
         <View style={styles.container}>
             <View>
@@ -61,17 +71,39 @@ export default function RandomRec() {
                         storeClassification={restaurant.storeClassification}
                     />
                 )}
-            </View>
-            <View>
-            <Button 
-                text='Seen this store before? Get another recommendation' 
-                textColor='black' 
-                border = 'none'
-                underline = {true}
-                bgColor='transparent' 
-                fn={queryStore} 
-            />
+                <View style={styles.buttonContainer}>
+                    <Button 
+                        text='Seen this store before? Get another recommendation' 
+                        textColor='black' 
+                        border='none'
+                        underline={true}
+                        bgColor='transparent' 
+                        fn={queryStore} 
+                    />
+                    <View style={styles.iconRow}>
+                        <FontAwesome5 name="utensils" size={24} color="black" />
+                        <FontAwesome5 name="pizza-slice" size={24} color="black" />
+                        <FontAwesome5 name="ice-cream" size={24} color="black" />
+                        <FontAwesome5 name="hamburger" size={24} color="black" />
+                        <FontAwesome5 name="drumstick-bite" size={24} color="black" />
+                        <FontAwesome5 name="fish" size={24} color="black" />
+                    </View>
+                    <View style={styles.pointsBenefitContainer}>
+                        <MaterialIcons name="error-outline" size={50} color="black" />
+                        <Text style={styles.pointsBenefitText}>{pointsBenefitSentence}</Text>
+                    </View>
+                    <Link href='pages/recommendPage' style={styles.curlyButton}>
+                        <Text style={styles.curlyButtonText}>Click here to recommend your best dishes!</Text>
+                    </Link>
 
+                    <View style={styles.pointsBenefitContainer}>
+                        <MaterialIcons name="favorite" size={50} color="black" />
+                        <Text style={styles.pointsBenefitText}>{pointsBenefitSentence}</Text>
+                    </View>
+                    <Link href='pages/recommendPage' style={styles.curlyButton}>
+                        <Text style={styles.curlyButtonText}>Click here to indicate your preference!</Text>
+                    </Link>
+                </View>
             </View>
             <Navbar />
         </View>
@@ -83,5 +115,49 @@ const styles = StyleSheet.create({
         height: '100%',
         justifyContent: 'space-between',
         paddingHorizontal: 5,
+    },
+    buttonContainer: {
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    iconRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+        width: "100%",
+    },
+    pointsBenefitContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderWidth: 2,
+        borderColor: '#000',
+        borderRadius: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginTop: 10,
+        borderStyle: 'dotted',
+    },
+    pointsBenefitText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginLeft: 5,
+    },
+    curlyButton: {
+        backgroundColor: '#fff',
+        borderWidth: 2,
+        borderColor: '#000',
+        borderRadius: 15,
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        marginTop: 10,
+        //borderStyle: 'dotted',
+    },
+    curlyButtonText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 })

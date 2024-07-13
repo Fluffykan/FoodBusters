@@ -78,49 +78,6 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
     )
 }
 
-
-// Initial code
-
-
-/*
-<Link href={{
-            pathname: '/pages/stallscreen',
-            params: {
-                storeName,
-                storeDist,
-                storeAddress,
-                storeRating,
-                storeStatus,
-                storeClassification
-            }
-        }}>
-
-
-*/
-/*
-return (
-        <Link href='/pages/stallscreen'>
-            <View style={styles.storeImageContainer}>
-            <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
-            </View>
-            <View>
-                <View style={styles.flexRowContainer}>
-                <Text style={styles.informationText}>{storeName}</Text>
-                <Text style={styles.storeDistance}>{storeDist}</Text>
-                </View>
-                <Text style={styles.informationText}>{storeAddress}</Text>
-                <View style={styles.flexRowContainer}>
-                <Text style={styles.informationText}>{storeRating}</Text>
-                <Image source={require('../assets/star.png')} style={{height: 13, width: 13}} />
-                </View>
-                <Text style={styles.informationText}>{storeStatus}</Text>
-                <Text style={styles.informationText}>{storeClassification}</Text>
-
-            </View>
-        </Link>
-
-    )*/
-
 const styles = StyleSheet.create({
     shopButton: {
         flexDirection: 'row',

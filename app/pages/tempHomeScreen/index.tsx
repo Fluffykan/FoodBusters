@@ -33,11 +33,7 @@ export default function TempHomeScreen() {
     const handleSearch = () => {
         console.log(`searching for ${keywords}`);
     }
-
-    /*const handleFilter = () => {
-        console.log('open filter dropdown');
-    }*/
-
+    
     const handleFilter = () => {
       setFilterModalVisible(true);
     };
@@ -46,15 +42,18 @@ export default function TempHomeScreen() {
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
-    const url = "http://10.0.2.2:4200/restaurants";
-    const fetchAverageRatingUrl = (id: number) => `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
+    const junHongURL = "http://10.0.2.2:4200/restaurants";
+    const weibinURL = 'http://192.168.1.71:4200/restaurants'
+
+    const fetchAverageRatingUrlWeiBin = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
+    const fetchAverageRatingUrlJunHong = (id: number) => `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
 
     const fetch = () => {
-    axios.get(url)
+    axios.get(weibinURL)
       .then(response => {
         const fetchedRestaurants = response.data;
         const fetchRatingsPromises = fetchedRestaurants.map((restaurant: Restaurant) =>
-          axios.get(fetchAverageRatingUrl(restaurant.id)).then(res => ({
+          axios.get(fetchAverageRatingUrlWeiBin(restaurant.id)).then(res => ({
             ...restaurant,
             averageRating: res.data.averageRating
           }))

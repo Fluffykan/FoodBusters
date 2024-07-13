@@ -73,7 +73,7 @@ export async function selectAll() {
 }
 
 export async function selectAllReviews() {
-    const [result] = await pool.query("select * from reviewscomponent");
+    const [result] = await pool.query("select * from reviews");
     return result;
 }
 
@@ -108,7 +108,7 @@ export async function calculateAverageRating(restaurantID) {
 export async function selectStoreImage(restaurantID) {
     try {
         console.log("Querying for store image with restaurantID:", restaurantID); // Log the restaurantID
-        const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
+        const [result] = await pool.query("SELECT storeImage FROM restaurants WHERE id = ?", [restaurantID]);
         console.log("Query result:", result); // Log the query result
         if (result.length > 0 && result[0].storeImage) {
             const base64Image = Buffer.from(result[0].storeImage).toString('base64');
