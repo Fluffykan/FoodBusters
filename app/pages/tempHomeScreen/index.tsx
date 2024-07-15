@@ -38,22 +38,19 @@ export default function TempHomeScreen() {
       setFilterModalVisible(true);
     };
 
-    const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
 
-    const junHongURL = "http://10.0.2.2:4200/restaurants";
     const weibinURL = 'http://192.168.1.71:4200/restaurants'
 
     const fetchAverageRatingUrlWeiBin = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
-    const fetchAverageRatingUrlJunHong = (id: number) => `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
 
     const fetch = () => {
-    axios.get(weibinURL)
+    axios.get("http://10.0.2.2:4200/restaurants")
       .then(response => {
         const fetchedRestaurants = response.data;
         const fetchRatingsPromises = fetchedRestaurants.map((restaurant: Restaurant) =>
-          axios.get(fetchAverageRatingUrlWeiBin(restaurant.id)).then(res => ({
+          axios.get(`http://10.0.2.2:4200/averageRating?restaurantID=${restaurant.id}`).then(res => ({
             ...restaurant,
             averageRating: res.data.averageRating
           }))

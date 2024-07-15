@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, postReview, getUserReview, editReview } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -231,6 +231,13 @@ app.get("/getUserReviews/:email", async (req, res) => {
     }
 }) 
 
+app.get("/getUserReview", async (req, res) => {
+    const {restaurantID, username} = req.query;
+    console.log(restaurantID + " " + username);
+    const result = await getUserReview(restaurantID, username);
+    res.status(200).send(result);
+})
+
 // endpoint for setting restaurant as favorite
 app.post('/setFavorite', async (req, res) => {
     try {
@@ -272,6 +279,27 @@ app.post('/getFavorites', async (req, res) => {
     }
 })
 
+app.post("/postReview", async (req, res) => {
+    try {
+        const {restaurantId, username, review, rating} = req.body;
+        console.log("received");
+        postReview(restaurantId, username, review, rating);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+})
+
+app.post('/editReview', async (req, res) => {
+    try {
+        const {restaurantId, username, review, rating} = req.body;
+        console.log("received");
+        editReview(restaurantId, username, review, rating);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+})
 // Error handler middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

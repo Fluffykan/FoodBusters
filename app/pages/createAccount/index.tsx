@@ -5,7 +5,7 @@ import Button from '@/components/Button';
 import axios from 'axios';
 import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
 import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
-import RedirectingPopup from '@/components/popupEditProfileSuccess';
+import RedirectingPopup from '@/components/RedirectingPopup';
 
 export default function CreateAccountPage() {
     const [username, updateUsername] = useState('');

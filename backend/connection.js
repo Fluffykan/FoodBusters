@@ -163,6 +163,11 @@ export async function getUserReviews(id) {
     return result;
 }
 
+export async function getUserReview(restaurantId, username) {
+    const [result] = await pool.query("select * from reviews where restaurantID = ? and userID = ?", [restaurantId, username]);
+    return result;
+}
+
 export async function getRandomStore() {
     const [result] = await pool.query("select count(*) from reviews");
     console.log("count = " + result[0]["count(*)"]);
@@ -196,4 +201,18 @@ export async function getFavorites(userId) {
     const [result] = await pool.query("select res.* from restaurants as res, favorites as fav where fav.userId = 1 and fav.restaurantId = res.id", [userId]);
     console.log(result);
     return result;
+}
+
+export async function postReview(restaurantID, userID, userReview, userRating) {
+    const[result] = await pool.query("insert into reviews (restaurantID, userID, userReview, userRating) values (?,?,?,?)", 
+                                        [restaurantID, userID, userReview, userRating]);
+    console.log(result.affectedRows);
+    return result.affectedRows;
+}
+
+export async function editReview(restaurantID, userID, userReview, userRating) {
+    const[result] = await pool.query("update reviews set userReview = ?, userRating = ? where restaurantID = ? and userID = ?", 
+                                        [userReview, userRating, restaurantID, userID]);
+    console.log(result.affectedRows);
+    return result.affectedRows;
 }
