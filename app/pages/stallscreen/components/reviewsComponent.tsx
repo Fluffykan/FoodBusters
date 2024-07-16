@@ -29,6 +29,7 @@ export default function ReviewsComponent({ userID, userReview, userRating, revie
     */
    
     // Truncate the review since it is too long. Shows only the first 5 words of the review padded by "..." at the end
+    const [truncatedReview, setTruncatedReview] = useState(true);
     const truncateReview = (review: string, wordLimit: number) => {
         const words = review.split(" ");
         if (words.length <= wordLimit) {
@@ -100,33 +101,37 @@ export default function ReviewsComponent({ userID, userReview, userRating, revie
 
     return (
         <View style={styles.container}>
-            <View style={styles.userInfoWLike}>
-                <View style={styles.userInfo}>
-                    <Icon name="user" size={50} color="black" />
-                    <View>
-                        <View style={styles.usernameAndRating}>
-                            <Text>By: {userID}</Text>
-                            {restaurantId && <Text>Store: {storeName}</Text> }
-                            <View style={styles.rating}>
-                                <Text>Rating: {userRating}</Text>
-                                <Icon name="staro" size={15} color="black" />
-                                <Text> / 5.0</Text>
-                                <Icon name="staro" size={15} color="black" />
+            <TouchableOpacity onPress={() => setTruncatedReview(!truncatedReview)}>
+
+                <View style={styles.userInfoWLike}>
+                    <View style={styles.userInfo}>
+                        <Icon name="user" size={50} color="black" />
+                        <View>
+                            <View style={styles.usernameAndRating}>
+                                <Text>By: {userID}</Text>
+                                {restaurantId && <Text>Store: {storeName}</Text> }
+                                <View style={styles.rating}>
+                                    <Text>Rating: {userRating}</Text>
+                                    <Icon name="staro" size={15} color="black" />
+                                    <Text> / 5.0</Text>
+                                    <Icon name="staro" size={15} color="black" />
+                                </View>
                             </View>
                         </View>
                     </View>
+                    <LinkIconButtonWithOptionalText 
+                        iconName="like2" 
+                        iconColor={isLiked ? "red" : 'black'}
+                        text={numLikes.toString()}
+                        fn={updateLike}
+                    />
                 </View>
-                <LinkIconButtonWithOptionalText 
-                    iconName="like2" 
-                    iconColor={isLiked ? "red" : 'black'}
-                    text={numLikes.toString()}
-                    fn={updateLike}
-                />
-            </View>
-            <View style={styles.review}>
-                <Text style={{textAlign: 'justify'}}>{userReview}</Text>
-            </View>
-
+                <View style={styles.review}>
+                        {!truncatedReview && <Text style={styles.reviewText}>{userReview}</Text>}
+                        {truncatedReview && <Text style={styles.reviewText}>{truncateReview(userReview, 7)}</Text>}
+                </View>
+                
+            </TouchableOpacity>
         </View>
     )
 }
@@ -155,5 +160,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "space-between",
         alignItems: 'center',
+    }, 
+    reviewText: {
+        textAlign: 'justify',
     }
 })
