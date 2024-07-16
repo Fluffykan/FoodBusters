@@ -176,7 +176,7 @@ export default function StallScreen() {
     const handleFilterReviews = (keywords:string) => {
         console.log(`filtering reviews with: ${keywords}`);
     }
-    // change replaceScreen to true after finalising the 
+    // <Text/> element there to prevent last element in the list from being cut off
     if (loading) {
         return (
             <View>
@@ -213,9 +213,10 @@ export default function StallScreen() {
                             userID={review.userID}
                             userReview={review.userReview}
                             userRating={review.userRating}
+                            reviewID={review.reviewID}
                         />
                     ))}
-                    
+                    <Text/>
             </ScrollView>
             <Navbar />
 
@@ -239,7 +240,7 @@ export default function StallScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 5
+        padding: 5,
     },
     textInput: {
         paddingLeft: 10,

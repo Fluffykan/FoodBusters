@@ -1,14 +1,18 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/AntDesign';
+import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
+import axios from "axios";
 
 type ReviewsComponentProps = {
+    reviewID: number;
     userID: string;
     userReview: string;
     userRating: string;
+    restaurantId?: number;
 };
 
-export default function ReviewsComponent({ userID, userReview, userRating }: ReviewsComponentProps) {
+export default function ReviewsComponent({ userID, userReview, userRating, reviewID, restaurantId }: ReviewsComponentProps) {
 
     const name = "DomTor";
     const rating = "4.5";
@@ -33,25 +37,96 @@ export default function ReviewsComponent({ userID, userReview, userRating }: Rev
         return words.slice(0, wordLimit).join(" ") + "...";
     };
 
+    const [activeUserId, setActiveUserId] = useState(-1);
+    const getActiveUserId = async () => {
+        try {
+            const result = await axios.get("http://10.0.2.2:4200/getUserCreds");
+            setActiveUserId(result.data[0]);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    const [storeName, setStoreName] = useState("");
+    const getStoreName = async () => {
+        try {
+            const result = await axios.get(`http://10.0.2.2:4200/getStoreName?restaurantId=${restaurantId}`);
+            setStoreName(result.data.storeName);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    const [isLiked, setLiked] = useState(false);
+    const checkLiked = async () => {
+        try {
+            const result = await axios.get(`http://10.0.2.2:4200/checkLiked?userId=${activeUserId}&reviewId=${reviewID}`);
+            setLiked(result.data[0].count > 0);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    
+    const [numLikes, setNumLikes] = useState(0);
+    const getNumLikes = async () => {
+        const result = await axios.get(`http://10.0.2.2:4200/getNumLikes?reviewId=${reviewID}`);
+        setNumLikes(result.data.count);
+    }
+
+    const updateLike = async () => {
+        try {
+            if (isLiked) {
+                await axios.post(`http://10.0.2.2:4200/unlikeReview?userId=${activeUserId}&reviewId=${reviewID}`);
+                setLiked(!isLiked);
+            } else {
+                await axios.post(`http://10.0.2.2:4200/likeReview?userId=${activeUserId}&reviewId=${reviewID}`);
+                setLiked(!isLiked);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    useEffect(() => {
+        console.log('reloaded');
+        getActiveUserId();
+        if (restaurantId) {
+            getStoreName();
+        }
+    },[activeUserId, storeName]);
+
+    useEffect(() => {
+        checkLiked();
+        getNumLikes();
+    }, [activeUserId, isLiked, numLikes]);
 
     return (
         <View style={styles.container}>
-            <Icon name="user" size={50} color="black" />
-            <View>
-                <View style={styles.usernameAndRating}>
-                    <Text>By: {userID}</Text>
-                    <View style={styles.padding}></View>
-                    <View style={styles.rating}>
-                        <Text>Rating: {userRating}</Text>
-                        <Icon name="staro" size={15} color="black" />
-                        <Text> / 5.0</Text>
-                        <Icon name="staro" size={15} color="black" />
+            <View style={styles.userInfoWLike}>
+                <View style={styles.userInfo}>
+                    <Icon name="user" size={50} color="black" />
+                    <View>
+                        <View style={styles.usernameAndRating}>
+                            <Text>By: {userID}</Text>
+                            {restaurantId && <Text>Store: {storeName}</Text> }
+                            <View style={styles.rating}>
+                                <Text>Rating: {userRating}</Text>
+                                <Icon name="staro" size={15} color="black" />
+                                <Text> / 5.0</Text>
+                                <Icon name="staro" size={15} color="black" />
+                            </View>
+                        </View>
                     </View>
                 </View>
-                
-                <Text>{truncateReview(userReview, 7)}</Text>
-
+                <LinkIconButtonWithOptionalText 
+                    iconName="like2" 
+                    iconColor={isLiked ? "red" : 'black'}
+                    text={numLikes.toString()}
+                    fn={updateLike}
+                />
             </View>
+            <View style={styles.review}>
+                <Text style={{textAlign: 'justify'}}>{userReview}</Text>
+            </View>
+
         </View>
     )
 }
@@ -60,18 +135,25 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 10,
         borderWidth: 2,
-        flexDirection: "row",
-        paddingHorizontal: 5,
+        padding: 5,
     },
     usernameAndRating: {
-        justifyContent: "space-between",
-        flexDirection: "row",
+        justifyContent: "center",
+        flex: 1,
     },
     rating: {
         flexDirection: "row",
-        justifyContent: "center",
     },
-    padding: {
+    userInfo: {
+        flexDirection: 'row',
+    },
+    review: {
         paddingHorizontal: 10,
+    },
+    userInfoWLike: {
+        flexDirection: 'row',
+        flex: 1,
+        justifyContent: "space-between",
+        alignItems: 'center',
     }
 })

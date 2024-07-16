@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, postReview, getUserReview, editReview } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -180,6 +180,17 @@ app.get('/storeImage', async (req, res) => {
     }
 });
 
+app.get('/getStoreName', async (req, res) => {
+    try {
+        const {restaurantId} = req.query;
+        const result = await getStoreName(restaurantId);
+        res.status(200).send(result[0]);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+
+})
+
 app.post('/uploadImg', async (req, res) => {
     try {
         const {uri, owner} = req.body;
@@ -300,6 +311,55 @@ app.post('/editReview', async (req, res) => {
         res.sendStatus(500);
     }
 })
+
+app.get('/checkLiked', async (req, res) => {
+    try {
+        const {userId, reviewId} = req.query;
+        const result = await checkLiked(reviewId, userId);
+        res.status(200).send(result);
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+app.post('/likeReview', async (req, res) => {
+    try {
+        const {userId, reviewId} = req.query;
+        const result = await likeReview(reviewId, userId);
+        if (result == 1) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
+    } catch (error0) {
+        res.sendStatus(500);
+    }
+})
+
+app.post('/unlikeReview', async (req, res) => {
+    try {
+        const {userId, reviewId} = req.query;
+        const result = await unlikeReview(reviewId, userId);
+        if (result == 1) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
+    } catch (error0) {
+        res.sendStatus(500);
+    }
+})
+
+app.get('/getNumLikes', async (req, res) => {
+    try {
+        const {reviewId} = req.query;
+        const result = await getNumLikes(reviewId);
+        res.status(200).send(result[0]);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+})
+
 // Error handler middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);

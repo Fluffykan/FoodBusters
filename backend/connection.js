@@ -112,6 +112,11 @@ export async function calculateAverageRating(restaurantID) {
     }
 }*/
 
+export async function getStoreName(restaurantId) {
+    const [result] = await pool.query("select storeName from restaurants where id = ?", [restaurantId]);
+    return(result);
+}
+
 export async function selectStoreImage(restaurantID) {
     try {
         console.log("Querying for store image with restaurantID:", restaurantID); // Log the restaurantID
@@ -215,4 +220,24 @@ export async function editReview(restaurantID, userID, userReview, userRating) {
                                         [userReview, userRating, restaurantID, userID]);
     console.log(result.affectedRows);
     return result.affectedRows;
+}
+
+export async function checkLiked(reviewId, userId) {
+    const [result] = await pool.query(`select count(*) as count from upvoted where userId = ? and reviewId = ?`, [userId, reviewId]);
+    return result;
+}
+
+export async function likeReview(reviewId, userId) {
+    const [result] = await pool.query("insert into upvoted (userId, reviewId) values (?, ?)", [userId, reviewId]);
+    return result.affectedRows;
+}
+
+export async function unlikeReview(reviewId, userId) {
+    const [result] = await pool.query('delete from upvoted where userId = ? and reviewId = ?', [userId, reviewId]);
+    return result.affectedRows;
+}
+
+export async function getNumLikes(reviewId) {
+    const [result] = await pool.query('select count(*) as count from upvoted where reviewId = ?', [reviewId]);
+    return result;
 }
