@@ -109,6 +109,7 @@ type User = {
             filteredUsers.map(user => (
               <UserCondensedInfo
                 key={user.id} // Ensure unique key prop
+                id={user.id} // Pass the user ID as a prop
                 username={user.username}
                 preference={user.preference}
                 rank={user.userrank}

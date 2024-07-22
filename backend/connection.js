@@ -40,8 +40,15 @@ export async function verifyUser(email, password) {
     return data;
 }
 
-export async function saveUserCreds(id,username, email, password) {
+/*export async function saveUserCreds(id,username, email, password) {
     fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password}`, {
+        flag: "w"
+    });
+    console.log("written");
+}*/
+
+export async function saveUserCreds(id,username, email, password, preference, points, cash, userrank) {
+    fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password},${preference},${points},${cash},${userrank}`, {
         flag: "w"
     });
     console.log("written");
@@ -50,6 +57,8 @@ export async function saveUserCreds(id,username, email, password) {
 export function getUserCreds() {
     return fs.readFileSync('./userCreds.txt', {encoding:'utf-8', flag:'r'});
 }
+
+// Reads more fields for users
 
 export async function getUsers() {
     const [data] = await pool.query("select * from users");
@@ -96,21 +105,6 @@ export async function calculateAverageRating(restaurantID) {
     return result[0].averageRating;
 }
 
-
-/*export async function selectStoreImage(restaurantID) {
-    const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
-    return result.length > 0 ? result[0].storeImage : null;
-}*/
-
-/*export async function selectStoreImage(restaurantID) {
-    try {
-        const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
-        return result.length > 0 ? result[0].storeImage : null;
-    } catch (error) {
-        console.error("Error selecting store image:", error);
-        throw error; // Rethrow the error to be caught by the calling function
-    }
-}*/
 
 export async function selectStoreImage(restaurantID) {
     try {
@@ -195,5 +189,71 @@ export async function checkFavorite(storeId, userId) {
 export async function getFavorites(userId) {
     const [result] = await pool.query("select res.* from restaurants as res, favorites as fav where fav.userId = 1 and fav.restaurantId = res.id", [userId]);
     console.log(result);
+    return result;
+}
+
+export async function updateUserPreference(userId, preference) {
+    const [result] = await pool.query("UPDATE users SET preference = ? WHERE id = ?", [preference, userId]);
+    return result.affectedRows;
+}
+
+/*export async function insertRecommendations(recommendations) {
+    const values = recommendations.map(rec => [rec.recommendby, rec.recommendto, rec.stallid]);
+    const [result] = await pool.query("INSERT INTO recommend (recommendby, recommendto, stallid) VALUES ?", [values]);
+    return result.affectedRows;
+}*/
+
+/*export async function insertRecommendations(recommendations) {
+    const values = recommendations.map(rec => [
+        rec.recommendby, 
+        rec.recommendto, 
+        rec.stallid, 
+        rec.username, 
+        rec.userrank
+    ]);
+    const [result] = await pool.query("INSERT INTO recommend (recommendby, recommendto, stallid, username, userrank) VALUES ?", [values]);
+    return result.affectedRows;
+}*/
+
+export async function insertRecommendations(recommendations) {
+    const values = recommendations.map(rec => [
+        rec.recommendby, 
+        rec.recommendto, 
+        rec.stallid, 
+        rec.username, 
+        rec.userrank,
+        rec.storeDist,
+        rec.storeClassification,
+        rec.storeStatus,
+        rec.storeName,
+        rec.storeAddress,
+        rec.storeRating
+    ]);
+    const [result] = await pool.query(`
+        INSERT INTO recommend (
+            recommendby, 
+            recommendto, 
+            stallid, 
+            username, 
+            userrank,
+            storeDist,
+            storeClassification,
+            storeStatus,
+            storeName,
+            storeAddress,
+            storeRating
+        ) VALUES ?`, [values]);
+    return result.affectedRows;
+}
+
+
+
+export async function selectRecommendationsByUserId(userId) {
+    const [result] = await pool.query("SELECT * FROM recommend WHERE recommendto = ?", [userId]);
+    return result;
+}
+
+export async function selectRestaurantsByIds(ids) {
+    const [result] = await pool.query("SELECT * FROM restaurants WHERE id IN (?)", [ids]);
     return result;
 }

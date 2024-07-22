@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
-import { Link, Redirect } from 'expo-router';
+import { Link, Redirect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
@@ -11,6 +11,8 @@ export default function LoginPage() {
     const [password, updatePassword] = useState<String>('');
     const [passwordError, updatePasswordError] = useState(true);
     const [attemptedLogin, updateAttemptedLogin] = useState(false);
+    const [userId, setUserId] = useState(null);
+    const router = useRouter();
 
     const handleLogin = () => {
         if (!hasEmptyField) {
@@ -21,7 +23,11 @@ export default function LoginPage() {
                     const status = response.status;
                     console.log("response status=" + status);
                     updatePasswordError(status != 200);
-                    updateAttemptedLogin(true);
+                    //updateAttemptedLogin(true);
+                    if (status === 200) {
+                        //setUserId(response.data.userId); // Set the userId upon successful login
+                        router.push(`/pages/tempHomeScreen?email=${email}&password_hash=${password}`);
+                    }
                 })
                 .catch(error => {
                     console.error(error);

@@ -24,7 +24,9 @@ import { useState } from 'react';
 
 export default function index() {
     return(
-        <EditProfilePage />
+        //<EditProfilePage />
+        <LoginPage />
+        //<RandomRec />
     )
 }
 

@@ -54,7 +54,8 @@ export default function RandomRec() {
     }
 
     const pointsBenefitSentence = "Did you know you can recommend dishes to other users based on their preferences. Successful recommendations will earn you loyalty points that can be exchanged for cash prizes and discounts at various dining spots!"
-
+    const indicatePreferenceSentence = "Indicate your preferences for other users to share their culinary insights with you!"
+    const recommendedFoodBySomeone = "Click below to check the food recommended by other users!"
     return (
         <View style={styles.container}>
             <View>
@@ -98,10 +99,18 @@ export default function RandomRec() {
 
                     <View style={styles.pointsBenefitContainer}>
                         <MaterialIcons name="favorite" size={50} color="black" />
-                        <Text style={styles.pointsBenefitText}>{pointsBenefitSentence}</Text>
+                        <Text style={styles.pointsBenefitText}>{indicatePreferenceSentence}</Text>
                     </View>
-                    <Link href='pages/recommendPage' style={styles.curlyButton}>
+                    <Link href='pages/indicatePreferencePage' style={styles.curlyButton}>
                         <Text style={styles.curlyButtonText}>Click here to indicate your preference!</Text>
+                    </Link>
+
+                    <View style={styles.pointsBenefitContainer}>
+                        <MaterialIcons name="mail" size={50} color="black" />
+                        <Text style={styles.pointsBenefitText}>{recommendedFoodBySomeone}</Text>
+                    </View>
+                    <Link href='pages/checkRecommendedFood' style={styles.curlyButton}>
+                        <Text style={styles.curlyButtonText}>Check what has been recommended!</Text>
                     </Link>
                 </View>
             </View>
@@ -134,7 +143,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         borderWidth: 2,
         borderColor: '#000',
-        borderRadius: 15,
+        borderRadius: 5,
         paddingVertical: 10,
         paddingHorizontal: 20,
         marginTop: 10,

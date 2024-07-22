@@ -3,19 +3,20 @@ import { Link } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 
 type UserCondensedInfoProps = {
+    id: number;
     username: string;
     preference: string;
     rank: string;
 };
 
 export default function UserCondensedInfo(props: UserCondensedInfoProps) {
-    const { username, preference, rank } = props;
+    const { id, username, preference, rank } = props;
 
     // Truncate the preference field to the first 4 words
     const truncatedPreference = preference.split(' ').slice(0, 4).join(' ') + ' ...';
 
     // Create query string with parameters
-    const queryParams = `username=${username}&preference=${truncatedPreference}&rank=${rank}`;
+    const queryParams = `userid=${id}&username=${username}&preference=${preference}&userrank=${rank}`;
 
     return (
         <Link href={`/pages/recommendToUserPage?${queryParams}`} style={styles.overallContainer} replace={true}>

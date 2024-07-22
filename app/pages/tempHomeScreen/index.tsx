@@ -1,5 +1,6 @@
 import { StyleSheet, View, ScrollView, FlatList, Text, Modal } from "react-native";
 import { useState, useEffect } from "react";
+import { useLocalSearchParams } from 'expo-router';
 import Header from "@/components/Header";
 import ShopCondensedInfo from "@/app/components/ShopCondensedInfo";
 import PageBreakLine from "@/components/PageBreakLine";
@@ -38,6 +39,8 @@ export default function TempHomeScreen() {
       setFilterModalVisible(true);
     };
 
+    const uniqueUserID = 0;
+
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
@@ -48,7 +51,10 @@ export default function TempHomeScreen() {
     const fetchAverageRatingUrlWeiBin = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
     const fetchAverageRatingUrlJunHong = (id: number) => `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
 
-    const fetch = () => {
+    const [userId, setUserId] = useState<number | null>(null); // State to store userId
+
+
+    const fetchRestaurants = () => {
     axios.get(weibinURL)
       .then(response => {
         const fetchedRestaurants = response.data;
@@ -78,7 +84,7 @@ export default function TempHomeScreen() {
   
     // Added this
     useEffect(() => {
-      fetch();
+      fetchRestaurants();
     }, []);
 
     // Filter function
@@ -125,14 +131,6 @@ export default function TempHomeScreen() {
 
     return (
 
-      // To check if my app is actually connected to the server
-
-      /*<View>
-          <Text>restaurants</Text>
-          <Button text="fetch" border='rounded' fn={fetch} />
-          <Text>help</Text>
-      </View>*/
-
     <View style={styles.container}>
             
         <Header header='FoodBuster' />
@@ -167,6 +165,7 @@ export default function TempHomeScreen() {
                 )}
                 
             </ScrollView>
+            
             <Navbar />
 
             {/* Filter Modal */}
@@ -181,26 +180,6 @@ export default function TempHomeScreen() {
     )
 
 }
-
-/*
-<Modal
-                transparent={true}
-                visible={filterModalVisible}
-                animationType="slide"
-                onRequestClose={() => setFilterModalVisible(false)}
-              >
-                <View style={styles.modalContainer}>
-                  <View style={styles.modalContent}>
-                    <Text style={styles.modalTitle}>Filter Options</Text>
-                    {}
-                    <Button text="Close" border='rounded' fn={() => setFilterModalVisible(false)} />
-                  </View>
-                </View>
-            </Modal>
-*/
-
-// Previously
-// <LinkIconButtonWithOptionalText iconName="filter" fn={handleFilter} />
 
 const styles1 = StyleSheet.create({
     container: {

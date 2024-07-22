@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -20,7 +20,7 @@ app.get('/users', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
+/*app.post('/login', async (req, res) => {
     try {
         console.log(req.params)
         const {email, password_hash} = req.body;
@@ -30,6 +30,23 @@ app.post('/login', async (req, res) => {
             res.status(401).send("unknown user");
         } else {
             await saveUserCreds(result.id, result.username, result.email, result.password_hash)
+            res.status(200).send("successful login: " + result.username);
+        }
+    } catch (error) {
+        res.status(500).send("something broke", error)
+    }
+});*/
+
+app.post('/login', async (req, res) => {
+    try {
+        console.log(req.params)
+        const {email, password_hash} = req.body;
+        const [result] = await verifyUser(email, password_hash);
+        console.log(result);
+        if (result == undefined) {
+            res.status(401).send("unknown user");
+        } else {
+            await saveUserCreds(result.id, result.username, result.email, result.password_hash, result.preference, result.points, result.cash, result.userrank)
             res.status(200).send("successful login: " + result.username);
         }
     } catch (error) {
@@ -143,6 +160,24 @@ app.get('/averageRating', async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+// For fetching uniqueuser primary key ID
+app.post('/uniqueuser', async (req, res) => {
+    try {
+        const { email, password_hash } = req.body;
+        const result = await verifyUser(email, password_hash);
+        if (result.length > 0) {
+            const userId = result[0].id; // Assuming id is the primary key in your users table
+            res.status(200).json({ userId });
+        } else {
+            res.status(404).send("User not found");
+        }
+    } catch (error) {
+        console.error("Error retrieving unique user:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
 
 // New endpoint for fetching the store image by restaurantID
 /*app.get('/storeImage', async (req, res) => {
@@ -271,6 +306,63 @@ app.post('/getFavorites', async (req, res) => {
         res.status(500).send(error);
     }
 })
+
+app.put('/updatePreference', async (req, res) => {
+    const { userId, preference } = req.body;
+    try {
+        const result = await updateUserPreference(userId, preference);
+        res.json({ affectedRows: result });
+    } catch (error) {
+        console.error('Error updating preference:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+/*app.post('/recommendations', async (req, res) => {
+    try {
+      const recommendations = req.body.recommendations;
+      await insertRecommendations(recommendations);
+      res.status(201).send('Recommendations added successfully');
+    } catch (error) {
+      console.error('Error adding recommendations', error);
+      res.status(500).send('Error adding recommendations');
+    }
+});*/
+
+app.post('/recommendations', async (req, res) => {
+    try {
+        const recommendations = req.body.recommendations;
+        await insertRecommendations(recommendations);
+        res.status(201).send('Recommendations added successfully');
+    } catch (error) {
+        console.error('Error adding recommendations', error);
+        res.status(500).send('Error adding recommendations');
+    }
+});
+
+
+app.get('/getUserRecommendations', async (req, res) => {
+    const { userId } = req.query;
+    try {
+        const result = await selectRecommendationsByUserId(userId);
+        console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.status(500).send("unknown error" + error);
+    }
+});
+
+app.get('/getRecommendedRestaurants', async (req, res) => {
+    try {
+        const { stallIds } = req.query;
+        const idsArray = stallIds.split(',').map(id => parseInt(id, 10));
+        const restaurants = await selectRestaurantsByIds(idsArray);
+        res.json(restaurants);
+    } catch (error) {
+        console.error('Error fetching recommended restaurants:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 
 // Error handler middleware
 app.use((err, req, res, next) => {
