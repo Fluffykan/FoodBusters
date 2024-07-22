@@ -154,7 +154,7 @@ function ReviewsListView({userId}:ViewProps) {
     return (
         <View>
             { /* redlines are there but it works as intended, just leave it alone */
-            reviews.map(review => <ReviewsComponent userID={review.username} userReview={review.userReview} userRating={review.userRating} />)}
+            reviews.map(review => <ReviewsComponent restaurantId={review.restaurantID} reviewID={review.reviewID} userID={review.username} userReview={review.userReview} userRating={review.userRating} />)}
         </View>
     )
 

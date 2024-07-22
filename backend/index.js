@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -215,6 +215,17 @@ app.get('/storeImage', async (req, res) => {
     }
 });
 
+app.get('/getStoreName', async (req, res) => {
+    try {
+        const {restaurantId} = req.query;
+        const result = await getStoreName(restaurantId);
+        res.status(200).send(result[0]);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+
+})
+
 app.post('/uploadImg', async (req, res) => {
     try {
         const {uri, owner} = req.body;
@@ -266,6 +277,13 @@ app.get("/getUserReviews/:email", async (req, res) => {
     }
 }) 
 
+app.get("/getUserReview", async (req, res) => {
+    const {restaurantID, username} = req.query;
+    console.log(restaurantID + " " + username);
+    const result = await getUserReview(restaurantID, username);
+    res.status(200).send(result);
+})
+
 // endpoint for setting restaurant as favorite
 app.post('/setFavorite', async (req, res) => {
     try {
@@ -304,6 +322,76 @@ app.post('/getFavorites', async (req, res) => {
         res.status(200).send(restaurants);
     } catch (error) {
         res.status(500).send(error);
+    }
+})
+
+app.post("/postReview", async (req, res) => {
+    try {
+        const {restaurantId, username, review, rating} = req.body;
+        console.log("received");
+        postReview(restaurantId, username, review, rating);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+})
+
+app.post('/editReview', async (req, res) => {
+    try {
+        const {restaurantId, username, review, rating} = req.body;
+        console.log("received");
+        editReview(restaurantId, username, review, rating);
+        res.sendStatus(200);
+    } catch (error) {
+        res.sendStatus(500);
+    }
+})
+
+app.get('/checkLiked', async (req, res) => {
+    try {
+        const {userId, reviewId} = req.query;
+        const result = await checkLiked(reviewId, userId);
+        res.status(200).send(result);
+    } catch (error) {
+        console.error(error);
+    }
+})
+
+app.post('/likeReview', async (req, res) => {
+    try {
+        const {userId, reviewId} = req.query;
+        const result = await likeReview(reviewId, userId);
+        if (result == 1) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
+    } catch (error0) {
+        res.sendStatus(500);
+    }
+})
+
+app.post('/unlikeReview', async (req, res) => {
+    try {
+        const {userId, reviewId} = req.query;
+        const result = await unlikeReview(reviewId, userId);
+        if (result == 1) {
+            res.sendStatus(200);
+        } else {
+            res.sendStatus(500);
+        }
+    } catch (error0) {
+        res.sendStatus(500);
+    }
+})
+
+app.get('/getNumLikes', async (req, res) => {
+    try {
+        const {reviewId} = req.query;
+        const result = await getNumLikes(reviewId);
+        res.status(200).send(result[0]);
+    } catch (error) {
+        res.sendStatus(500);
     }
 })
 

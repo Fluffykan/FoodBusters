@@ -4,7 +4,7 @@ import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
 import axios from 'axios';
 import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
-import PopupEditProfileSuccess from '@/components/popupEditProfileSuccess';
+import RedirectingPopup from '@/components/RedirectingPopup';
 
 export default function EditProfilePage() {
     const [password, updatePassword] = useState('');
@@ -51,7 +51,7 @@ export default function EditProfilePage() {
 
     return (
         <View style={styles.container}>
-            <PopupEditProfileSuccess 
+            <RedirectingPopup 
                 visible={popupVisible} 
                 iconName='home'
                 bodyText='Successfully Update Profile'

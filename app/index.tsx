@@ -19,7 +19,7 @@ import ShopCondensedInfo from './components/ShopCondensedInfo';
 import UserCondensedInfo from './components/UserCondensedInfo';
 import CreateAccountPage from './pages/createAccount';
 import EditProfilePage from './pages/profilePage/components/editProfilePage';
-import PopupEditProfileSuccess from '../components/popupEditProfileSuccess';
+import PopupEditProfileSuccess from '../components/RedirectingPopup';
 import { useState } from 'react';
 
 export default function index() {

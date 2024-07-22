@@ -106,6 +106,26 @@ export async function calculateAverageRating(restaurantID) {
 }
 
 
+/*export async function selectStoreImage(restaurantID) {
+    const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
+    return result.length > 0 ? result[0].storeImage : null;
+}*/
+
+/*export async function selectStoreImage(restaurantID) {
+    try {
+        const [result] = await pool.query("SELECT storeImage FROM restaurantstest1 WHERE id = ?", [restaurantID]);
+        return result.length > 0 ? result[0].storeImage : null;
+    } catch (error) {
+        console.error("Error selecting store image:", error);
+        throw error; // Rethrow the error to be caught by the calling function
+    }
+}*/
+
+export async function getStoreName(restaurantId) {
+    const [result] = await pool.query("select storeName from restaurants where id = ?", [restaurantId]);
+    return(result);
+}
+
 export async function selectStoreImage(restaurantID) {
     try {
         console.log("Querying for store image with restaurantID:", restaurantID); // Log the restaurantID
@@ -154,6 +174,11 @@ export async function getAllImages(email) {
 
 export async function getUserReviews(id) {
     const [result] = await pool.query(`select * from reviews as rev, users as u where u.id = ? and rev.userID = u.username`, [id]);
+    return result;
+}
+
+export async function getUserReview(restaurantId, username) {
+    const [result] = await pool.query("select * from reviews where restaurantID = ? and userID = ?", [restaurantId, username]);
     return result;
 }
 
