@@ -7,7 +7,7 @@ type ShopCondensedInfoProps = {
     storeAddress: string;
     storeStatus: string;
     storeClassification: string;
-    storeRating: string;
+    storeRating: string | number;
     storeDist: string;
 };
 
@@ -24,8 +24,8 @@ export default function ShopCondensedInfo(props: ShopCondensedInfoProps) {
     //const storeClassification = 'Cafe, Coffee, Toast';
 
     // Convert storeRating and storeDist to numbers
-    const rating = parseFloat(storeRating);
-    const distance = parseFloat(storeDist);
+    // const rating = parseFloat(storeRating);
+    // const distance = parseFloat(storeDist);
 
     // Create query string with parameters
     const queryParams = `id=${id}&storeName=${storeName}&storeAddress=${storeAddress}&storeStatus=${storeStatus}&storeClassification=${storeClassification}&storeRating=${storeRating}&storeDist=${storeDist}`;

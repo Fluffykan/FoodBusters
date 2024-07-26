@@ -37,7 +37,7 @@ export default function CheckRecommendedFood() {
 
     const getUserData = async () => {
         try {
-            const response = await axios.get(weibinURLUser);
+            const response = await axios.get('http://10.0.2.2:4200/getUserCreds');
             const data = response.data;
             console.log(data);
             setUserId(data[0]);
@@ -53,7 +53,7 @@ export default function CheckRecommendedFood() {
 
     const getRecommendations = async () => {
         try {
-            const response = await axios.get(`${weibinURLRecommend}?userId=${userId}`);
+            const response = await axios.get(`http://10.0.2.2:4200/getUserRecommendations?userId=${userId}`);
             const data : Recommendation[] =  response.data;
             setRecommendData(data);
             setFilteredRecommendData(data);

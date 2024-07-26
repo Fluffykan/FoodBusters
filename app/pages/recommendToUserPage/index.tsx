@@ -39,7 +39,6 @@ export default function RecommendToUserPage() {
   const fetchAverageRatingUrlWeiBin = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
 
   const weibinURLUser = 'http://192.168.1.71:4200/getUserCreds'
-  const junHongURLUser = 'http://10.0.2.2:4200/getUserCreds'
 
   const [userId, setUserId] = useState(""); // recommendBy user details
   const [usernameBy, setUsername] = useState("");
@@ -48,7 +47,7 @@ export default function RecommendToUserPage() {
 
   const getUserData = async () => {
     try {
-        const response = await axios.get(weibinURLUser);
+        const response = await axios.get('http://10.0.2.2:4200/getUserCreds');
         const data = response.data;
         console.log(data);
         setUserId(data[0]);
@@ -65,11 +64,11 @@ export default function RecommendToUserPage() {
   // For the original
 
   const fetchRestaurants = () => {
-    axios.get<Restaurant[]>(weibinURL)
+    axios.get<Restaurant[]>('http://10.0.2.2:4200/restaurants')
       .then(response => {
         const fetchedRestaurants = response.data;
         const fetchRatingsPromises = fetchedRestaurants.map((restaurant: Restaurant) =>
-          axios.get(fetchAverageRatingUrlWeiBin(restaurant.id)).then(res => ({
+          axios.get(`http://10.0.2.2:4200/averageRating?restaurantID=${restaurant.id}`).then(res => ({
             ...restaurant,
             averageRating: res.data.averageRating
           }))
@@ -92,9 +91,10 @@ export default function RecommendToUserPage() {
   };
 
   useEffect(() => {
+    console.log("loading");
     fetchRestaurants();
-    getUserData();
-  }, []);
+    getUserData(); 
+  }, [loading]);
 
   const filterRestaurants = (keyword: string) => {
     const filtered = restaurants.filter(restaurant =>
@@ -169,7 +169,7 @@ export default function RecommendToUserPage() {
         };
       });
   
-      await axios.post('http://192.168.1.71:4200/recommendations', { recommendations });
+      await axios.post('http://10.0.2.2:4200/recommendations', { recommendations });
       alert('Recommendations confirmed!');
     } catch (error) {
       console.error('Error confirming recommendations', error);
@@ -235,6 +235,7 @@ export default function RecommendToUserPage() {
         <Button
           text="Confirm Recommendation"
           bgColor="#6B8EAE" // Blue color
+          border='rounded'
           fn={handleConfirmRecommendation}
         />
       </View>

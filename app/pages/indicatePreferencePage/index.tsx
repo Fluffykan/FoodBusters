@@ -18,11 +18,10 @@ export default function IndicatePreferencePage() {
     const [charCount, setCharCount] = useState(0);
 
     const weibinURL = 'http://192.168.1.71:4200/getUserCreds'
-    const junHongURL = 'http://10.0.2.2:4200/getUserCreds'
 
     const getUserData = async () => {
         try {
-            const response = await axios.get(weibinURL);
+            const response = await axios.get('http://10.0.2.2:4200/getUserCreds');
             const data = response.data;
             console.log(data);
             setUserId(data[0]);
@@ -52,7 +51,7 @@ export default function IndicatePreferencePage() {
 
     const handleUpdatePreference = async () => {
         try {
-            const response = await axios.put(updatePreferenceURLWeiBin, {
+            const response = await axios.put('http://10.0.2.2:4200/updatePreference', {
                 userId,
                 preference: inputText
             });
@@ -113,6 +112,7 @@ export default function IndicatePreferencePage() {
                         text="Indicate your preference"
                         fn={handleUpdatePreference}
                         bgColor="#0000FF"
+                        border='rounded'
                     />
                 </View>
             </ScrollView>
@@ -124,6 +124,7 @@ export default function IndicatePreferencePage() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'space-between'
     },
     scrollContent: {
         flexGrow: 1,

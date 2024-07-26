@@ -101,8 +101,14 @@ export async function selectReviewsByRestaurantID(restaurantID) {
 
 
 export async function calculateAverageRating(restaurantID) {
-    const [result] = await pool.query("SELECT AVG(userRating) as averageRating FROM reviews WHERE restaurantID = ?", [restaurantID]);
-    return result[0].averageRating;
+    try {
+        const [result] = await pool.query("SELECT AVG(userRating) as averageRating FROM reviews WHERE restaurantID = ?", [restaurantID]);
+        return result[0].averageRating;
+    } catch (error) {
+        const [result] = await pool.query("select storeRating from restaurants where id = ?", [restaurantID]);
+        return result[0].storeRating;
+    }
+    
 }
 
 
@@ -214,6 +220,39 @@ export async function checkFavorite(storeId, userId) {
 export async function getFavorites(userId) {
     const [result] = await pool.query("select res.* from restaurants as res, favorites as fav where fav.userId = 1 and fav.restaurantId = res.id", [userId]);
     console.log(result);
+    return result;
+}
+
+export async function postReview(restaurantID, userID, userReview, userRating) {
+    const[result] = await pool.query("insert into reviews (restaurantID, userID, userReview, userRating) values (?,?,?,?)", 
+                                        [restaurantID, userID, userReview, userRating]);
+    console.log(result.affectedRows);
+    return result.affectedRows;
+}
+
+export async function editReview(restaurantID, userID, userReview, userRating) {
+    const[result] = await pool.query("update reviews set userReview = ?, userRating = ? where restaurantID = ? and userID = ?", 
+                                        [userReview, userRating, restaurantID, userID]);
+    console.log(result.affectedRows);
+}
+
+export async function checkLiked(reviewId, userId) {
+    const [result] = await pool.query(`select count(*) as count from upvoted where userId = ? and reviewId = ?`, [userId, reviewId]);
+    return result;
+}
+
+export async function likeReview(reviewId, userId) {
+    const [result] = await pool.query("insert into upvoted (userId, reviewId) values (?, ?)", [userId, reviewId]);
+    return result.affectedRows;
+}
+
+export async function unlikeReview(reviewId, userId) {
+    const [result] = await pool.query('delete from upvoted where userId = ? and reviewId = ?', [userId, reviewId]);
+    return result.affectedRows;
+}
+
+export async function getNumLikes(reviewId) {
+    const [result] = await pool.query('select count(*) as count from upvoted where reviewId = ?', [reviewId]);
     return result;
 }
 

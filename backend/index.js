@@ -154,7 +154,7 @@ app.get('/averageRating', async (req, res) => {
 
     try {
         const averageRating = await calculateAverageRating(restaurantID);
-        res.json({ averageRating });
+        res.json({ averageRating: parseFloat(averageRating) });
     } catch (err) {
         console.error("Error calculating average rating:", err);
         res.status(500).send("Internal Server Error");

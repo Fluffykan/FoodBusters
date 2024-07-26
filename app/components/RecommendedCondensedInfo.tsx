@@ -32,28 +32,31 @@ export default function RecommendedCondensedInfo(props: RecommendedCondensedInfo
 
     return (
         <Link href={`/pages/stallscreen?${queryParams}`} style={styles.overallContainer} replace={true}>
-            <View style={styles.recommendationContainer}>
-                <View style={styles.flexRowContainer}>
-                    <Text style={styles.recommendedByText}>Recommended By: {username}</Text>
-                </View>
-                <Text style={styles.userrankText}>Rank: {userrank}</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-                <View style={styles.storeImageContainer}>
-                    <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
-                </View>
-                <View>
+            <View>
+                <View style={styles.recommendationContainer}>
                     <View style={styles.flexRowContainer}>
-                        <Text style={styles.informationText}>{storeName}</Text>
-                        <Text style={styles.storeDistance}>{storeDist}</Text>
+                        <Text style={styles.recommendedByText}>Recommended By: {username}</Text>
                     </View>
-                    <Text style={styles.informationText}>{storeAddress}</Text>
-                    <View style={styles.flexRowContainer}>
-                        <Text style={styles.informationText}>{storeRating}</Text>
-                        <Image source={require('../assets/star.png')} style={{height: 13, width: 13}} />
+                    <Text style={styles.userrankText}>Rank: {userrank}</Text>
+                </View>
+
+                <View style={{flexDirection: 'row'}}>
+                    <View style={styles.storeImageContainer}>
+                        <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
                     </View>
-                    <Text style={styles.informationText}>{storeStatus}</Text>
-                    <Text style={styles.informationText}>{storeClassification}</Text>
+                    <View>
+                        <View style={styles.flexRowContainer}>
+                            <Text style={styles.informationText}>{storeName}</Text>
+                            <Text style={styles.storeDistance}>{storeDist}</Text>
+                        </View>
+                        <Text style={styles.informationText}>{storeAddress}</Text>
+                        <View style={styles.flexRowContainer}>
+                            <Text style={styles.informationText}>{storeRating}</Text>
+                            <Image source={require('../assets/star.png')} style={{height: 13, width: 13}} />
+                        </View>
+                        <Text style={styles.informationText}>{storeStatus}</Text>
+                        <Text style={styles.informationText}>{storeClassification}</Text>
+                    </View>
                 </View>
             </View>
         </Link>
@@ -96,12 +99,14 @@ const styles = StyleSheet.create({
     storeImageContainer: {
         width: '30%',
         height: '100%',
-        borderWidth: 1,
+        aspectRatio: "1/1",
         backgroundColor: 'black',
+        padding: 5,
     },
     storeImage: {
         resizeMode: 'stretch',
-        flex: 1,
+        width: '100%',
+        height: '100%',
     },
     informationText: {
         paddingLeft: 10,
