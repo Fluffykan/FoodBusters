@@ -2,6 +2,8 @@ import mysql from 'mysql2';
 import dotenv from 'dotenv';
 import { Buffer } from 'buffer';
 import fs from 'fs-extra';
+import bcrypt from 'bcrypt';
+const saltRounds = 10;
 
 dotenv.config();
 
@@ -34,18 +36,22 @@ const imgPool = mysql.createPool({
 
 
 export async function verifyUser(email, password) {
-    console.log(email + " " + password);
-    const [data] = await pool.query("select * from users where email = ? and password_hash = ?", [email, password]);
-    console.log(data);  
-    return data;
+    async function comparePasswords(thisPassword, database) {
+        try {
+            const result = await bcrypt.compare(thisPassword, database);
+            // console.log(`password match = ${result}`);
+            return result;
+        } catch (error) {
+            console.error(error);
+        }
+        
+    }
+    const [data] = await pool.query("select * from users where email = ?", [email]);
+    // console.log(data[0]);  
+    const database_password_hash = data[0].password_hash;
+    const match = await comparePasswords(password, database_password_hash)
+    return match ? data : null; 
 }
-
-/*export async function saveUserCreds(id,username, email, password) {
-    fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password}`, {
-        flag: "w"
-    });
-    console.log("written");
-}*/
 
 export async function saveUserCreds(id,username, email, password, preference, points, cash, userrank) {
     fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password},${preference},${points},${cash},${userrank}`, {
@@ -66,7 +72,7 @@ export async function getUsers() {
 }
 
 export async function createAccount(username, email, password) {
-    const [result] = await pool.query("insert into users (username, email, password_hash) values (?, ?, ?)", [username, email, password]);
+    const [result] = await pool.query("insert into users (username, email, password_hash, preference, points, cash, userrank) values (?, ?, ?, '', 0, 0, 'Apprentice Chef')", [username, email, password]);
     return result.affectedRows;
 }
 
@@ -320,4 +326,24 @@ export async function selectRecommendationsByUserId(userId) {
 export async function selectRestaurantsByIds(ids) {
     const [result] = await pool.query("SELECT * FROM restaurants WHERE id IN (?)", [ids]);
     return result;
+}
+
+export async function hashFunction(password) {
+    // bcrypt.genSalt(saltRounds)
+    // .then(salt => {
+    //     console.log(`Salt: ${salt}`);
+    //     return bcrypt.hash(password, salt);
+    // })
+    // .then(hash => {
+    //     console.log(`Hash: ${hash}`);
+    //     })
+    // .catch(error => console.error(error));
+    try {
+        const hash = await bcrypt.hash(password, saltRounds);
+        console.log(`Hash: ${hash}`);
+        return hash;
+    } catch (error) {
+        console.error(error);
+    }
+
 }
