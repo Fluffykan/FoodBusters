@@ -1,10 +1,11 @@
 import InputBoxWithOptionalTitle from "@/components/InputBoxWithTitle";
 import Button from "@/components/Button";
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, Alert } from 'react-native';
 import { useState } from "react";
 import axios from 'axios';
 import TopButtonPlusHeader from "@/components/TopButtonPlusHeader";
 import NavIconButtonWithOptionalText from "@/components/NavIconButtonWithOptionalText";
+import { Redirect } from "expo-router";
 
 export default function ResetPassword() {
     const [email, updateEmail] = useState('');
@@ -24,7 +25,7 @@ export default function ResetPassword() {
                 .then(response => {
                     console.log('reset password success');
                     const status = response.status;
-                    updateResetPasswordSuccess(status == 200);
+                    showAlert(status == 200);
                     updateAttempt(true);
                 })
                 .catch(error => {
@@ -36,12 +37,42 @@ export default function ResetPassword() {
         }
     }
 
+    const showAlert = (b:boolean) => {
+        if (b) {
+            Alert.alert(
+                'Password Reset Successfully!',
+                '',
+                [
+                    {
+                        text: 'Back to Login',
+                        style: 'cancel',
+                        onPress: () => updateResetPasswordSuccess(true),
+                    }
+                ], 
+                {
+                    cancelable: true,
+                }
+            )
+        } else {
+            Alert.alert(
+                'Password Reset Error!',
+                'Password could not be reset, please try again.',
+                [
+                    {
+                        text: 'close',
+                        style: 'cancel',
+                    }
+                ], 
+                {
+                    cancelable: true,
+                }
+            )
+        }
+    }
+
     if (resetPasswordSuccess) {
         return (
-            <View style={styles.successScreen}>
-                <Text style={styles.pageHeading}>Reset Password Success!</Text>
-                <NavIconButtonWithOptionalText iconName="enter" destination="/pages/loginPage" text="Back To Login" flexDir="row" border={true} replaceScreen={true} />
-            </View>
+            <Redirect href="/pages/loginPage" />
         )
     } else {
         return (

@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
 import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
 import axios from 'axios';
 import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
-import RedirectingPopup from '@/components/RedirectingPopup';
+import { Redirect } from 'expo-router';
 
 export default function CreateAccountPage() {
     const [username, updateUsername] = useState('');
@@ -12,7 +12,6 @@ export default function CreateAccountPage() {
     const [password, updatePassword] = useState('');
     const [confirmPassword, updateConfirmPassword] = useState('');
     const [emailTaken, updateEmailTaken] = useState(false);
-    const [popupVisible, setPopupVisible] = useState(false);
 
     // TODO: 
     // CREATE LOGIC TO HANDLE ACCOUNT CREATION
@@ -23,7 +22,7 @@ export default function CreateAccountPage() {
             axios.post('http://10.0.2.2:4200/createAccount', {username:username, email:email, password_hash:password})
                 .then(response => {
                     console.log(`Success! New Account: username=${username},email=${email},password=${password}`)
-                    setPopupVisible(true);
+                    showAlert();
                 })
                 .catch(error => {
                     // if email has been used, display the error for user to see
@@ -35,20 +34,32 @@ export default function CreateAccountPage() {
     const passwordMismatch = !(password === confirmPassword);
     const hasEmptyField = (username == '' || password == '' || email == '' || confirmPassword == '');
 
+    const [redirect, setRedirect] = useState(false);
+    const showAlert = () => {
+        Alert.alert(
+            'Account Successfully Created!',
+            '',
+            [
+                {
+                    text: 'Back to Login',
+                    onPress: () => setRedirect(true),
+                    style: 'cancel'
+                }, 
+            ], 
+            {
+                cancelable: true,
+            }
+        )
+    };
+
+    if (redirect) {
+        return (
+            <Redirect href='/pages/loginPage' />
+        )
+    }
+
     return (
         <View style={styles.container}>
-            <RedirectingPopup 
-                visible={popupVisible}
-                bodyText='Account Creation Success'
-                buttonText='Back To Login'
-                iconName='login'
-                redirectTo='/pages/loginPage'
-                borderWidth={2}
-                fontSize={40}
-                paddingVertical={60}
-                bgColor='#04ff00'
-                buttonColor='#ffffff'
-            />
             <TopButtonPlusHeader header='FoodBuster' transparentBg={true} destination='/pages/loginPage' replaceScreen={true} />
             <Text style={styles.pageHeading}>Create Account</Text>
             <InputBoxWithOptionalTitle title='Username' placeholder='' updaterFn={updateUsername} />

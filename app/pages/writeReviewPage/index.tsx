@@ -1,21 +1,15 @@
-import { StyleSheet, View, Text, ScrollView, TextInput, Modal } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TextInput, Modal, Alert } from "react-native";
 import { useEffect, useState } from "react";
-import { useLocalSearchParams, useSegments } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import Icon from 'react-native-vector-icons/AntDesign';
 import Slider from '@react-native-community/slider'; //npm install @react-native-community/slider <= Make sure to run this first
 import Button from "@/components/Button";
 import ImagePickerButton from "./components/imagePicker";
 import axios from "axios";
-import { CollapsablePopupWindowStyle } from "@/components/CollapsablePopup";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
 
 
 export default function WriteReviewPage() {
-
-    /*const storeName = "La Jiang Shan";
-    const storeAddress = "@ Selegie Road";*/
-    const [successPopupVisible, setSuccessPopupVisible] = useState(false);
-    const [failedPopupVisible, setFailedPopupVisible] = useState(false);
 
     const [username, setUsername] = useState("");
     const { stallName, stallAddress, restaurantID } = useLocalSearchParams();
@@ -71,50 +65,58 @@ export default function WriteReviewPage() {
         if (!hasPastReview) {
             // no previous review, insert new review
             await axios.post("http://10.0.2.2:4200/postReview", {restaurantId:restaurantID, username:username, review:review, rating:rating.toFixed(1)})
-                        .then(() => setSuccessPopupVisible(true))
+                        .then(() => showAlert(true))
                         .catch(error => {
                             console.error(error);
-                            setFailedPopupVisible(true);
+                            showAlert(false);
                         })
         } else {
             // has previous review, modify previous review
             await axios.post("http://10.0.2.2:4200/editReview", {restaurantId:restaurantID, username:username, review:review, rating:rating.toFixed(1)})
-                        .then(() => setSuccessPopupVisible(true))
+                        .then(() => showAlert(true))
                         .catch(error => {
                             console.error(error);
-                            setFailedPopupVisible(true);
+                            showAlert(false);
                         })
         }
         setEmptyReview(false);
 
     }
+
+    const showAlert = (b:boolean) => {
+        if (b) {
+            Alert.alert(
+                'Review Successfully Posted!',
+                '',
+                [
+                    {
+                        text: 'close',
+                        style: 'cancel',
+                    }
+                ], 
+                {
+                    cancelable: true,
+                }
+            )
+        } else {
+            Alert.alert(
+                'Error Posting Review',
+                'Something went wrong when posting your review, please try again',
+                [
+                    {
+                        text: 'close',
+                        style: 'cancel'
+                    }
+                ], 
+                {
+                    cancelable: true,
+                }
+            )
+        }
+    }
     
     return (
         <ScrollView style={styles.container}>
-            <CollapsablePopupWindowStyle
-                visible={successPopupVisible}
-                setVisible={setSuccessPopupVisible}
-                bodyText="Review Successfully Posted!"
-                fontSize={40}
-                height={40}
-                width={70}
-                borderWidth={1}
-                borderRadius={10}
-                buttonColor="red"
-                bgColor="#00ff44"
-            />
-            <CollapsablePopupWindowStyle
-            visible={failedPopupVisible}
-            setVisible={setFailedPopupVisible}
-            bodyText="Could Not Upload Review :("
-            fontSize={40}
-            height={40}
-            width={70}
-            borderWidth={1}
-            borderRadius={10}
-            buttonColor="white"
-            bgColor="#ff0000"
-        />
             <View style={styles.storeInfo}>
                 <Text style={styles.storeName}>{stallName}</Text>
                 <Text style={styles.storeAddress}>{stallAddress}</Text>

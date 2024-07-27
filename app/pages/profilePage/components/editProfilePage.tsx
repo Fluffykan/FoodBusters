@@ -1,17 +1,16 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Alert } from 'react-native';
 import { useEffect, useState } from 'react';
 import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
 import axios from 'axios';
 import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
-import RedirectingPopup from '@/components/RedirectingPopup';
+import { Redirect } from 'expo-router';
 
 export default function EditProfilePage() {
     const [password, updatePassword] = useState('');
     const [confirmPassword, updateConfirmPassword] = useState('');
     const [emailTaken, updateEmailTaken] = useState(false);
     const [oldCreds, setOldCreds] = useState<string[]>([]);
-    const [popupVisible, setPopupVisible] = useState(false);
 
     const getUserCreds = async () => {
         try {
@@ -24,8 +23,7 @@ export default function EditProfilePage() {
     useEffect(() => {
         getUserCreds();
     },[])
-    // TODO: 
-    // CREATE LOGIC TO HANDLE ACCOUNT CREATION
+
     const handleEditProfile = () => {
         if (!passwordMismatch && !hasEmptyField) {
             updateEmailTaken(false);
@@ -37,7 +35,7 @@ export default function EditProfilePage() {
                     }
                     axios.post("http://10.0.2.2:4200/updateUserCreds", {id:oldCreds[0],username:oldCreds[1], email:oldCreds[2], password:password});
                     console.log(`Success! New Profile details: username=${oldCreds[1]},email=${oldCreds[2]},password=${password}`)
-                    setPopupVisible(true);
+                    showAlert();
                 })
                 .catch(error => {
                     // if email has been used, display the error for user to see
@@ -49,20 +47,32 @@ export default function EditProfilePage() {
     const passwordMismatch = !(password === confirmPassword);
     const hasEmptyField = (password == '' || confirmPassword == '');
 
+    const [redirect, setRedirect] = useState(false);
+    const showAlert = () => {
+        Alert.alert(
+          'Password Successfuly Reset',
+          '',
+          [
+            {
+              text: 'Back to Profile Page',
+              onPress: () => setRedirect(true),
+              style: 'cancel',
+            },
+          ],
+          {
+            cancelable: true,
+          },
+        )
+    };
+
+    if (redirect) {
+        return (
+            <Redirect href='/pages/profilePage' />
+        )
+    }
+
     return (
         <View style={styles.container}>
-            <RedirectingPopup 
-                visible={popupVisible} 
-                iconName='home'
-                bodyText='Successfully Update Profile'
-                redirectTo='/pages/profilePage'
-                buttonText='Back To Profile Page'
-                fontSize={40}
-                paddingVertical={80}
-                paddingHorizontal={10}
-                bgColor='#4cff00'
-                borderWidth={2}
-            />
             <TopButtonPlusHeader header='FoodBuster' transparentBg={true} destination='/pages/profilePage' replaceScreen={true} />
             <Text style={styles.pageHeading}>Edit Profile</Text>
             <InputBoxWithOptionalTitle title='Username' defaultValue={oldCreds[1]} updaterFn={() => {}} editable={false} />
