@@ -26,7 +26,7 @@ import CheckRecommendedFood from './pages/checkRecommendedFood';
 
 export default function index() {
     return(
-        <CheckRecommendedFood />
+        <LoginPage />
     )
 }
 

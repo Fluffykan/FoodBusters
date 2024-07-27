@@ -33,6 +33,7 @@ app.post('/login', async (req, res) => {
         }
     } catch (error) {
         res.status(500).send(error.message);
+        res.status(500).send(error.message);
     }
 });
 
@@ -47,6 +48,8 @@ app.get('/getUserCreds', async (req, res) => {
 app.post('/createAccount', async (req, res) => {
     try {
         const {username, email, password_hash} = req.body;
+        const p_hash = await hashFunction(password_hash);
+        const result = await createAccount(username, email, p_hash);
         const p_hash = await hashFunction(password_hash);
         const result = await createAccount(username, email, p_hash);
         console.log(result);
@@ -85,12 +88,16 @@ app.post('/resetPassword', async (req, res) => {
         const {email, password_hash} = req.body;
         const p_hash = await hashFunction(password_hash);
         const result = await resetPassword(email, p_hash);
+        const p_hash = await hashFunction(password_hash);
+        const result = await resetPassword(email, p_hash);
         if (result == 1) {
             res.status(200).send("password reset");
         } else {
             res.status(500).send("error " + result);
+            res.status(500).send("error " + result);
         }
     } catch (error) {
+        res.status(500).send(error.message);
         res.status(500).send(error.message);
     }
 })
