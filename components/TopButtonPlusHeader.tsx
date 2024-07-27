@@ -1,6 +1,7 @@
-import { View, Text, StyleSheet } from 'react-native';
-import IconButtonWithOptionalText from "./NavIconButtonWithOptionalText";
+import { View, Text, StyleSheet, Linking } from 'react-native';
 import Header from './Header';
+import NavIconButtonWithOptionalText from './NavIconButtonWithOptionalText';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 type TopButtonPlusHeaderProps = {
     header: string;
@@ -27,9 +28,11 @@ export default function TopButtonPlusHeader({header, transparentBg, destination,
     })
     return (
         <View style={styles.container}>
-            <IconButtonWithOptionalText iconName="doubleleft" replaceScreen={replaceScreen} destination={destination} />
-            <Header header={header} transparentBg={transparentBg} />
-            <View />
+            <NavIconButtonWithOptionalText iconName="doubleleft" replaceScreen={replaceScreen} destination={destination} />
+            <View>
+            <Header transparentBg={transparentBg} header={header} />
+            </View>
+            <Icon name='doubleleft' color='transparent' />
         </View>
     )
 }

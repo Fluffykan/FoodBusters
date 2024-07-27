@@ -30,24 +30,9 @@ export default function TempHomeScreen() {
     const [restaurants, update] = useState<Restaurant[]>([]);
 
     const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]); // State for filtered restaurants
-    
-    const handleSearch = () => {
-        console.log(`searching for ${keywords}`);
-    }
-    
-    const handleFilter = () => {
-      setFilterModalVisible(true);
-    };
 
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
-
-    const weibinURL = 'http://192.168.1.71:4200/restaurants'
-
-    const fetchAverageRatingUrlWeiBin = (id: number) => `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
-
-    const [userId, setUserId] = useState<number | null>(null); // State to store userId
-
 
     const fetchRestaurants = () => {
     axios.get("http://10.0.2.2:4200/restaurants")

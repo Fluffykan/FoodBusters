@@ -1,1 +1,1 @@
-1,Aoki,aoki@gmail.com,1,Pastries and cakes,567,500.50,Epicurean Enthusiast
+13,Aoki,aoki@gmail.com,$2b$10$/bILlfWJak7MLXrgmhgP4ONqzLz6IvDRA6fgLHm0mFRvf5D6uhe86,dingtainfung,0,0.00,Apprentice Chef

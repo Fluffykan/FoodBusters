@@ -35,7 +35,7 @@ type User = {
     const weibinURL = 'http://192.168.1.71:4200/users'; // Replace with your actual endpoint
   
     const fetchUsers = () => {
-      axios.get(weibinURL)
+      axios.get('http://10.0.2.2:4200/users')
         .then(response => {
           const fetchedUsers = response.data;
           updateUsers(fetchedUsers);

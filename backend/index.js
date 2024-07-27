@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName, hashFunction, deleteRecommendation } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -20,29 +20,11 @@ app.get('/users', async (req, res) => {
     }
 });
 
-/*app.post('/login', async (req, res) => {
-    try {
-        console.log(req.params)
-        const {email, password_hash} = req.body;
-        const [result] = await verifyUser(email, password_hash);
-        console.log(result);
-        if (result == undefined) {
-            res.status(401).send("unknown user");
-        } else {
-            await saveUserCreds(result.id, result.username, result.email, result.password_hash)
-            res.status(200).send("successful login: " + result.username);
-        }
-    } catch (error) {
-        res.status(500).send("something broke", error)
-    }
-});*/
 
 app.post('/login', async (req, res) => {
     try {
-        console.log(req.params)
         const {email, password_hash} = req.body;
         const [result] = await verifyUser(email, password_hash);
-        console.log(result);
         if (result == undefined) {
             res.status(401).send("unknown user");
         } else {
@@ -50,7 +32,8 @@ app.post('/login', async (req, res) => {
             res.status(200).send("successful login: " + result.username);
         }
     } catch (error) {
-        res.status(500).send("something broke", error)
+        res.status(500).send(error.message);
+        res.status(500).send(error.message);
     }
 });
 
@@ -65,7 +48,8 @@ app.get('/getUserCreds', async (req, res) => {
 app.post('/createAccount', async (req, res) => {
     try {
         const {username, email, password_hash} = req.body;
-        const result = await createAccount(username, email, password_hash);
+        const p_hash = await hashFunction(password_hash);
+        const result = await createAccount(username, email, p_hash);
         console.log(result);
         if (result == 1) {
             res.status(201).send("account created");
@@ -100,14 +84,17 @@ app.post("/updateUserCreds", (req, res) => {
 app.post('/resetPassword', async (req, res) => {
     try {
         const {email, password_hash} = req.body;
-        const result = await resetPassword(email, password_hash);
+        const p_hash = await hashFunction(password_hash);
+        const result = await resetPassword(email, p_hash);
         if (result == 1) {
             res.status(200).send("password reset");
         } else {
-            res.status(500).send("error" + result);
+            res.status(500).send("error " + result);
+            res.status(500).send("error " + result);
         }
     } catch (error) {
-        res.status(500).send("unknown error");
+        res.status(500).send(error.message);
+        res.status(500).send(error.message);
     }
 })
 
@@ -154,7 +141,7 @@ app.get('/averageRating', async (req, res) => {
 
     try {
         const averageRating = await calculateAverageRating(restaurantID);
-        res.json({ averageRating });
+        res.json({ averageRating: parseFloat(averageRating) });
     } catch (err) {
         console.error("Error calculating average rating:", err);
         res.status(500).send("Internal Server Error");
@@ -451,6 +438,16 @@ app.get('/getRecommendedRestaurants', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+app.post('/deleteRecommendation', async (req, res) => {
+    try {
+        const {id} = req.query;
+        deleteRecommendation(id);
+        res.sendStatus(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+})
 
 // Error handler middleware
 app.use((err, req, res, next) => {

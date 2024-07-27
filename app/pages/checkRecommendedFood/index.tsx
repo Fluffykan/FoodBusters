@@ -10,6 +10,7 @@ import PageBreakLine from "@/components/PageBreakLine";
 import RecommendFilterModal from "@/components/RecommendFilterModal";
 
 type Recommendation = {
+    id: number;
     stallid: number;
     storeName: string;
     storeAddress: string;
@@ -39,7 +40,7 @@ export default function CheckRecommendedFood() {
 
     const getUserData = async () => {
         try {
-            const response = await axios.get(weibinURLUser);
+            const response = await axios.get('http://10.0.2.2:4200/getUserCreds');
             const data = response.data;
             console.log(data);
             setUserId(data[0]);
@@ -55,13 +56,13 @@ export default function CheckRecommendedFood() {
 
     const getRecommendations = async () => {
         try {
-            const response = await axios.get(`${weibinURLRecommend}?userId=${userId}`);
+            const response = await axios.get(`http://10.0.2.2:4200/getUserRecommendations?userId=${userId}`);
             const data : Recommendation[] =  response.data;
             setRecommendData(data);
             setFilteredRecommendData(data);
         } catch (error) {
             console.error(error);
-        }
+        } 
     }
 
     
@@ -73,7 +74,7 @@ export default function CheckRecommendedFood() {
         if (userId) {
             getRecommendations();
         }
-    }, [userId]);
+    }, [userId, recommendData]);
 
     const handleKeywordChange = (text: string) => {
         setKeywords(text);
@@ -135,7 +136,8 @@ export default function CheckRecommendedFood() {
                 ) : (
                     filteredRecommendData.map(recommendation => (
                         <RecommendedCondensedInfo
-                            key={recommendation.stallid} // Ensure unique key prop
+                            key={recommendation.id} // Ensure unique key prop
+                            recommendId={recommendation.id}
                             id={recommendation.stallid}
                             storeName={recommendation.storeName}
                             storeDist={recommendation.storeDist}

@@ -1,13 +1,14 @@
 import Header from '@/components/Header';
 import Navbar from '@/components/Navbar';
 import UserCondensedInfo from '@/app/components/UserCondensedInfo';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
 import axios from 'axios';
 import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
 import Button from '@/components/Button';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import PageBreakLine from '@/components/PageBreakLine';
 
 export default function RandomRec() {
     const [loading, setLoading] = useState(false);
@@ -25,11 +26,10 @@ export default function RandomRec() {
       };
 
       const weibinURL = 'http://192.168.1.71:4200/getRandomStore';
-      const junHongURL = "http://10.0.2.2:4200/getRandomStore"
 
 
       const queryStore = () => {
-        axios.get(weibinURL)
+        axios.get("http://10.0.2.2:4200/getRandomStore")
         .then(response => {
             console.log(response.data);
             setRec(response.data);
@@ -58,7 +58,11 @@ export default function RandomRec() {
     const recommendedFoodBySomeone = "Click below to check the food recommended by other users!"
     return (
         <View style={styles.container}>
-            <View>
+            <Header header="FoodBusters" />
+            <PageBreakLine style="solid" />
+
+            <ScrollView>
+                <Header header="Today's Recommendation" size='med'/>
                 {/* this shows that there's an error, but actually theres no problem, idk how to ignore the redline */
                 rec.map(restaurant => 
                     <ShopCondensedInfo
@@ -72,15 +76,16 @@ export default function RandomRec() {
                         storeClassification={restaurant.storeClassification}
                     />
                 )}
+                <Button 
+                    text='Seen this store before? Get another recommendation' 
+                    textColor='black' 
+                    border='none'
+                    underline={true}
+                    bgColor='transparent' 
+                    fn={queryStore} 
+                />
                 <View style={styles.buttonContainer}>
-                    <Button 
-                        text='Seen this store before? Get another recommendation' 
-                        textColor='black' 
-                        border='none'
-                        underline={true}
-                        bgColor='transparent' 
-                        fn={queryStore} 
-                    />
+                    <Header header="Send Recommendations to Others" size='med' />
                     <View style={styles.iconRow}>
                         <FontAwesome5 name="utensils" size={24} color="black" />
                         <FontAwesome5 name="pizza-slice" size={24} color="black" />
@@ -113,7 +118,7 @@ export default function RandomRec() {
                         <Text style={styles.curlyButtonText}>Check what has been recommended!</Text>
                     </Link>
                 </View>
-            </View>
+            </ScrollView>
             <Navbar />
         </View>
     )

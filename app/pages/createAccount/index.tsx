@@ -3,7 +3,6 @@ import { useState } from 'react';
 import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
 import axios from 'axios';
-import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
 import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
 import RedirectingPopup from '@/components/RedirectingPopup';
 
