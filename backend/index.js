@@ -50,8 +50,6 @@ app.post('/createAccount', async (req, res) => {
         const {username, email, password_hash} = req.body;
         const p_hash = await hashFunction(password_hash);
         const result = await createAccount(username, email, p_hash);
-        const p_hash = await hashFunction(password_hash);
-        const result = await createAccount(username, email, p_hash);
         console.log(result);
         if (result == 1) {
             res.status(201).send("account created");
@@ -86,8 +84,6 @@ app.post("/updateUserCreds", (req, res) => {
 app.post('/resetPassword', async (req, res) => {
     try {
         const {email, password_hash} = req.body;
-        const p_hash = await hashFunction(password_hash);
-        const result = await resetPassword(email, p_hash);
         const p_hash = await hashFunction(password_hash);
         const result = await resetPassword(email, p_hash);
         if (result == 1) {
