@@ -2,6 +2,8 @@ import mysql from 'mysql2';
 import dotenv from 'dotenv';
 import { Buffer } from 'buffer';
 import fs from 'fs-extra';
+import bcrypt from 'bcrypt';
+const saltRound = 10;
 
 dotenv.config();
 
@@ -34,10 +36,14 @@ const imgPool = mysql.createPool({
 
 
 export async function verifyUser(email, password) {
-    console.log(email + " " + password);
-    const [data] = await pool.query("select * from users where email = ? and password_hash = ?", [email, password]);
+    async function comparePassword(pw, database) {
+        const match = await bcrypt.compare(pw, database);
+        return match;
+    }
+    const [data] = await pool.query("select * from users where email = ?", [email]);
     console.log(data);  
-    return data;
+    const match = comparePassword(password, data[0].password_hash);
+    return match ? data : null;
 }
 
 /*export async function saveUserCreds(id,username, email, password) {
@@ -66,7 +72,7 @@ export async function getUsers() {
 }
 
 export async function createAccount(username, email, password) {
-    const [result] = await pool.query("insert into users (username, email, password_hash) values (?, ?, ?)", [username, email, password]);
+    const [result] = await pool.query("insert into users (username, email, password_hash, preference, points, cash, userrank) values (?, ?, ?, '', 0, 0, 'Apprentice Chef')", [username, email, password]);
     return result.affectedRows;
 }
 
@@ -218,7 +224,7 @@ export async function checkFavorite(storeId, userId) {
 }
 
 export async function getFavorites(userId) {
-    const [result] = await pool.query("select res.* from restaurants as res, favorites as fav where fav.userId = 1 and fav.restaurantId = res.id", [userId]);
+    const [result] = await pool.query("select res.* from restaurants as res, favorites as fav where fav.userId = ? and fav.restaurantId = res.id", [userId]);
     console.log(result);
     return result;
 }
@@ -320,4 +326,9 @@ export async function selectRecommendationsByUserId(userId) {
 export async function selectRestaurantsByIds(ids) {
     const [result] = await pool.query("SELECT * FROM restaurants WHERE id IN (?)", [ids]);
     return result;
+}
+
+export async function hashFunction(password) {
+    const hash = await bcrypt.hash(password, saltRound);
+    return hash;
 }
