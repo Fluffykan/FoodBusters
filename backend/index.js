@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName, hashFunction } from './connection.js';
-
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -21,21 +20,37 @@ app.get('/users', async (req, res) => {
     }
 });
 
-app.post('/login', async (req, res) => {
+/*app.post('/login', async (req, res) => {
     try {
-        console.log(req.body);
+        console.log(req.params)
         const {email, password_hash} = req.body;
-        const result = await verifyUser(email, password_hash);
-        const user = result[0];
+        const [result] = await verifyUser(email, password_hash);
         console.log(result);
-        if (result.length == 0) {
+        if (result == undefined) {
             res.status(401).send("unknown user");
         } else {
-            await saveUserCreds(user.id, user.username, user.email, user.password_hash, user.preference, user.points, user.cash, user.userrank)
-            res.status(200).send("successful login: " + user.username);
+            await saveUserCreds(result.id, result.username, result.email, result.password_hash)
+            res.status(200).send("successful login: " + result.username);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send("something broke", error)
+    }
+});*/
+
+app.post('/login', async (req, res) => {
+    try {
+        console.log(req.params)
+        const {email, password_hash} = req.body;
+        const [result] = await verifyUser(email, password_hash);
+        console.log(result);
+        if (result == undefined) {
+            res.status(401).send("unknown user");
+        } else {
+            await saveUserCreds(result.id, result.username, result.email, result.password_hash, result.preference, result.points, result.cash, result.userrank)
+            res.status(200).send("successful login: " + result.username);
+        }
+    } catch (error) {
+        res.status(500).send("something broke", error)
     }
 });
 
@@ -50,9 +65,7 @@ app.get('/getUserCreds', async (req, res) => {
 app.post('/createAccount', async (req, res) => {
     try {
         const {username, email, password_hash} = req.body;
-        console.log(req.body);
-        const p_hash = await hashFunction(password_hash);
-        const result = await createAccount(username, email, p_hash);
+        const result = await createAccount(username, email, password_hash);
         console.log(result);
         if (result == 1) {
             res.status(201).send("account created");
@@ -60,7 +73,7 @@ app.post('/createAccount', async (req, res) => {
             res.status(500).send("error" + result);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send("unknown error");
     }
 })
 
@@ -153,7 +166,6 @@ app.post('/uniqueuser', async (req, res) => {
     try {
         const { email, password_hash } = req.body;
         const result = await verifyUser(email, password_hash);
-        console.log(result);
         if (result.length > 0) {
             const userId = result[0].id; // Assuming id is the primary key in your users table
             res.status(200).json({ userId });
