@@ -9,6 +9,7 @@ import RecommendedCondensedInfo from "@/app/components/RecommendedCondensedInfo"
 import PageBreakLine from "@/components/PageBreakLine";
 
 type Recommendation = {
+    id: number;
     stallid: number;
     storeName: string;
     storeAddress: string;
@@ -59,7 +60,7 @@ export default function CheckRecommendedFood() {
             setFilteredRecommendData(data);
         } catch (error) {
             console.error(error);
-        }
+        } 
     }
 
     
@@ -71,7 +72,7 @@ export default function CheckRecommendedFood() {
         if (userId) {
             getRecommendations();
         }
-    }, [userId]);
+    }, [userId, recommendData]);
 
     const handleKeywordChange = (text: string) => {
         setKeywords(text);
@@ -106,7 +107,8 @@ export default function CheckRecommendedFood() {
                 ) : (
                     filteredRecommendData.map(recommendation => (
                         <RecommendedCondensedInfo
-                            key={recommendation.stallid} // Ensure unique key prop
+                            key={recommendation.id} // Ensure unique key prop
+                            recommendId={recommendation.id}
                             id={recommendation.stallid}
                             storeName={recommendation.storeName}
                             storeDist={recommendation.storeDist}

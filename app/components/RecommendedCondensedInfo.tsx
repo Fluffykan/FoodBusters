@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Link } from 'expo-router';
+import Icon from 'react-native-vector-icons/AntDesign';
+import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
+import axios from 'axios';
 
 type RecommendedCondensedInfoProps = {
+    recommendId:number;
     id: number;
     storeName: string;
     storeAddress: string;
@@ -15,7 +19,7 @@ type RecommendedCondensedInfoProps = {
 
 export default function RecommendedCondensedInfo(props: RecommendedCondensedInfoProps) {
 
-    const { id, storeName, storeDist, storeAddress, storeRating, storeStatus, storeClassification, username, userrank } = props;
+    const { id, recommendId, storeName, storeDist, storeAddress, storeRating, storeStatus, storeClassification, username, userrank } = props;
 
     // Convert storeRating and storeDist to numbers
     const rating = parseFloat(storeRating);
@@ -30,36 +34,48 @@ export default function RecommendedCondensedInfo(props: RecommendedCondensedInfo
         console.log('redirect to store page');
     }
 
-    return (
-        <Link href={`/pages/stallscreen?${queryParams}`} style={styles.overallContainer} replace={true}>
-            <View>
-                <View style={styles.recommendationContainer}>
-                    <View style={styles.flexRowContainer}>
-                        <Text style={styles.recommendedByText}>Recommended By: {username}</Text>
-                    </View>
-                    <Text style={styles.userrankText}>Rank: {userrank}</Text>
-                </View>
+    const deleteRecommendation = (id:number) => {
+        try {
+            console.log("delete recommendation " + id);
+            axios.post(`http://10.0.2.2:4200/deleteRecommendation?id=${id}`);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
-                <View style={{flexDirection: 'row'}}>
-                    <View style={styles.storeImageContainer}>
-                        <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
+    return (
+        <View style={styles.overallContainer}>
+            <Link href={`/pages/stallscreen?${queryParams}`} style={styles.pressableContainer} replace={true}>
+                <View>
+                    <View style={styles.recommendationContainer}>
+                        <View style={styles.flexRowContainer}>
+                            <Text style={styles.recommendedByText}>Recommended By: {username}</Text>
+                        </View>
+                        <Text style={styles.userrankText}>Rank: {userrank}</Text>
                     </View>
-                    <View>
-                        <View style={styles.flexRowContainer}>
-                            <Text style={styles.informationText}>{storeName}</Text>
-                            <Text style={styles.storeDistance}>{storeDist}</Text>
+
+                    <View style={{flexDirection: 'row'}}>
+                        <View style={styles.storeImageContainer}>
+                            <Image source={require('../assets/plateAndCutlery.png')} style={styles.storeImage} />
                         </View>
-                        <Text style={styles.informationText}>{storeAddress}</Text>
-                        <View style={styles.flexRowContainer}>
-                            <Text style={styles.informationText}>{storeRating}</Text>
-                            <Image source={require('../assets/star.png')} style={{height: 13, width: 13}} />
+                        <View>
+                            <View style={styles.flexRowContainer}>
+                                <Text style={styles.informationText}>{storeName}</Text>
+                                <Text style={styles.storeDistance}>{storeDist}</Text>
+                            </View>
+                            <Text style={styles.informationText}>{storeAddress}</Text>
+                            <View style={styles.flexRowContainer}>
+                                <Text style={styles.informationText}>{storeRating}</Text>
+                                <Image source={require('../assets/star.png')} style={{height: 13, width: 13}} />
+                            </View>
+                            <Text style={styles.informationText}>{storeStatus}</Text>
+                            <Text style={styles.informationText}>{storeClassification}</Text>
                         </View>
-                        <Text style={styles.informationText}>{storeStatus}</Text>
-                        <Text style={styles.informationText}>{storeClassification}</Text>
                     </View>
                 </View>
-            </View>
-        </Link>
+            </Link>
+            <LinkIconButtonWithOptionalText iconName="delete" fn={() => deleteRecommendation(recommendId)} iconSize={23} iconColor='red' />
+        </View>
     )
 }
 
@@ -68,9 +84,14 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         padding: 5,
-        flexDirection: 'column',
+        flexDirection: 'row',
+        alignItems: 'center',
         width: '100%',
         marginBottom: 10,
+        justifyContent: 'space-between',
+    },
+    pressableContainer: {
+        flex: 1,
     },
     recommendationContainer: {
         marginBottom: 10,

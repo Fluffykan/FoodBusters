@@ -21,10 +21,12 @@ import CreateAccountPage from './pages/createAccount';
 import EditProfilePage from './pages/profilePage/components/editProfilePage';
 import PopupEditProfileSuccess from '../components/RedirectingPopup';
 import { useState } from 'react';
+import RecommendPage from './pages/recommendPage';
+import CheckRecommendedFood from './pages/checkRecommendedFood';
 
 export default function index() {
     return(
-        <TempHomeScreen />
+        <CheckRecommendedFood />
     )
 }
 
