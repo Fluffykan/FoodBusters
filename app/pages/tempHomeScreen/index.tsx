@@ -79,7 +79,7 @@ export default function TempHomeScreen() {
   
     // Added this
     useEffect(() => {
-      fetch();
+      fetchRestaurants();
     }, []);
 
     // Filter function

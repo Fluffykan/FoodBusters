@@ -7,6 +7,7 @@ import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptio
 import axios from "axios";
 import RecommendedCondensedInfo from "@/app/components/RecommendedCondensedInfo";
 import PageBreakLine from "@/components/PageBreakLine";
+import RecommendFilterModal from "@/components/RecommendFilterModal";
 
 type Recommendation = {
     stallid: number;
@@ -34,6 +35,7 @@ export default function CheckRecommendedFood() {
     const [recommendData, setRecommendData] = useState<Recommendation[]>([]);
     const [filteredRecommendData, setFilteredRecommendData] = useState<Recommendation[]>([]);
     const [keywords, setKeywords] = useState("");
+    const [filterModalVisible, setFilterModalVisible] = useState(false); // State for filter modal visibility
 
     const getUserData = async () => {
         try {
@@ -89,6 +91,32 @@ export default function CheckRecommendedFood() {
         }
     };
 
+    const handleApplyFilters = (filters: any) => {
+        const { distance, storeName, storeClassification, rating, username, userrank } = filters;
+        let filtered = recommendData;
+    
+        if (distance) {
+          filtered = filtered.filter(recommendation => recommendation.storeDist <= distance);
+        }
+        if (storeName) {
+          filtered = filtered.filter(recommendation => recommendation.storeName.toLowerCase().startsWith(storeName.toLowerCase()));
+        }
+        if (storeClassification) {
+          filtered = filtered.filter(recommendation => recommendation.storeClassification.toLowerCase().includes(storeClassification.toLowerCase()));
+        }
+        if (rating) {
+          filtered = filtered.filter(recommendation => recommendation.storeRating && recommendation.storeRating >= rating);
+        }
+        if (username) {
+          filtered = filtered.filter(recommendation => recommendation.username.toLowerCase().startsWith(username.toLowerCase()));
+        }
+        if (userrank) {
+          filtered = filtered.filter(recommendation => recommendation.userrank.toLowerCase().startsWith(userrank.toLowerCase()));
+        }
+    
+        setFilteredRecommendData(filtered);
+      };
+
     return (
         <View style={styles.container}>
             <Header header='FoodBuster' />
@@ -98,6 +126,7 @@ export default function CheckRecommendedFood() {
                     <InputBoxWithOptionalTitle updaterFn={handleKeywordChange} placeholder='Search By Store Name' />
                 </View>
                 <LinkIconButtonWithOptionalText iconName="search1" fn={() => filterRecommendations(keywords)} />
+                <LinkIconButtonWithOptionalText iconName="filter" fn={() => setFilterModalVisible(true)} />
             </View>
 
             <ScrollView>
@@ -121,6 +150,11 @@ export default function CheckRecommendedFood() {
                 )}
             </ScrollView>
             <Navbar />
+            <RecommendFilterModal
+                visible={filterModalVisible}
+                onClose={() => setFilterModalVisible(false)}
+                onApply={handleApplyFilters}
+            />
         </View>
     )
 }

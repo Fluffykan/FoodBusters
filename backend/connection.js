@@ -217,6 +217,40 @@ export async function getFavorites(userId) {
     return result;
 }
 
+export async function postReview(restaurantID, userID, userReview, userRating) {
+    const[result] = await pool.query("insert into reviews (restaurantID, userID, userReview, userRating) values (?,?,?,?)", 
+                                        [restaurantID, userID, userReview, userRating]);
+    console.log(result.affectedRows);
+    return result.affectedRows;
+}
+
+export async function editReview(restaurantID, userID, userReview, userRating) {
+    const[result] = await pool.query("update reviews set userReview = ?, userRating = ? where restaurantID = ? and userID = ?", 
+                                        [userReview, userRating, restaurantID, userID]);
+    console.log(result.affectedRows);
+}
+
+export async function checkLiked(reviewId, userId) {
+    const [result] = await pool.query(`select count(*) as count from upvoted where userId = ? and reviewId = ?`, [userId, reviewId]);
+    return result;
+}
+
+export async function likeReview(reviewId, userId) {
+    const [result] = await pool.query("insert into upvoted (userId, reviewId) values (?, ?)", [userId, reviewId]);
+    return result.affectedRows;
+}
+
+export async function unlikeReview(reviewId, userId) {
+    const [result] = await pool.query('delete from upvoted where userId = ? and reviewId = ?', [userId, reviewId]);
+    return result.affectedRows;
+}
+
+export async function getNumLikes(reviewId) {
+    const [result] = await pool.query('select count(*) as count from upvoted where reviewId = ?', [reviewId]);
+    return result;
+}
+
+
 export async function updateUserPreference(userId, preference) {
     const [result] = await pool.query("UPDATE users SET preference = ? WHERE id = ?", [preference, userId]);
     return result.affectedRows;
@@ -270,8 +304,6 @@ export async function insertRecommendations(recommendations) {
         ) VALUES ?`, [values]);
     return result.affectedRows;
 }
-
-
 
 export async function selectRecommendationsByUserId(userId) {
     const [result] = await pool.query("SELECT * FROM recommend WHERE recommendto = ?", [userId]);
