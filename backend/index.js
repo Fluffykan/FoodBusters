@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, editProfile, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName, hashFunction, deleteRecommendation } from './connection.js';
+import { createAccount, resetPassword, verifyUser, selectAll, selectAllReviews, selectReviewsByRestaurantID, calculateAverageRating, selectStoreImage, uploadImage, getImage, getAllImages, saveUserCreds, getUserCreds, getUserReviews, getRandomStore, setFavorite, removeFavorite, checkFavorite, getFavorites, getUsers, updateUserPreference, insertRecommendations, selectRecommendationsByUserId, selectRestaurantsByIds, postReview, getUserReview, editReview, checkLiked, likeReview, unlikeReview, getNumLikes, getStoreName, hashFunction, deleteRecommendation } from './connection.js';
 
 const app = express();
 const PORT = 4200;
@@ -58,16 +58,6 @@ app.post('/createAccount', async (req, res) => {
         }
     } catch (error) {
         res.status(500).send("unknown error");
-    }
-})
-
-app.post('/editProfile',async(req, res) => {
-    try {
-        const {username, password} = req.body;
-        const result = await editProfile(username, password);
-        res.status(200).send({affectedRows:result});
-    } catch (error) {
-        res.status(500).send(error);
     }
 })
 

@@ -47,13 +47,6 @@ export async function verifyUser(email, password) {
     return match ? data : null;
 }
 
-/*export async function saveUserCreds(id,username, email, password) {
-    fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password}`, {
-        flag: "w"
-    });
-    console.log("written");
-}*/
-
 export async function saveUserCreds(id,username, email, password, preference, points, cash, userrank) {
     fs.writeFileSync("userCreds.txt", `${id},${username},${email},${password},${preference},${points},${cash},${userrank}`, {
         flag: "w"
@@ -145,8 +138,7 @@ export async function selectStoreImage(restaurantID) {
         const [result] = await pool.query("SELECT storeImage FROM restaurants WHERE id = ?", [restaurantID]);
         console.log("Query result:", result); // Log the query result
         if (result.length > 0 && result[0].storeImage) {
-            const base64Image = Buffer.from(result[0].storeImage).toString('base64');
-            return `data:image/jpeg;base64,${base64Image}`;
+            return result[0].storeImage;
         } else {
             console.warn(`No image found for restaurantID: ${restaurantID}`); // Log if no image is found
             return null;

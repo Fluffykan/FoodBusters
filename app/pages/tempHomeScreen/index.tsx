@@ -7,9 +7,9 @@ import PageBreakLine from "@/components/PageBreakLine";
 import InputBoxWithOptionalTitle from "@/components/InputBoxWithTitle";
 import Navbar from "@/components/Navbar";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
-import Button from "@/components/Button";
 import FilterModal from "@/components/filterModal";
 import axios from "axios";
+import NavIconButtonWithOptionalText from "@/components/NavIconButtonWithOptionalText";
 
 type Restaurant = {
   id: number;
@@ -112,48 +112,47 @@ export default function TempHomeScreen() {
     return (
 
     <View style={styles.container}>
-            
-        <Header header='FoodBuster' />
-            <PageBreakLine style="solid" />
+        <Header header='FoodBuster' inbox={true} />
+        <PageBreakLine style="solid" />
 
-            <View style={styles.searchBar}>
-                <View style={{width: '80%'}}>
-                <InputBoxWithOptionalTitle updaterFn={handleKeywordChange} placeholder='Search By Store Name' />
-                </View>
-                <LinkIconButtonWithOptionalText iconName="search1" fn={() => filterRestaurants(keywords)} />
-                
-                <LinkIconButtonWithOptionalText iconName="filter" fn={() => setFilterModalVisible(true)} />
+        <View style={styles.searchBar}>
+            <View style={{width: '80%'}}>
+            <InputBoxWithOptionalTitle updaterFn={handleKeywordChange} placeholder='Search By Store Name' />
             </View>
+            <LinkIconButtonWithOptionalText iconName="search1" fn={() => filterRestaurants(keywords)} />
+            
+            <LinkIconButtonWithOptionalText iconName="filter" fn={() => setFilterModalVisible(true)} />
+        </View>
             
             
-            <ScrollView>
-                {loading ? ( // Conditional rendering based on loading state
-                    <Text>Loading...</Text>
-                ) : (
-                  filteredRestaurants.map(restaurant => (
-                        <ShopCondensedInfo
-                            key={restaurant.id} // Ensure unique key prop
-                            id={restaurant.id} // Pass the id to ShopCondensedInfo
-                            storeName={restaurant.storeName}
-                            storeDist={restaurant.storeDist.toString()}
-                            storeAddress={restaurant.storeAddress}
-                            storeRating={restaurant.averageRating !== null ? restaurant.averageRating.toFixed(1) : 'No Rating'} // Handle null value
-                            storeStatus={restaurant.storeStatus}
-                            storeClassification={restaurant.storeClassification}
-                        />
-                    ))
-                )}
-                
-            </ScrollView>
+        <ScrollView>
+            {loading ? ( // Conditional rendering based on loading state
+                <Text>Loading...</Text>
+            ) : (
+              filteredRestaurants.map(restaurant => (
+                    <ShopCondensedInfo
+                        key={restaurant.id} // Ensure unique key prop
+                        id={restaurant.id} // Pass the id to ShopCondensedInfo
+                        storeName={restaurant.storeName}
+                        storeDist={restaurant.storeDist.toString()}
+                        storeAddress={restaurant.storeAddress}
+                        storeRating={restaurant.averageRating !== null ? restaurant.averageRating.toFixed(1) : 'No Rating'} // Handle null value
+                        storeStatus={restaurant.storeStatus}
+                        storeClassification={restaurant.storeClassification}
+                    />
+                ))
+            )}
             
-            <Navbar />
+        </ScrollView>
+            
+        <Navbar />
 
-            {/* Filter Modal */}
-            <FilterModal
-              visible={filterModalVisible}
-              onClose={() => setFilterModalVisible(false)}
-              onApply={handleApplyFilters}
-            />
+        {/* Filter Modal */}
+        <FilterModal
+          visible={filterModalVisible}
+          onClose={() => setFilterModalVisible(false)}
+          onApply={handleApplyFilters}
+        />
 
         </View>
 

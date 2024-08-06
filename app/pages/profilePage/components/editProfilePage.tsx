@@ -27,15 +27,15 @@ export default function EditProfilePage() {
     const handleEditProfile = () => {
         if (!passwordMismatch && !hasEmptyField) {
             updateEmailTaken(false);
-            axios.post('http://10.0.2.2:4200/editProfile', 
-                    {username:oldCreds[1], password:password})
+            console.log(oldCreds[2])
+            axios.post('http://10.0.2.2:4200/resetPassword', 
+                    {email:oldCreds[2], password_hash:password})
                 .then(response => {
-                    if (response.data.affectedRows != 1) {
+                    if (response.status == 500) {
                         throw Error;
                     }
-                    axios.post("http://10.0.2.2:4200/updateUserCreds", {id:oldCreds[0],username:oldCreds[1], email:oldCreds[2], password:password});
-                    console.log(`Success! New Profile details: username=${oldCreds[1]},email=${oldCreds[2]},password=${password}`)
-                    showAlert();
+                    // login used to save user creds to userCreds.txt
+                    axios.post('http://10.0.2.2:4200/login', {email:oldCreds[2], password_hash:password});
                 })
                 .catch(error => {
                     // if email has been used, display the error for user to see

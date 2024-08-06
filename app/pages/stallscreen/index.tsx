@@ -47,13 +47,6 @@ export default function StallScreen() {
     const [storeUserId, setUserId] = useState("");
     // This database is based on Wei Bin's IP Address, could edit yours accordingly
     // This URL filters reviews based on their restaurantID which serves as a foreign key in reviewscomponent
-    const url = `http://10.0.2.2:4200/reviews?restaurantID=${id}`;
-    const averageRatingUrl = `http://10.0.2.2:4200/averageRating?restaurantID=${id}`;
-
-    const weibinURL = `http://192.168.1.71:4200/reviews?restaurantID=${id}`;
-
-    const averageRatingUrlWeiBin = `http://192.168.1.71:4200/averageRating?restaurantID=${id}`;
-
     // This URL should display all reviews for every single restaurant
     //const url = "http://192.168.1.72:4200/allreviews";
     const restaurantID = parseInt(id as string, 10);
@@ -87,6 +80,7 @@ export default function StallScreen() {
         axios.get(storeImageUrl)
             .then(response => {
                 const imageData = response.data.storeImage;
+                console.log("link " + imageData);
                 if (imageData) {
                     setStoreImage(imageData);
                 } else {
@@ -189,7 +183,7 @@ export default function StallScreen() {
             <TopButtonPlusHeader header='FoodBuster' destination="/pages/tempHomeScreen" replaceScreen={true} />
 
             <ScrollView style={styles.container}>
-            {storeImage ? (
+            {storeImage == '' ? (
                     <Image style={{ height: 200, width: "100%" }} source={{ uri: storeImage }} />
                 ) : (
                     <Image style={{ height: 200, width: "100%" }} source={{ uri: 'https://via.placeholder.com/200' }} />
