@@ -7,10 +7,10 @@ type Header = {
     transparentBg?: boolean;
     size?: "small" | "med" | "large";
     inbox?: boolean;
-
+    hasMail?: boolean;
 }
 
-export default function Header({header, transparentBg, size, inbox}:Header) {
+export default function Header({header, transparentBg, size, inbox, hasMail}:Header) {
     const bgColor = transparentBg ? 'none': 'white';
     const fontSize = size == 'small' ? 20 : size == 'med' ? 27 : 35;
     const styles = StyleSheet.create({
@@ -32,11 +32,12 @@ export default function Header({header, transparentBg, size, inbox}:Header) {
         }
     })
     if (inbox) {
+        const color = hasMail ? "red" : "black";
         return (
             <View style={styles.containerWithInbox}>
                 <Icon name='mail' color="transparent" size={30} />
                 <Text style={styles.headerText}>{header}</Text>
-                <NavIconButtonWithOptionalText iconName='mail' iconColor='black' destination='pages/checkRecommendedFood' replaceScreen={true} />
+                <NavIconButtonWithOptionalText iconName='mail' iconColor={color} destination='pages/checkRecommendedFood' replaceScreen={true} />
             </View>
         )
     }

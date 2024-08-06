@@ -49,7 +49,7 @@ export default function TempHomeScreen() {
             update(restaurantsWithRatings);
             setFilteredRestaurants(restaurantsWithRatings); // Initialize with all restaurants
             setLoading(false); // Set loading to false after data is fetched
-            console.log(restaurantsWithRatings);
+            // console.log(restaurantsWithRatings);
           })
           .catch(error => {
             console.error("Error fetching average ratings", error);
@@ -61,11 +61,35 @@ export default function TempHomeScreen() {
         setLoading(false); // Set loading to false in case of error
       });
   };
+
+  const [mail, setMail] = useState(0);
+  const getRecommendations = async () => {
+    try {
+        const response = await axios.get(`http://10.0.2.2:4200/getUserRecommendations?userId=${userId}`);
+        setMail(response.data.length);
+        console.log(mail);
+    } catch (error) {
+        console.error(error);
+    } 
+  }
+
+  const [userId, setUserId] = useState(0);
+  const getUserCreds = async () => {
+    const result = await axios.get('http://10.0.2.2:4200/getUserCreds');
+    const userInfo:string[] = result.data;
+    setUserId(parseInt(userInfo[0]));
+  }
   
     // Added this
     useEffect(() => {
       fetchRestaurants();
+      getUserCreds();
     }, []);
+
+    // check if inbox has any incoming recommendations
+    useEffect(() => {
+      getRecommendations()
+    }, [mail, userId]);
 
     // Filter function
     const filterRestaurants = (keyword: string) => {
@@ -112,7 +136,7 @@ export default function TempHomeScreen() {
     return (
 
     <View style={styles.container}>
-        <Header header='FoodBuster' inbox={true} />
+        <Header header='FoodBuster' inbox={true} hasMail={mail > 0} />
         <PageBreakLine style="solid" />
 
         <View style={styles.searchBar}>
