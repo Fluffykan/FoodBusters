@@ -30,7 +30,7 @@ export default function TopButtonPlusHeader({header, transparentBg, destination,
         <View style={styles.container}>
             <NavIconButtonWithOptionalText iconName="doubleleft" replaceScreen={replaceScreen} destination={destination} />
             <View>
-            <Header transparentBg={transparentBg} header={header} />
+                <Header transparentBg={transparentBg} header={header} />
             </View>
             <Icon name='doubleleft' color='transparent' />
         </View>

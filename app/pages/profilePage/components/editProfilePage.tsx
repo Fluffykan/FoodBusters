@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet, Alert } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
 import axios from 'axios';
 import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
 import { Redirect } from 'expo-router';
+import Navbar from '@/components/Navbar';
+import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
+import Header from '@/components/Header';
 
 export default function EditProfilePage() {
     const [password, updatePassword] = useState('');
@@ -72,18 +75,24 @@ export default function EditProfilePage() {
     }
 
     return (
-        <View style={styles.container}>
-            <TopButtonPlusHeader header='FoodBuster' transparentBg={true} destination='/pages/profilePage' replaceScreen={true} />
-            <Text style={styles.pageHeading}>Edit Profile</Text>
-            <InputBoxWithOptionalTitle title='Username' defaultValue={oldCreds[1]} updaterFn={() => {}} editable={false} />
-            <InputBoxWithOptionalTitle title='Email' defaultValue={oldCreds[2]} updaterFn={() => {}} editable={false} />
-            <InputBoxWithOptionalTitle title='Password' placeholder='' updaterFn={updatePassword} />
-            <InputBoxWithOptionalTitle title = 'Confirm Password' placeholder='' updaterFn={updateConfirmPassword} />
-            {passwordMismatch && <Text style={styles.errorMessage}>Passwords do not match</Text>}
-            <Button text='Save Changes' border='rounded' fn={handleEditProfile} />
-            {hasEmptyField && <Text style={styles.errorMessage}>Some fields are empty</Text>}
-            {emailTaken && <Text style={styles.errorMessage}>Email or Username has already been taken, try another email</Text>}
+        <View style={{justifyContent:'space-between', flex: 1,}}>
+            <Header header='FoodBuster' />
+            <ScrollView style={styles.container}>
+                <Text style={styles.pageHeading}>Edit Profile</Text>
+                <InputBoxWithOptionalTitle title='Username' defaultValue={oldCreds[1]} updaterFn={() => {}} editable={false} />
+                <InputBoxWithOptionalTitle title='Email' defaultValue={oldCreds[2]} updaterFn={() => {}} editable={false} />
+                <InputBoxWithOptionalTitle title='Password' placeholder='' updaterFn={updatePassword} />
+                <InputBoxWithOptionalTitle title = 'Confirm Password' placeholder='' updaterFn={updateConfirmPassword} />
+                {passwordMismatch && <Text style={styles.errorMessage}>Passwords do not match</Text>}
+                <Button text='Save Changes' border='rounded' fn={handleEditProfile} />
+                {hasEmptyField && <Text style={styles.errorMessage}>Some fields are empty</Text>}
+                {emailTaken && <Text style={styles.errorMessage}>Email or Username has already been taken, try another email</Text>}
+                <Text style={styles.pageHeading}>Edit Food Preferences</Text>
+                <NavIconButtonWithOptionalText iconName='form' destination='pages/indicatePreferencePage' replaceScreen={false} text='Go to Change Preferences' flexDir='row' />
+            </ScrollView>
+            <Navbar />
         </View>
+
     )
     
 

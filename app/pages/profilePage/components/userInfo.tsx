@@ -20,7 +20,7 @@ export default function UserInfo({username, email}:userInfoProps) {
                 <NavIconButtonWithOptionalText 
                     iconName='setting' 
                     destination='/pages/profilePage/components/editProfilePage' 
-                    replaceScreen={true} 
+                    replaceScreen={false} 
                     text='Edit Profile' 
                     flexDir='row' border={true}
                 />
