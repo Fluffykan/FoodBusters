@@ -1,6 +1,7 @@
 import { View, Image, Text, StyleSheet } from 'react-native';
 import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
 import Icon from 'react-native-vector-icons/AntDesign';
+import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
 type userInfoProps = {
     username:string;
     email: string;
@@ -32,9 +33,8 @@ export default function UserInfo({username, email}:userInfoProps) {
 const styles = StyleSheet.create({
     userPictureAndInfo: {
         flexDirection: 'row',
-        borderColor: 'black',
-        borderWidth: 1,
         paddingBottom: 10,
+        flex: 1,
     },
     userProfilePicture: {
         height: 70,

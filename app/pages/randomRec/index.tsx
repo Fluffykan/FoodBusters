@@ -9,6 +9,8 @@ import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
 import Button from '@/components/Button';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 import PageBreakLine from '@/components/PageBreakLine';
+import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
+import HelpBar from '@/components/HelpBar';
 
 export default function RandomRec() {
     const [loading, setLoading] = useState(false);
@@ -22,6 +24,7 @@ export default function RandomRec() {
         storeClassification: string;
         storeRating: string;
         storeDist: string;
+        storeImage: string;
         averageRating: number | null; // Added this field. For some restaurants where there are no reviews added, there would be no average rating, hence the null value
       };
 
@@ -52,12 +55,13 @@ export default function RandomRec() {
             </View>
         )
     }
-
+    const [closePopup, setClosePopup] = useState(false);
     const pointsBenefitSentence = "Did you know you can recommend dishes to other users based on their preferences. Successful recommendations will earn you loyalty points that can be exchanged for cash prizes and discounts at various dining spots!"
     const indicatePreferenceSentence = "Indicate your preferences for other users to share their culinary insights with you!"
     const recommendedFoodBySomeone = "Click below to check the food recommended by other users!"
     return (
         <View style={styles.container}>
+            <HelpBar page='fotd' visibility={closePopup} changeVisibility={setClosePopup} />
             <Header header="FoodBusters" />
             <PageBreakLine style="solid" />
 
@@ -74,6 +78,7 @@ export default function RandomRec() {
                         storeRating={restaurant.storeRating} // Handle null value
                         storeStatus={restaurant.storeStatus}
                         storeClassification={restaurant.storeClassification}
+                        storeImage={restaurant.storeImage}
                     />
                 )}
                 <Button 
@@ -119,6 +124,7 @@ export default function RandomRec() {
                     </Link>
                 </View>
             </ScrollView>
+            <LinkIconButtonWithOptionalText text='Help' iconColor='red' floating={true} fn={() => setClosePopup(!closePopup)} iconName='questioncircleo' iconSize={50} />
             <Navbar />
         </View>
     )

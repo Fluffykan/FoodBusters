@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { View, StyleSheet, ScrollView, Text, Image, Modal } from 'react-native';
 import UserInfo from './components/userInfo';
 import Navbar from '@/components/Navbar';
 import axios from 'axios';
 import ProfileNavBar from './components/profileNavBar';
 import ReviewsComponent from '../stallscreen/components/reviewsComponent';
 import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
+import Icon from 'react-native-vector-icons/AntDesign';
+import Button from '@/components/Button';
+import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
+import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
+import HelpBar from '@/components/HelpBar';
 
 export default function ProfilePage() {
     // TODO: 
@@ -14,6 +19,7 @@ export default function ProfilePage() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [loading, setLoading] = useState(true);
+    const [closePopup, setClosePopup] = useState(false);
 
     const getUserCreds = async () => {
         try {
@@ -57,13 +63,18 @@ export default function ProfilePage() {
     }
     return (
         <View style={styles.container}>
-            <UserInfo username={username} email={email} />
+            <HelpBar page='profile' visibility={closePopup} changeVisibility={setClosePopup} />
+            <View style={{flexDirection: 'row'}}>
+                <UserInfo username={username} email={email} />
+            </View>
+
             <ProfileNavBar toggleScreen={setScreen} />
             <ScrollView>
                 {screen == 0 && <ReviewsListView email={email} userId={userId} />}
                 {screen == 2 && <FavListView email={email} userId={userId} />}
                 {screen == 1 && <ImageView email={email} userId={userId} />}
             </ScrollView>
+            <LinkIconButtonWithOptionalText text='Help' iconColor='red' floating={true} fn={() => setClosePopup(!closePopup)} iconName='questioncircleo' iconSize={50} />
             <Navbar/>
         </View>
     );
@@ -72,8 +83,8 @@ export default function ProfilePage() {
 const styles = StyleSheet.create({
     container: {
         justifyContent: 'space-between', 
-        height: '100%'
-    }
+        height: '100%',
+    },
 });
 
 type ViewProps = {
@@ -151,10 +162,23 @@ function ReviewsListView({userId}:ViewProps) {
         getReviews();
     }, []);
 
+    type ReviewProps = {
+        restaurantID: number;
+        reviewID: number;
+        username: string;
+        userReview: string;
+        userRating: string;
+    }
+
     return (
         <View>
             { /* redlines are there but it works as intended, just leave it alone */
-            reviews.map(review => <ReviewsComponent restaurantId={review.restaurantID} reviewID={review.reviewID} userID={review.username} userReview={review.userReview} userRating={review.userRating} />)}
+            reviews.map((review: ReviewProps) => <ReviewsComponent 
+                                    restaurantId={review.restaurantID} 
+                                    reviewID={review.reviewID} 
+                                    userID={review.username} 
+                                    userReview={review.userReview} 
+                                    userRating={review.userRating} />)}
         </View>
     )
 
@@ -178,10 +202,23 @@ function FavListView({userId}:ViewProps) {
         getFavorites();
         console.log(favorites);
     },[]);
+
+    type storeProps = {
+        id: number;
+        storeName: string;
+        storeAddress: string;
+        storeRating: number;
+        storeClassification: string;
+        storeDist: string;
+        storeStatus: string;
+        storeImage: string;
+    }
+
     return (
         <View>
             { /* red underline cannot be removed, but works as intended */
-            favorites.map(store => <ShopCondensedInfo
+            favorites.map((store: storeProps) => 
+                                    <ShopCondensedInfo
                                         key={store.id}
                                         id={store.id}
                                         storeName={store.storeName}
@@ -190,6 +227,7 @@ function FavListView({userId}:ViewProps) {
                                         storeClassification={store.storeClassification}
                                         storeDist={store.storeDist}
                                         storeStatus={store.storeStatus}
+                                        storeImage={store.storeImage}
                                     />
             )}
         </View>

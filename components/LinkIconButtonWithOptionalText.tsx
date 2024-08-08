@@ -10,11 +10,12 @@ type IconButtonProps = {
     text?: string; // default = no text
     fontSize?: number; // default font size = 18
     border?: boolean;
+    floating?: boolean;
 
 }
 
 
-export default function LinkIconButtonWithOptionalText({iconName, fn, iconSize, flexDir, iconColor, text, fontSize, border}: IconButtonProps) {  
+export default function LinkIconButtonWithOptionalText({iconName, fn, iconSize, flexDir, iconColor, floating, text, fontSize, border}: IconButtonProps) {  
     const defaultTextSize = text ? (fontSize ? fontSize : 15) : 0;
     const defaultIconColor = iconColor ? iconColor : 'black';
     const defaultIconSize = iconSize ? iconSize : 30;
@@ -37,6 +38,27 @@ export default function LinkIconButtonWithOptionalText({iconName, fn, iconSize, 
             paddingRight: 10
         }
     })
+
+    if (floating) {
+        return (
+            <TouchableOpacity
+            style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: defaultIconSize + 5,
+                position: 'absolute',
+                top: '80%',
+                right: '8%',
+                height: defaultIconSize + 5,
+                borderRadius: 100,
+            }}
+            onPress={() => fn()}
+            >
+                <Icon name='questioncircleo' size={defaultIconSize} color={defaultIconColor} />
+                <Text>{text}</Text>
+            </TouchableOpacity>
+        )
+    }
     
     if (flexDirection == "row") {
         return (

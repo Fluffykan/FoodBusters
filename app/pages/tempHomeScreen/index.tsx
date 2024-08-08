@@ -1,6 +1,5 @@
 import { StyleSheet, View, ScrollView, FlatList, Text, Modal } from "react-native";
 import { useState, useEffect } from "react";
-import { useLocalSearchParams } from 'expo-router';
 import Header from "@/components/Header";
 import ShopCondensedInfo from "@/app/components/ShopCondensedInfo";
 import PageBreakLine from "@/components/PageBreakLine";
@@ -9,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
 import FilterModal from "@/components/filterModal";
 import axios from "axios";
-import NavIconButtonWithOptionalText from "@/components/NavIconButtonWithOptionalText";
+import HelpBar from "@/components/HelpBar";
 
 type Restaurant = {
   id: number;
@@ -20,19 +19,18 @@ type Restaurant = {
   storeRating: string;
   storeDist: string;
   averageRating: number | null; // Added this field. For some restaurants where there are no reviews added, there would be no average rating, hence the null value
+  storeImage: string;
 };
 
 
 export default function TempHomeScreen() {
 
     const [keywords, updateKeywords] = useState('');
-    
     const [restaurants, update] = useState<Restaurant[]>([]);
-
     const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([]); // State for filtered restaurants
-
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
+    const [helpbar, toggleHelpbar] = useState(false);
 
     const fetchRestaurants = () => {
     axios.get("http://10.0.2.2:4200/restaurants")
@@ -136,6 +134,8 @@ export default function TempHomeScreen() {
     return (
 
     <View style={styles.container}>
+        <HelpBar page='home' visibility={helpbar} changeVisibility={toggleHelpbar} />
+        
         <Header header='FoodBuster' inbox={true} hasMail={mail > 0} />
         <PageBreakLine style="solid" />
 
@@ -144,7 +144,6 @@ export default function TempHomeScreen() {
             <InputBoxWithOptionalTitle updaterFn={handleKeywordChange} placeholder='Search By Store Name' />
             </View>
             <LinkIconButtonWithOptionalText iconName="search1" fn={() => filterRestaurants(keywords)} />
-            
             <LinkIconButtonWithOptionalText iconName="filter" fn={() => setFilterModalVisible(true)} />
         </View>
             
@@ -163,11 +162,13 @@ export default function TempHomeScreen() {
                         storeRating={restaurant.averageRating !== null ? restaurant.averageRating.toFixed(1) : 'No Rating'} // Handle null value
                         storeStatus={restaurant.storeStatus}
                         storeClassification={restaurant.storeClassification}
+                        storeImage={restaurant.storeImage}
                     />
                 ))
             )}
             
         </ScrollView>
+        <LinkIconButtonWithOptionalText text='Help' iconColor='red' floating={true} fn={() => toggleHelpbar(!helpbar)} iconName='questioncircleo' iconSize={50} />
             
         <Navbar />
 

@@ -1,26 +1,37 @@
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { useState } from "react";
 import PageBreakLine from "@/components/PageBreakLine";
-import LoyaltyPointsBar from "./components/loyaltyPointsBar";
-import WalletNavbar from "./components/walletNavBar";
 import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
 import { MaterialIcons, FontAwesome, Entypo } from '@expo/vector-icons';  // Make sure to install @expo/vector-icons
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import HelpBar from "@/components/HelpBar";
+import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
+import PointShop from "./components/PointsShop";
+import VoucherShop from "./components/VoucherShop";
+import TopUp from "./components/Topup";
 
 export default function Wallet() {
 
     const [pointShopOpen, togglePointsShop] = useState(false);
-    const handleOpenPointsShpo = () => {
+    const handleOpenPointsShop = () => {
         togglePointsShop(true);
         toggleVoucherShop(false);
-        console.log('displaying Points Shop')
+        toggleTopup(false);
+        console.log('displaying Points Shop');
     }
-    const [voucherShopOpen, toggleVoucherShop] = useState(true);
+    const [voucherShopOpen, toggleVoucherShop] = useState(false);
     const handleOpenVouchers = () => {
         togglePointsShop(false);
         toggleVoucherShop(true);
-        console.log('displaying Vouchers')
+        toggleTopup(false);
+        console.log('displaying Vouchers');
+    }
+    const [topupOpen, toggleTopup] = useState(false);
+    const handleOpenTopup = () => {
+        togglePointsShop(false);
+        toggleVoucherShop(false);
+        toggleTopup(true);
     }
 
     // Each user can have 2 additional fields: Money and Points
@@ -32,10 +43,12 @@ export default function Wallet() {
     const usePoints = "Use Points";
     const topUp = "Top Up";
     const useVouchers = "Voucher";
+    const [closePopup, setClosePopup] = useState(false);
     // TODO: fetch random sentence from database
     const sentence = 'Start recommending your best dishes to earn loyalty points!';
     return (
         <View style={styles.container}>
+            <HelpBar page='wallet' visibility={closePopup} changeVisibility={setClosePopup} />
             <Header header="My Wallet" />
             <PageBreakLine style='solid' />
             <View style={styles.content}>
@@ -50,29 +63,36 @@ export default function Wallet() {
                         </View>
                 </View>
                 <PageBreakLine style='solid' />
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.button}>
-                        <MaterialIcons name="attach-money" size={24} color="black" />
-                        <Text style={styles.buttonText}>{topUp}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <FontAwesome name="star" size={24} color="black" />
-                        <Text style={styles.buttonText}>{usePoints}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Entypo name="ticket" size={24} color="black" />
-                        <Text style={styles.buttonText}>{useVouchers}</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.catContainer}>
-                    <MaterialCommunityIcons name="cat" size={50} color="black" />
-                    <View style={styles.speechBubble}>
-                        <Text style={styles.speechTextBold}>What does Chase wish to say :</Text>
-                        <Text style={styles.speechText}>{sentence}</Text>
+                <ScrollView>
+                    <View style={styles.buttonContainer}>
+                        <TouchableOpacity style={styles.button} onPress={handleOpenTopup}>
+                            <MaterialIcons name="attach-money" size={24} color="black" />
+                            <Text style={styles.buttonText}>{topUp}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleOpenPointsShop}>
+                            <FontAwesome name="star" size={24} color="black" />
+                            <Text style={styles.buttonText}>{usePoints}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={handleOpenVouchers}>
+                            <Entypo name="ticket" size={24} color="black" />
+                            <Text style={styles.buttonText}>{useVouchers}</Text>
+                        </TouchableOpacity>
                     </View>
-                </View>
-                {/* Add your other content components here */}
+                    {topupOpen && <TopUp />}
+                    {pointShopOpen && <PointShop />}
+                    {voucherShopOpen && <VoucherShop />}
+                    <View style={styles.catContainer}>
+                        <MaterialCommunityIcons name="cat" size={50} color="black" />
+                        <View style={styles.speechBubble}>
+                            <Text style={styles.speechTextBold}>What does Chase wish to say :</Text>
+                            <Text style={styles.speechText}>{sentence}</Text>
+                        </View>
+                    </View>
+                    {/* Add your other content components here */}
+                    <Text />
+                </ScrollView>
             </View>
+            <LinkIconButtonWithOptionalText text='Help' iconColor='red' floating={true} fn={() => setClosePopup(!closePopup)} iconName='questioncircleo' iconSize={50} />
             <Navbar/>
         </View>
         

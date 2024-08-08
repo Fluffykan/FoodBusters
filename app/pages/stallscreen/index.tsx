@@ -183,7 +183,7 @@ export default function StallScreen() {
             <TopButtonPlusHeader header='FoodBuster' destination="/pages/tempHomeScreen" replaceScreen={true} />
 
             <ScrollView style={styles.container}>
-            {storeImage == '' ? (
+            {storeImage != '' ? (
                     <Image style={{ height: 200, width: "100%" }} source={{ uri: storeImage }} />
                 ) : (
                     <Image style={{ height: 200, width: "100%" }} source={{ uri: 'https://via.placeholder.com/200' }} />
