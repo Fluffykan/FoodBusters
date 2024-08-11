@@ -26,6 +26,7 @@ type Review = {
     userID: string;
     userReview: string;
     userRating: string;
+    image?: number;
 };
 
 
@@ -208,6 +209,7 @@ export default function StallScreen() {
                             userReview={review.userReview}
                             userRating={review.userRating}
                             reviewID={review.reviewID}
+                            image={review.image}
                         />
                     ))}
                     <Text/>

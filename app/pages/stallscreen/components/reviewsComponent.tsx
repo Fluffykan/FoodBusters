@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, Image } from "react-native";
 import { useEffect, useState } from "react";
 import Icon from 'react-native-vector-icons/AntDesign';
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
@@ -10,9 +10,10 @@ type ReviewsComponentProps = {
     userReview: string;
     userRating: string;
     restaurantId?: number;
+    image?: number;
 };
 
-export default function ReviewsComponent({ userID, userReview, userRating, reviewID, restaurantId }: ReviewsComponentProps) {
+export default function ReviewsComponent({ userID, userReview, image, userRating, reviewID, restaurantId }: ReviewsComponentProps) {
 
     const name = "DomTor";
     const rating = "4.5";
@@ -129,6 +130,8 @@ export default function ReviewsComponent({ userID, userReview, userRating, revie
                 <View style={styles.review}>
                         {!truncatedReview && <Text style={styles.reviewText}>{userReview}</Text>}
                         {truncatedReview && <Text style={styles.reviewText}>{truncateReview(userReview, 7)}</Text>}
+                        <Text/>
+                        {image && <Image source={{uri:`http://10.0.2.2:4200/getImg/${image}`}} style={{aspectRatio: '1/1', height: 100}} />}
                 </View>
                 
             </TouchableOpacity>

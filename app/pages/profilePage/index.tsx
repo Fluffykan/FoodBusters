@@ -6,9 +6,6 @@ import axios from 'axios';
 import ProfileNavBar from './components/profileNavBar';
 import ReviewsComponent from '../stallscreen/components/reviewsComponent';
 import ShopCondensedInfo from '@/app/components/ShopCondensedInfo';
-import Icon from 'react-native-vector-icons/AntDesign';
-import Button from '@/components/Button';
-import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
 import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
 import HelpBar from '@/components/HelpBar';
 
@@ -168,6 +165,7 @@ function ReviewsListView({userId}:ViewProps) {
         username: string;
         userReview: string;
         userRating: string;
+        image?: number;
     }
 
     return (
@@ -178,7 +176,8 @@ function ReviewsListView({userId}:ViewProps) {
                                     reviewID={review.reviewID} 
                                     userID={review.username} 
                                     userReview={review.userReview} 
-                                    userRating={review.userRating} />)}
+                                    userRating={review.userRating}
+                                    image={review.image} />)}
         </View>
     )
 

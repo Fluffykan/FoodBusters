@@ -1,5 +1,5 @@
 import { StyleSheet, View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageBreakLine from "@/components/PageBreakLine";
 import Navbar from "@/components/Navbar";
 import Header from "@/components/Header";
@@ -10,6 +10,7 @@ import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptio
 import PointShop from "./components/PointsShop";
 import VoucherShop from "./components/VoucherShop";
 import TopUp from "./components/Topup";
+import axios from "axios";
 
 export default function Wallet() {
 
@@ -36,8 +37,18 @@ export default function Wallet() {
 
     // Each user can have 2 additional fields: Money and Points
     // fetch using API
-    const loyaltyPoints = 555;
-    const foodbusterPay = 1599.54;
+    const [loyaltyPoints, setLoyaltyPoints] = useState(0);
+    const [foodbusterPay, setFoodbusterPay] = useState(0);
+    const getPoints = async () => {
+        const result = await axios.get('http://10.0.2.2:4200/getUserCreds');
+        const usercreds = result.data;
+        setLoyaltyPoints(usercreds[5]);
+        setFoodbusterPay(usercreds[6]);
+    }
+
+    useEffect(() => {
+        getPoints();
+    }, [loyaltyPoints, foodbusterPay]);
     // TODO: fetch point shop and voucher shop contents
 
     const usePoints = "Use Points";
@@ -55,7 +66,7 @@ export default function Wallet() {
                 <View style={styles.boxContainer}>
                         <View style={styles.box}>
                             <Text style={styles.boxHeader}>FoodBuster Purse:</Text>
-                            <Text style={styles.boxAmount}>${foodbusterPay.toFixed(2)}</Text>
+                            <Text style={styles.boxAmount}>${foodbusterPay}</Text>
                         </View>
                         <View style={styles.box}>
                             <Text style={styles.boxHeader}>Loyalty Points:</Text>
