@@ -128,23 +128,6 @@ export default function RecommendToUserPage() {
     setFilteredRestaurants(filtered);
   };
 
-  /*const handleConfirmRecommendation = async () => {
-    try {
-      const recommendations = selectedRestaurants.map(stallid => ({
-        recommendby: userId,
-        recommendto: recommendToUserId,
-        stallid,
-        username: usernameBy,
-        userrank: rank
-      }));
-      await axios.post('http://192.168.1.71:4200/recommendations', { recommendations });
-      alert('Recommendations confirmed!');
-    } catch (error) {
-      console.error('Error confirming recommendations', error);
-      alert('Error confirming recommendations');
-    }
-  };*/
-
   const handleConfirmRecommendation = async () => {
     try {
       const recommendations = selectedRestaurants.map(stallid => {

@@ -25,9 +25,6 @@ type Recommendation = {
 
 export default function CheckRecommendedFood() {
 
-    const weibinURLUser = 'http://192.168.1.71:4200/getUserCreds'; // The user data of the current user that logged in
-    const weibinURLRecommend = 'http://192.168.1.71:4200/getUserRecommendations'; // Gets all the entry details of all food recommendations w.r.t to current user
-
     const [userId, setUserId] = useState(""); // User details
     const [usernameBy, setUsername] = useState("");
     const [rank, setRank] = useState("");

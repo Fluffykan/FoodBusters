@@ -93,7 +93,6 @@ function ImageView({email}:ViewProps) {
     const [images, setImages] = useState<string[][]>([]);
     const fetch = async () => {
         try {
-            // need to find a way to store the username 
             const response = await axios.get(`http://10.0.2.2:4200/getAllImgs/` + email);
 
             // Process rawdata to create images array

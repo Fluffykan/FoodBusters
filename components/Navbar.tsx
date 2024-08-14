@@ -1,4 +1,4 @@
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import NavIconButtonWithOptionalText from './NavIconButtonWithOptionalText';
 
 

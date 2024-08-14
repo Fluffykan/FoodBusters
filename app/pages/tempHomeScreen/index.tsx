@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView, FlatList, Text, Modal } from "react-native";
+import { StyleSheet, View, ScrollView, Text } from "react-native";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import ShopCondensedInfo from "@/app/components/ShopCondensedInfo";
@@ -184,29 +184,6 @@ export default function TempHomeScreen() {
     )
 
 }
-
-const styles1 = StyleSheet.create({
-    container: {
-      flex: 1,
-      padding: 16,
-    },
-    restaurantItem: {
-      padding: 16,
-      borderBottomWidth: 1,
-      borderBottomColor: '#ccc',
-    },
-    restaurantName: {
-      fontSize: 18,
-      fontWeight: 'bold',
-    },
-    restaurantAddress: {
-      fontSize: 16,
-    },
-    restaurantStatus: {
-      fontSize: 14,
-      color: 'green',
-    },
-  });
 
 const styles = StyleSheet.create({
     searchBar: {

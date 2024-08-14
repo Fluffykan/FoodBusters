@@ -26,10 +26,6 @@ export default function ShopCondensedInfoWithTickBox(props: ShopCondensedInfoPro
         onSelectionChange(id, newSelectedState);
     };
 
-    // Convert storeRating and storeDist to numbers
-    const rating = parseFloat(storeRating);
-    const distance = parseFloat(storeDist);
-
     // Define the container style with conditional green outline
     const containerStyle = [
         styles.overallContainer,

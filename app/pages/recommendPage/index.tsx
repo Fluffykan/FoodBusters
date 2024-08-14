@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
 import axios from "axios";
 import UserCondensedInfo from "@/app/components/UserCondensedInfo";
-import FilterModal from "@/components/filterModal"; 
 import UserFilterModal from "@/components/userFilterModal";
 
 // Should fetch all user info here.
@@ -31,8 +30,6 @@ type User = {
     const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [filterModalVisible, setFilterModalVisible] = useState(false);
-  
-    const weibinURL = 'http://192.168.1.71:4200/users'; // Replace with your actual endpoint
   
     const fetchUsers = () => {
       axios.get('http://10.0.2.2:4200/users')

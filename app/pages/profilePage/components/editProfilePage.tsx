@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import InputBoxWithOptionalTitle from '@/components/InputBoxWithTitle';
 import Button from '@/components/Button';
 import axios from 'axios';
-import TopButtonPlusHeader from '@/components/TopButtonPlusHeader';
 import { Redirect } from 'expo-router';
 import Navbar from '@/components/Navbar';
 import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
@@ -39,6 +38,7 @@ export default function EditProfilePage() {
                     }
                     // login used to save user creds to userCreds.txt
                     axios.post('http://10.0.2.2:4200/login', {email:oldCreds[2], password_hash:password});
+                    showAlert();
                 })
                 .catch(error => {
                     // if email has been used, display the error for user to see

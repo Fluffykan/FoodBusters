@@ -11,7 +11,6 @@ export default function LoginPage() {
     const [password, updatePassword] = useState<String>('');
     const [passwordError, updatePasswordError] = useState(true);
     const [attemptedLogin, updateAttemptedLogin] = useState(false);
-    const [userId, setUserId] = useState(null);
     const router = useRouter();
 
     const handleLogin = () => {

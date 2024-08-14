@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Linking } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Header from './Header';
 import NavIconButtonWithOptionalText from './NavIconButtonWithOptionalText';
 import Icon from 'react-native-vector-icons/AntDesign';

@@ -5,7 +5,7 @@ import Header from '@/components/Header';
 import Navbar from '@/components/Navbar';
 import Button from '@/components/Button';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function IndicatePreferencePage() {
     
@@ -17,7 +17,6 @@ export default function IndicatePreferencePage() {
     const [inputText, setInputText] = useState("");
     const [charCount, setCharCount] = useState(0);
 
-    const weibinURL = 'http://192.168.1.71:4200/getUserCreds'
 
     const getUserData = async () => {
         try {
@@ -46,8 +45,6 @@ export default function IndicatePreferencePage() {
             setCharCount(text.length);
         }
     };
-
-    const updatePreferenceURLWeiBin = 'http://192.168.1.71:4200/updatePreference'
 
     const handleUpdatePreference = async () => {
         try {

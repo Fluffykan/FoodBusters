@@ -1,7 +1,6 @@
 import Header from '@/components/Header';
 import Navbar from '@/components/Navbar';
-import UserCondensedInfo from '@/app/components/UserCondensedInfo';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { useEffect, useState } from 'react';
 import { Link } from 'expo-router';
 import axios from 'axios';
@@ -27,9 +26,6 @@ export default function RandomRec() {
         storeImage: string;
         averageRating: number | null; // Added this field. For some restaurants where there are no reviews added, there would be no average rating, hence the null value
       };
-
-      const weibinURL = 'http://192.168.1.71:4200/getRandomStore';
-
 
       const queryStore = () => {
         axios.get("http://10.0.2.2:4200/getRandomStore")

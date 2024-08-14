@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { Link } from 'expo-router';
-import Icon from 'react-native-vector-icons/AntDesign';
 import LinkIconButtonWithOptionalText from '@/components/LinkIconButtonWithOptionalText';
 import axios from 'axios';
 
@@ -21,18 +20,8 @@ export default function RecommendedCondensedInfo(props: RecommendedCondensedInfo
 
     const { id, recommendId, storeName, storeDist, storeAddress, storeRating, storeStatus, storeClassification, username, userrank } = props;
 
-    // Convert storeRating and storeDist to numbers
-    const rating = parseFloat(storeRating);
-    const distance = parseFloat(storeDist);
-
     // Create query string with parameters
     const queryParams = `id=${id}&storeName=${storeName}&storeAddress=${storeAddress}&storeStatus=${storeStatus}&storeClassification=${storeClassification}&storeRating=${storeRating}&storeDist=${storeDist}`;
-
-    // TODO: 
-    // CREATE LOGIC TO REDIRECT TO STORE PAGE
-    const handleStoreClick = () => {
-        console.log('redirect to store page');
-    }
 
     const deleteRecommendation = (id:number) => {
         try {

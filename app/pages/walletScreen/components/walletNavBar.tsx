@@ -1,5 +1,5 @@
 import VerticalLine from '@/components/VerticalLine';
-import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 
 type walletNavbarProps = {

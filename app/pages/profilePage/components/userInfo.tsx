@@ -1,4 +1,4 @@
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import NavIconButtonWithOptionalText from '@/components/NavIconButtonWithOptionalText';
 import Icon from 'react-native-vector-icons/AntDesign';
 type userInfoProps = {

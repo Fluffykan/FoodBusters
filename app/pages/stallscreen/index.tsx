@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image, Button, TouchableOpacity, Pressable, ScrollView, TextInput } from "react-native";
+import { StyleSheet, View, Text, Image, ScrollView, TextInput } from "react-native";
 import { useState, useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
 import axios from "axios";
@@ -9,16 +9,6 @@ import ReviewsComponent from './components/reviewsComponent';
 import PageBreakLine from "@/components/PageBreakLine";
 import Navbar from "@/components/Navbar";
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
-
-type StallScreenProps = {
-    id: number;
-    storeName: string;
-    storeAddress: string;
-    storeStatus: string;
-    storeClassification: string;
-    storeRating: string;
-    storeDist: string;
-};
 
 type Review = {
     reviewID: number;
@@ -168,9 +158,6 @@ export default function StallScreen() {
     const rating = 5;
     const foodType = 'hotpot'*/
 
-    const handleFilterReviews = (keywords:string) => {
-        console.log(`filtering reviews with: ${keywords}`);
-    }
     // <Text/> element there to prevent last element in the list from being cut off
     if (loading) {
         return (
@@ -220,11 +207,6 @@ export default function StallScreen() {
     );
 }
 
-/*
-<Image style={{height:200, width:"100%"}}
-                            source={{ uri: 'https://singaporebeauty.com/wp-content/uploads/2021/10/la-jiang-shan-selegie-dhoby-ghaut-orchard-buffet.jpg' }} />
-
-*/
 // Previous rating code
 // rating={parseInt(storeRating as string, 10) || 0} 
 // <LinkIconButtonWithOptionalText iconName="search1" fn={() => handleFilterReviews(keywords)} />

@@ -1,6 +1,5 @@
-import { StyleSheet, View, Text, Image, Button, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { useState } from "react";
-import Icon from 'react-native-vector-icons/AntDesign';
 import LinkIconButtonWithOptionalText from "@/components/LinkIconButtonWithOptionalText";
 import NavIconButtonWithOptionalText from "@/components/NavIconButtonWithOptionalText";
 

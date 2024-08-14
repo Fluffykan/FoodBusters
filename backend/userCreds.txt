@@ -1,1 +1,1 @@
-13,Aoki,aoki@gmail.com,$2b$10$DiBFtNFuUgZYt4S84k9Dr.1wCf1ejFjObNcBGVUu5TnuUluClBePq,dingtainfung,10,3.21,Apprentice Chef
+13,Aoki,aoki@gmail.com,$2b$10$5nHvGaS809pkJDhGRSxWn.QjIm9FHdcPH6c4fR/XZkypIxVS3mBhG,gyoza,10,3.21,Apprentice Chef

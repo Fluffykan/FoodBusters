@@ -15,20 +15,6 @@ type ReviewsComponentProps = {
 
 export default function ReviewsComponent({ userID, userReview, image, userRating, reviewID, restaurantId }: ReviewsComponentProps) {
 
-    const name = "DomTor";
-    const rating = "4.5";
-    const tempReview = "Review: Amazing food with great service here..."
-
-    /*
-    // ReadMore functionality is removed, can add back if time and skill permits in the future
-
-    const [readMoreButtonIsPressed, setReadMoreButton] = useState(false)
-    const toggleReadMoreButton = () => {
-        setReadMoreButton(!readMoreButtonIsPressed)
-        console.log("Extending Review...")
-    }
-    */
-   
     // Truncate the review since it is too long. Shows only the first 5 words of the review padded by "..." at the end
     const [truncatedReview, setTruncatedReview] = useState(true);
     const truncateReview = (review: string, wordLimit: number) => {

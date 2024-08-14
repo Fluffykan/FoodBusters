@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, ScrollView, TextInput, Modal, Alert } from "react-native";
+import { StyleSheet, View, Text, ScrollView, TextInput, Alert } from "react-native";
 import { useEffect, useState } from "react";
 import { useLocalSearchParams } from "expo-router";
 import Icon from 'react-native-vector-icons/AntDesign';

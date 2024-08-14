@@ -19,6 +19,7 @@ export default function VoucherShop() {
     )
 }
 
+// for future use when shop items are added
 type ShopItemProps = {
     item: string;
     price: number;

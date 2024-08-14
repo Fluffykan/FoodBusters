@@ -19,6 +19,7 @@ export default function PointShop() {
     )
 }
 
+// for future use if shop items are added
 type ShopItemProps = {
     item: string;
     price: number;

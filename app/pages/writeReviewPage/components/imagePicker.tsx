@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Button, Image, View, StyleSheet, Text } from 'react-native';
+import { Button, Image, View, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 type ImagePickerButtonProps = {

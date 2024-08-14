@@ -4,7 +4,6 @@ import { View, StyleSheet, Text, Alert } from 'react-native';
 import { useState } from "react";
 import axios from 'axios';
 import TopButtonPlusHeader from "@/components/TopButtonPlusHeader";
-import NavIconButtonWithOptionalText from "@/components/NavIconButtonWithOptionalText";
 import { Redirect } from "expo-router";
 
 export default function ResetPassword() {
